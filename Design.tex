@@ -211,7 +211,7 @@ track\_type & 20 & 12 & Type of stream, such as video, chat \\
 
 It has 32-byte fixed-size header and variable-length payload; the packet structure is defined as a 32-byte fixed header and an arbitrary-length field. There are three fields entered in the header:
 
-\paragraph{track_id (16 bytes)}
+\paragraph{track\_id (16 bytes)}
 The \texttt{track\_id} field is a unique identifier of logical stream or source like ``live\_video'' or ``live\_chat''. It allows the server or router to multiplex multiple logical streams into a single QUIC connection so that the connection can support features such as multi-user streaming. The 16-byte size allows for human-readable identifiers, null-padding for shorter IDs and ensures flexibility and simplicity.
 
 \paragraph{payload\_len (4 bytes, big-endian)}

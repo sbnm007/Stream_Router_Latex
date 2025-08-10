@@ -186,6 +186,31 @@ Connection Migration & No & No & Yes (survives IP changes) \\
 \section{HTTP Protocols}
 
 The HyperText Transfer Protocol (HTTP) has undergone multiple changes since its inception, which helped it evolve in order to meet the growing demands of modern web applications. Each version introduces significant changes in how data is structured, delivered, and optimized over networks.
+\begin{figure}
+\centering
+\begin{tikzpicture}[scale=1]
+% Drawing the timeline axis
+\draw[->, thick] (0,0) -- (11,0) node[below, font=\small] {Year};
+
+% Year ticks and labels
+\foreach \x/\year in {0/1991, 2/1996, 4/1997, 6/2015, 8/2022, 10/2025} {
+  \draw (\x,0) -- ++(0,-3mm) node[below, font=\tiny\bfseries] {\year};
+}
+
+% HTTP version bars with simplified labels
+\fill[pink] (0,0) rectangle ++(2,1) node[midway, black, font=\tiny\bfseries, align=center] {HTTP/0.9 \\ Simple GET};
+\fill[green!90] (2,0) rectangle ++(2,1) node[midway, black, font=\tiny\bfseries, align=center] {HTTP/1.0 \\ Headers};
+\fill[cyan] (4,0) rectangle ++(2,1) node[midway, black, font=\tiny\bfseries, align=center] {HTTP/1.1 \\ Pipelining};
+\fill[yellow!70] (6,0) rectangle ++(2,1) node[midway, black, font=\tiny\bfseries, align=center] {HTTP/2 \\ Multiplexing};
+\fill[orange!70] (8,0) rectangle ++(2,1) node[midway, black, font=\tiny\bfseries, align=center] {HTTP/3 \\ QUIC};
+
+\end{tikzpicture}
+\caption{HTTP protocol evolution (1991--2025)}
+\label{fig:http-timeline}
+\end{figure}
+
+
+As shown in Figure~\ref{fig:http-timeline}, the HTTP protocol evolved significantly from 1991 to 2025, introducing key features like multiplexing and QUIC.
 
 \subsection{HTTP/0.9}
 
@@ -511,7 +536,7 @@ StatefulSets are ideal for workloads like databases, such as MongoDB, PostgreSQL
 As Kubernetes adoption continues to rise across industries, cloud providers have responded with fully managed solutions to simplify deployment, scaling, and maintenance. Among the most prominent managed Kubernetes offerings are Amazon Elastic Kubernetes Service (EKS), Azure Kubernetes Service (AKS), and Google Kubernetes Engine (GKE). This section reviews these platforms, examining their design principles, cloud integration capabilities, and recent developments, with a focus on their maturity and positioning in the cloud-native ecosystem.
 
 \subsubsection{EKS}
-Amazon Elastic Kubernetes Service (EKS), introduced by AWS in 2018, offers a fully managed control plane that spans multiple Availability Zones to ensure high availability and resilience \cite{aws-docs}. It leverages the security and scalability of AWS infrastructure while supporting native Kubernetes tooling. EKS integrates tightly with AWS services such as Identity and Access Management (IAM) for access control, CloudWatch for observability, and Elastic Load Balancer (ELB) for load balancing. Recent additions like EKS Anywhere - for on-premises Kubernetes - and Bottlerocket - a container-optimized Operating System (OS) - reflect AWS's commitment to extending Kubernetes beyond cloud boundaries (AWS, 2025). However, EKS has historically been more complex to configure than its competitors, particularly due to its networking model, which tightly couples pods to Virtual Private Cloud (VPC) configurations (Smith & Alqahtani, 2024).
+Amazon Elastic Kubernetes Service (EKS), introduced by AWS in 2018, offers a fully managed control plane that spans multiple Availability Zones to ensure high availability and resilience \cite{aws-docs}. It leverages the security and scalability of AWS infrastructure while supporting native Kubernetes tooling. EKS integrates tightly with AWS services such as Identity and Access Management (IAM) for access control, CloudWatch for observability, and Elastic Load Balancer (ELB) for load balancing. Recent additions like EKS Anywhere - for on-premises Kubernetes - and Bottlerocket - a container-optimized Operating System (OS) - reflect AWS's commitment to extending Kubernetes beyond cloud boundaries (AWS, 2025). However, EKS has historically been more complex to configure than its competitors, particularly due to its networking model, which tightly couples pods to Virtual Private Cloud (VPC) configurations (Smith \& Alqahtani, 2024).
 
 \subsubsection{AKS}
 Azure Kubernetes Service (AKS) represents Microsoft's managed Kubernetes platform and is particularly favored in enterprise environments with existing Azure investments \cite{azure-docs}. AKS manages the Kubernetes control plane free of cost and supports features like node auto-scaling, Azure Active Directory (AD) integration, and Virtual Node support via Azure Container Instances (ACI). As of 2025, Microsoft has enhanced its hybrid cloud capabilities through Azure Arc, enabling consistent Kubernetes management across cloud and on-prem infrastructure (Microsoft Docs, 2025). Though AKS is generally user-friendly and well-integrated with Azure DevOps and Visual Studio, it sometimes lags behind Google Kubernetes Engine (GKE) in offering the latest Kubernetes versions (Nguyen et al., 2023).
