@@ -241,23 +241,64 @@ Encryption & No & Optional (via TLS) & Optional (via TLS) & Yes (via QUIC) \\
 \end{table}
 
 
+\section{WebSocket Protocol}
+
+As HTTP protocols evolved to address performance limitations, another approach emerged to handle real-time, bidirectional communication needs: WebSocket. While HTTP/3 focused on improving request-response patterns through QUIC, WebSocket took a different path by establishing persistent, full-duplex communication channels over TCP.
+
+WebSocket is a communication protocol that provides full-duplex communication channels over a single TCP connection. Standardized in RFC 6455, it was designed specifically for real-time web applications that require persistent connections between clients and servers. Unlike the request-response model of HTTP, WebSocket enables continuous, low-latency communication by keeping the connection open, eliminating the overhead of establishing new connections for each data exchange.
+
+The protocol operates through an initial HTTP handshake that upgrades the connection to the WebSocket protocol. Once established, data can be sent bidirectionally without the constraints of HTTP headers or request-response cycles. This persistent nature makes WebSocket particularly suitable for applications requiring real-time updates, such as chat applications, online gaming, collaborative editing, and live streaming platforms.
+
+
+\begin{figure}[h]
+\centering
+\begin{tikzpicture}[
+    box/.style={rectangle, draw, rounded corners, minimum height=3em, minimum width=8em, align=center},
+    arrow/.style={-Stealth, thick}
+]
+    % Nodes
+    \node[box] (client)  at (0,0)   {WebSocket\\[-0.3ex]\small (Browser, mobile…)};
+    \node[box] (server)  at (10,0) {Server\\[-0.3ex]\small (Node, Go, Python…)};
+    
+    % Arrows
+    \draw[<->, arrow] (client.east) -- (server.west) 
+          node[midway, above] {TCP 80/443 (ws/wss)} 
+          node[midway, below] {full-duplex data};
+\end{tikzpicture}
+\caption{WebSocket Client-Server Connection}
+\label{fig:websocket}
+\end{figure}
+Despite these advantages, WebSockets inherit limitations from their underlying transport layer, TCP. Because TCP enforces ordered, reliable delivery of data, packet loss on the network can cause head-of-line (HOL) blocking, where the delivery of later messages is delayed until missing packets are retransmitted. WebSockets also lack native multiplexing: all application data must share a single ordered stream, which can be suboptimal for applications needing parallel, independent data flows.
+
 \section{WebTransport Protocol}
 
 WebTransport is a modern protocol built over QUIC, designed to provide developers with flexible transport options for web applications. Unlike WebSockets, which rely on TCP and lack multiplexing, WebTransport leverages QUIC’s stream and datagram capabilities to support both reliable and unreliable data transfers within a single connection. WebTransport’s design enables developers to choose between streams for ordered, reliable delivery and datagrams for low-latency, loss-tolerant communication, making it suitable for diverse applications, including real-time gaming, audio streaming, and large file transfers.
 
-WebTransport’s architecture encapsulates data within QUIC packets, which are transmitted over UDP datagrams, IP packets, and Ethernet frames. This layered approach ensures compatibility with existing network infrastructure while providing advanced features like connection migration and frame coalescing. The framework’s APIs, including Streams and Datagram APIs, allow fine-grained control over data transmission, as will be explored in the implementation section with a focus on WebTransport Streams.
+WebTransport's architecture encapsulates data within QUIC packets, which are transmitted over UDP datagrams, IP packets, and Ethernet frames. This layered approach ensures compatibility with existing network infrastructure while providing advanced features like connection migration and frame coalescing. The protocol leverages QUIC's inherent capabilities to offer both reliable streams and unreliable datagrams within a single connection, allowing applications to use the most appropriate transport mechanism for different types of data - for instance, using streams for critical application state and datagrams for real-time position updates in gaming applications.
+
+The protocol establishes a session over HTTP/3 using a CONNECT request, after which the connection is upgraded to support WebTransport-specific communication patterns. This design ensures compatibility with existing HTTP/3 infrastructure while enabling the advanced features that modern web applications require.
 
 \subsection{WebTransport Streams}
 
 WebTransport Streams provide a reliable, ordered, and flow-controlled mechanism for data transfer, analogous to TCP but with QUIC’s performance benefits. Each stream operates independently within a QUIC connection, identified by a unique Stream ID (Quic streams in background), allowing concurrent data transfers without inter-stream HOL blocking. For example, a single QUIC packet can carry multiple STREAM frames, such as HTML data and image data, as demonstrated in the provided content.
 
-Streams are particularly suited for applications requiring guaranteed delivery, such as file downloads or structured data exchanges. However, intra-stream HOL blocking persists, as data within a single stream must be delivered in order, requiring retransmission of lost packets. Stream prioritization APIs enable developers to assign higher priority to critical streams - such as audio over video -, optimizing resource allocation. In the implementation section, WebTransport Streams will be selected as the protocol of choice due to their reliability and suitability for structured web applications.
+Streams are particularly suited for applications requiring guaranteed delivery, such as file downloads or structured data exchanges. However, intra-stream HOL blocking persists, as data within a single stream must be delivered in order, requiring retransmission of lost packets. Stream prioritization APIs enable developers to assign higher priority to critical streams - such as audio over video -, optimizing resource allocation. Due to their reliability and suitability for structured web applications, WebTransport Streams will be the focus of the implementation section of this dissertation.
 
 \subsection{WebTransport API}
 
 The WebTransport API is a modern JavaScript interface that enables web applications to communicate over QUIC, offering both reliable and unreliable transport options \cite{webtransport-mdn}. It is designed to support low-latency, multiplexed, and secure communication directly from the browser, making it ideal for use cases such as real-time gaming, video streaming, and collaborative applications.
 
-WebTransport exposes two main interfaces in javascript implementation.
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.8\textwidth]{SOA/webtransport_architecture.png}
+\caption{WebTransport Architecture}
+\label{fig:webtransport_architecture}
+\end{figure}
+
+Figure~\ref{fig:webtransport_architecture} illustrates a WebTransport session over HTTP/3, where a single UDP/443 connection is established between the client and server. After the HTTP/3 CONNECT request initiates the session through a QUIC handshake, the Streams API is used to create a reliable, ordered bidirectional stream for exchanging structured data such as JSON. In parallel, the Datagram API provides an unreliable, unordered channel for transmitting raw payloads, such as game state updates. Both communication types share the same QUIC connection and UDP socket, enabling efficient multiplexing of reliable and unreliable data within a single transport session.
+
+WebTransport exposes two main interfaces for developers: the Streams API for reliable communication and the Datagram API for unreliable, low-latency communication. Understanding the practical implementation of these interfaces is crucial for building effective real-time applications.
 
 \subsection{JavaScript Implementation}
 
@@ -304,9 +345,9 @@ await transport.sendDatagram(new TextEncoder().encode('x:10,y:20'));
 
 The sendDatagram() function transmits a raw byte payload over QUIC datagrams. Since datagrams are not guaranteed to arrive or preserve order, developers must handle any necessary retries or loss-tolerance logic in the application layer.
 
-\subsection{Custom Header Handling}
+\subsection{Custom Header Handling and Routing}
 
-Unlike HTTP-based protocols, WebTransport streams do not inherently support headers for identifying content type or routing information. To overcome this, developers must embed custom headers within the data payload itself.
+A key implementation challenge with WebTransport streams is the absence of built-in header support for content identification and routing. Unlike HTTP-based protocols that include headers to specify content type, routing information, and metadata, WebTransport streams require developers to embed this information within the data payload itself.
 
 For example, when sending audio or video data over a stream, a header might be prefixed to indicate the type:
 
@@ -317,10 +358,15 @@ const payload = new Uint8Array([...new TextEncoder().encode(header), ...binaryAu
 await writer.write(payload);
 \end{verbatim}
 
-On the receiving end, such as in a server or reverse proxy, the application parses this prefixed header to determine how to route or process the incoming stream—such as directing it to the appropriate microservice, such as audio handler vs. video handler. While this provides flexibility, it introduces additional complexity in parsing logic and requires robust message framing techniques. Since we are working with WebTransport Protocol we will be exploring this further in the implementation.
+On the receiving end, such as in a server or reverse proxy, the application parses this prefixed header to determine how to route or process the incoming stream—such as directing it to the appropriate microservice, such as audio handler vs. video handler. While this provides flexibility, it introduces additional complexity in parsing logic and requires robust message framing techniques. This challenge will be explored further in the implementation section of this dissertation.
+
+\subsection{Standardization Status and Future Outlook}
+
+WebTransport represents an emerging approach to internet communication using modern web technologies. The protocol is currently defined in RFC 9297 for its HTTP/3 variant, though it has not yet achieved full standardization status. Similarly, the WebTransport API used in web browsers remains a Working Draft by the W3C, indicating that the specification may undergo changes before final standardization.
+
+This evolving status presents both opportunities and challenges. While the protocol offers significant advantages over existing transport mechanisms, its ongoing development means that implementations may need to adapt to specification changes. This dynamic environment makes WebTransport an active area of research and innovation, particularly relevant for applications requiring low-latency, multiplexed communication.
 
 
-WebTransport is a new method to send data over the internet using modern web technologies. Its main version works over HTTP/3 and is explained in RFC 9297, but it is not yet an official standard. The WebTransport API used in web browsers is also still a Working Draft by the W3C, meaning it may change before becoming a standard. This opens an area if research for this protocol.
 \section{Wireshark}
 
 Wireshark is a widely used open-source network protocol analyzer that allows real-time capture and inspection of network traffic across various protocols and interfaces. By selecting a network interface, such as Ethernet, Wi-Fi, or loopback, users can monitor all incoming and outgoing packets exchanged between a client and server. This level of visibility makes it an essential tool for network diagnostics, debugging, and protocol analysis, especially in complex distributed environments. Wireshark provides a graphical interface that breaks down packet details across different OSI layers, offering timestamps, protocol headers, payloads, and flow sequences.
@@ -898,7 +944,7 @@ The three libraries—Aioquic \cite{aioquic-repo}, Quic-go \cite{quic-go-repo}, 
 \subsection{Angie Webserver}
 Angie is a high-performance, modular web server and reverse proxy developed as a fork of NGINX, with explicit focus on supporting emerging protocols and modern web traffic patterns \cite{angie-docs}. One of Angie's key differentiators is its support for HTTP/3 via native QUIC integration. By leveraging QUIC, Angie can handle low-latency, multiplexed connections over UDP, making it suitable for next-generation web workloads. Angie's modular architecture also facilitates extensibility for protocol enhancements and security mechanisms.
 
-In this study, Angie was deployed within a Kubernetes environment using the official container image (docker.angie.software/angie:latest). Configuration was managed via a Kubernetes ConfigMap, specifying server blocks, TLS settings, and QUIC-related directives. Angie successfully forwarded HTTP/3 traffic to backend services, validating its compatibility with QUIC at the connection level. However, its current implementation lacks the ability to perform stream-level inspection or manipulation within QUIC connections. This limits its support for finer-grained traffic control and observability across individual HTTP/3 streams which is feature critical for advanced routing, security policies, and telemetry in production environments.
+In this study, Angie was deployed within a Kubernetes environment using the official container image (docker.angie.software/angie:latest). Configuration was managed via a Kubernetes ConfigMap, specifying server blocks, TLS settings, and QUIC-related directives. Angie successfully forwarded HTTP/3 traffic to backend services, validating its compatibility with QUIC at the connection level. However, its current implementation lacks the ability to perform stream-level inspection or manipulation within QUIC connections. This limits its support for finer-grained traffic control and observability across individual HTTP/3 streams in production environments.
 
 Despite these limitations, Angie presents a stable and efficient reverse proxy solution for HTTP/3 traffic, suitable for experimental deployments and scenarios where basic QUIC forwarding suffices. Its adherence to evolving protocol standards and active development trajectory make it a compelling candidate for future-ready capable proxy.
 
