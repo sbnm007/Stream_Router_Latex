@@ -268,6 +268,8 @@ The evaluation method includes both measuring qualitative as well as quantitativ
 
 \section{Experimental Design}
 
+The evaluation of the WebTransport-aware routing system requires a comprehensive experimental framework that validates both functional correctness and performance characteristics under varying load conditions. This section outlines the systematic approach taken to assess the system's capabilities, including the methodology for metrics collection, the specific experimental configurations used to simulate real-world scenarios, and the rationale behind the chosen evaluation parameters. The experimental design ensures that the assessment covers critical aspects such as latency, throughput, fragmentation handling, and resource utilization across different client load scenarios.
+
 \subsection{Evaluation Methodology}
 
 The evaluation methodology employs a multi-dimensional metrics collection system designed to capture comprehensive performance characteristics across four critical parts. The Buffer Management Metrics provide insights into memory utilization patterns through `buffer\_size\_bytes`, which tracks real-time buffer consumption whereas `max\_buffer\_size\_bytes` records peak memory usage during sessions. Similarly, `buffer\_overflows` counts critical overflow events that could indicate system stress or inadequate resource allocation. 

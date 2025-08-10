@@ -9,6 +9,9 @@ In conjunction, we will look at Kubernetes \cite{kubernetes-docs}, which is one 
 
 
 \section{Networking Concepts}
+
+To understand the context of modern transport protocols like QUIC and WebTransport, it is essential to establish a foundation in core networking concepts. This section explores the fundamental building blocks of network communication, including the OSI model, packet structures, transport protocols, and their limitations. We examine how traditional protocols like TCP and UDP operate, their packet structures, and the challenges they face in modern networking environments. This foundational knowledge provides the context needed to understand why newer protocols like QUIC were developed and how they address the limitations of existing transport layer solutions.
+
 \subsection{OSI Model}
 The Open Systems Interconnection (OSI) Model \cite{kurose2017} essentially breaks down communication networks into 7 layers, viz., Physical, Data Link, Network, Transport, Session, Presentation, and Application Layer. Each of these layers handles specific tasks and abstracts its functionality from the other layers. The physical layer is responsible for moving raw bits wired using cables or wireless using links. The data link layer deals with the management of data and ensures it is error-free as it travels to other devices. The network layer is responsible for handling routing decisions and deals with the transmission and reception of messages. The session, presentation, and application layers deal with managing sessions, formatting data, and running and creating application-formatted data. It's where the application services run. With respect to our dissertation topic, QUIC is a transport layer protocol, whereas HTTP/3 and WebTransport are application layer protocols.
 
@@ -43,10 +46,10 @@ Packets are bundled units of data that is transmitted across network interfaces.
 \includegraphics[width=1\textwidth]{SOA/packets.png}
 \end{figure}
 
-\subsection{TCP (Transmission Control Protocol)}
+\subsection{Transmission Control Protocol}
 
 
-TCP is a connection oriented protcol which ensures data reliability with several mechanisms such as Acknowledgments (Acks), Retransmissions and in-order delivery \cite{kurose2017}. TCP fucntions by establishing a three-way handshake between client and server. The handshakes can be seen in the figure below. TCP requires roundtrups to initiate communication and when it works with higher level application protocols which require TLS, it impacts performance introducing latency particularly during the connection setup.
+Transmission Control Protocol (TCP) is a connection oriented protocol which ensures data reliability with several mechanisms such as Acknowledgments (Acks), Retransmissions and in-order delivery \cite{kurose2017}. TCP functions by establishing a three-way handshake between client and server. The handshakes can be seen in the figure below. TCP requires roundtrips to initiate communication and when it works with higher level application protocols which require TLS, it impacts performance introducing latency particularly during the connection setup.
 
 
 \begin{figure}[H]
@@ -61,7 +64,7 @@ TCP's design introduced challenges such as Head of Line Blocking. This is an iss
 TCP guarantees reliability making it ideal for application which require stringent ordered delivery. However, due to middle box configurations and TCPs reliance on outdated implementations restricts it from being highly performative.
 
 
-\subsubsection{Operating System (OS) Configurations for TCP}
+\subsubsection{Operating System Configurations for TCP}
 
 In linux machines, TCP's state is exposed  through the /proc/next/tcp path which is a virtual filesystem part of the procfs interface. This provides dynamically generated real time information about the active TCP connections which includes local addresses, remote addresses, port numbers, connection states and sequence number. Each entry persists for 60s  in the TIME\_WAIT state. (Protocol Compliance Requirement). The confgurations for handling concurrent tcp connections are monitored via parameters such as tcp\_max\_orphans, fs.file-max, and ulimit -n. Modification to these parameter increases the set limits to increase performance. 
 
@@ -78,7 +81,7 @@ TCP’s congestion control is managed by the sender with the congestion window (
 Middleboxes become bottlenecks because of its old implementation and inability to update widely adopted middleboxes. In context of tcp it means the network devices like firewalls, routers have tcp implementation at their kernel level, which becomes an issue when updates to the core implementation of protocol are required.
 
 
-\subsection{UDP}
+\subsection{User Datagram Protocol}
 
 User Datagram Protocol (UDP), is a connectionless protocol that focuses low latency than reliability \cite{kurose2017}. This is due to the fact that it lacks the built-in mechanisms for retransmission, ordering, or congestion control and hence makes it suitable for applications where speed is critical, and occasional packet loss is tolerated. Due to this it enables one-RTT communication which is ideal for Domain Name System (DNS) queries and real-time media streaming like online gaming, video streaming, etc. But, its lack of reliability, security, and congestion control makes it unsuitable for use in cases requiring guaranteed delivery.
 
@@ -141,7 +144,7 @@ For example, in above figure \cite{marx2021-http3} depicting QUIC Packet structu
 
 QUIC implements congestion control at the connection level, using a sender-managed congestion window (\texttt{cwnd}) that adjusts based on network conditions, similar to TCP. The sender initializes \texttt{cwnd} conservatively, such as 10 segments, and increases it exponentially during the slow-start phase or linearly during congestion avoidance, reducing it upon detecting packet loss. Flow control, managed by the receiver’s advertised window (\texttt{rwnd}), operates at the stream level, ensuring that senders do not overwhelm receiver buffers.
 
-Stream prioritization, supported by QUIC’s APIs, allows developers to assign higher priority to critical streams (such as audio over video), optimizing resource allocation. Frame coalescing further enhances efficiency by packing multiple frame types into a single UDP datagram, following the Maximum Transmission Unit (MTU).
+Stream prioritization, supported by QUIC’s APIs, allows developers to assign higher priority to critical streams such as audio over video, optimizing resource allocation. Frame coalescing further enhances efficiency by packing multiple frame types into a single UDP datagram, following the Maximum Transmission Unit (MTU).
 
 \subsubsection{Implementation Considerations}
 
@@ -258,6 +261,8 @@ WebTransport exposes two main interfaces in javascript implementation.
 
 \subsection{JavaScript Implementation}
 
+The WebTransport JavaScript API provides developers with two primary interfaces for communicating over QUIC connections: the Streams API for reliable, ordered communication and the Datagram API for unreliable, low-latency communication. Understanding these implementation details is crucial for building real-time applications that leverage WebTransport's capabilities. This subsection examines the practical JavaScript syntax and usage patterns for both communication modes, providing concrete examples of how to establish connections, send data, and handle responses in web applications.
+
 \subsubsection{Streams API – Reliable and Ordered Communication}
 
 The Streams API provides bidirectional and unidirectional streams that ensure reliable, ordered data transfer. This makes it suitable for applications requiring robust delivery, such as sending structured HTML or JSON between a client and server.
@@ -316,7 +321,7 @@ On the receiving end, such as in a server or reverse proxy, the application pars
 
 
 WebTransport is a new method to send data over the internet using modern web technologies. Its main version works over HTTP/3 and is explained in RFC 9297, but it is not yet an official standard. The WebTransport API used in web browsers is also still a Working Draft by the W3C, meaning it may change before becoming a standard. This opens an area if research for this protocol.
-\section{Wireshark (Packet Capturing Tool)}
+\section{Wireshark}
 
 Wireshark is a widely used open-source network protocol analyzer that allows real-time capture and inspection of network traffic across various protocols and interfaces. By selecting a network interface, such as Ethernet, Wi-Fi, or loopback, users can monitor all incoming and outgoing packets exchanged between a client and server. This level of visibility makes it an essential tool for network diagnostics, debugging, and protocol analysis, especially in complex distributed environments. Wireshark provides a graphical interface that breaks down packet details across different OSI layers, offering timestamps, protocol headers, payloads, and flow sequences.
 
@@ -328,14 +333,14 @@ One of Wireshark’s key features is its ability to decrypt encrypted traffic, i
 \begin{minipage}{0.9\textwidth}
   \centering
   \includegraphics[width=\textwidth]{SOA/ws_interfaces.png}
-  \caption{WebSocket Interfaces}
+  \caption{Network Interfaces}
   % \label{fig:ws_interfaces} % optional label for referencing
 \end{minipage}
 \hfill
 \begin{minipage}{0.9\textwidth}
   \centering
   \includegraphics[width=\textwidth]{SOA/ws_packet.png}
-  \caption{WebSocket Packets}
+  \caption{Network Packets}
   % \label{fig:ws_packet} % optional label for referencing
 \end{minipage}
 \end{figure}
@@ -346,12 +351,18 @@ One of Wireshark’s key features is its ability to decrypt encrypted traffic, i
 Containers are lightweight, portable, and consistent runtime environments that package an application along with all its dependencies, configuration files, and system libraries. Unlike traditional virtual machines, containers share the host operating system kernel, making them faster to start and more resource-efficient. Containers are created with a container image and all the information is bundled into an image and stored in a registry. This makes it ideal for deploying and scaling applications in a microservices architecture. In context for this dissertation, in order to deploy and run applications in Kubernetes, the prerequisite is having a Docker image ready.
 
 \section{Kubernetes Concepts}
+
+Kubernetes has emerged as the de facto standard for container orchestration, providing the infrastructure needed to deploy, scale, and manage containerized applications in production environments. For this dissertation's focus on WebTransport and QUIC-based streaming applications, understanding Kubernetes is essential as it provides the platform for deploying and managing the distributed microservices architecture. This section explores Kubernetes architecture, its core components, networking models, and the challenges and solutions for supporting modern protocols like HTTP/3 and WebTransport in containerized environments.
+
 \subsection{Kubernetes Architecture Overview}
 Kubernetes is built on a distributed architecture consisting of a Control Plane and multiple Worker Nodes. The Control Plane manages the cluster's desired state and handles decisions such as scheduling, scaling, and responding to cluster events. It includes components like the API Server, etcd - a consistent, distributed key-value store -, Scheduler, and Controller Manager. The Control Plane acts as the brain of the system, making high-level decisions and continuously monitoring and adjusting the cluster to match the user-defined configuration.
 
 The Worker Nodes run the actual containerized applications. Each node hosts essential services: the kubelet (which ensures containers are running properly as specified by the control plane), the container runtime, such as containerd, and the kube-proxy, which handles networking and service discovery. Kubernetes follows a declarative model, where users define the desired state, such as the number of replicas, image versions, etc., and the system uses control loops to match the actual state with the desired state, ensuring continuous compliance and fault tolerance. Various core components within these layers work together to ensure reliability, scalability, and self-healing of applications across the cluster.
 
 \subsection{Kubernetes Components}
+
+Kubernetes operates through a collection of interconnected components that work together to manage containerized applications across a cluster. These components are divided between the control plane, which manages the overall cluster state and makes decisions, and the worker nodes, which run the actual application workloads. Understanding these components is crucial for comprehending how Kubernetes schedules, manages, and maintains applications, especially when deploying modern protocols like HTTP/3 and QUIC-based services. This subsection examines each core component and its role in the Kubernetes ecosystem.
+
 \subsubsection{API Server}
 The Kubernetes API Server (kube-apiserver) serves as the central management interface, exposing the Kubernetes API for communication between cluster components and external clients. It processes RESTful requests, validates and stores object configurations, such as Pods, Services, in the etcd database, and coordinates cluster operation. Any operation in the cluster goes through the API Server.
 
@@ -759,7 +770,7 @@ A major improvement introduced by the Gateway API is its declarative configurati
 Nevertheless, annotations have not been entirely eliminated. They are still used in specific cases, particularly to enable experimental features or for backward compatibility with legacy tooling. For example, enabling QUIC support or selecting specific cipher suites via BoringSSL may still require annotations, depending on the controller. However, these annotations are supplementary rather than central, with the primary configuration expressed through first-class Kubernetes resources. This allows for richer multi-protocol configurations—such as defining a single gateway that supports both TCPRoute and UDPRoute—an arrangement difficult to express using traditional Ingress.
 
 
-\subsection{QUIC Library Implementations: Aioquic, Quic-go, and Quiche}
+\subsection{QUIC Library Implementations}
 The standardization of the QUIC protocol by the IETF has encouraged the development of several independent and open-source implementations to support integration across diverse ecosystems. These implementations serve not only as vehicles for QUIC protocol adoption but also as platforms for experimentation, optimization, and integration into real-world systems. Among the most prominent and actively maintained QUIC libraries are Aioquic, Quic-go, and Quiche, each developed in a distinct programming language and suited to particular performance and deployment goals. This section provides a detailed examination of these libraries, discussing their internal architecture, design philosophies, and practical usage in production or research environments.
 
 \subsubsection{Aioquic}
