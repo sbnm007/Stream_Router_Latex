@@ -191,9 +191,17 @@ The HyperText Transfer Protocol (HTTP) has undergone multiple changes since its 
 
 Introduced in 1991, HTTP/0.9 was the earliest version of the protocol, designed for the simple retrieval of HTML documents. It supported only the \texttt{GET} method, and responses consisted of raw HTML without headers. Lacking support for metadata, status codes, or content types, HTTP/0.9 was limited to extremely basic use cases. It operated over a single TCP connection and closed the connection immediately after the response, making it inefficient for handling multiple resources.
 
+\subsection{HTTP/1.0}
+
+HTTP/1.0, standardized in 1996 (RFC 1945), introduced significant improvements over HTTP/0.9. It added support for additional HTTP methods such as \texttt{POST} and \texttt{HEAD}, HTTP headers for metadata exchange, status codes to indicate request outcomes, and support for different content types beyond HTML. HTTP/1.0 also introduced the concept of request and response headers, enabling features like content negotiation, caching directives, and authentication mechanisms.
+
+However, HTTP/1.0 maintained the limitation of opening a new TCP connection for each request-response cycle, leading to significant overhead. Each resource on a web page required a separate connection, resulting in multiple TCP handshakes and increased latency. This approach proved inefficient as web pages became more complex, incorporating multiple images, stylesheets, and scripts, highlighting the need for connection reuse mechanisms.
+
 \subsection{HTTP/1.1}
 
-Standardized in 1997 (RFC 2068, later updated by RFC 2616 and RFC 7230 series), HTTP/1.1 allowed multiple requests and responses to be sent over a single TCP connection hence introducing persistent connections \cite{kurose2017}. It added  methods like \texttt{PUT}, \texttt{DELETE}, and \texttt{OPTIONS} and support for chunked transfers, caching mechanisms, virtual hosting. However, HTTP/1.1 had head-of-line blocking at the application layer which severely limit performance, particularly for resource-heavy web pages due to fundamentally being constrained by the serialized nature of TCP streams.
+Standardized in 1997 (RFC 2068, later updated by RFC 2616 and RFC 7230 series), HTTP/1.1 addressed the major limitation of HTTP/1.0 by introducing persistent connections, allowing multiple requests and responses to be sent over a single TCP connection \cite{kurose2017}. It added methods like \texttt{PUT}, \texttt{DELETE}, and \texttt{OPTIONS} and support for chunked transfer encoding, enhanced caching mechanisms, and virtual hosting through the \texttt{Host} header.
+
+Despite these improvements, HTTP/1.1 suffered from head-of-line blocking at the application layer, which severely limited performance, particularly for resource-heavy web pages. This limitation arose from the protocol being fundamentally constrained by the serialized nature of TCP streams, where requests had to be processed sequentially.
 
 \subsection{HTTP/2}
 
@@ -224,16 +232,19 @@ However, widespread adoption is still in progress. Challenges such as middlebox 
 \begin{table}[H]
 \centering
 \resizebox{\textwidth}{!}{%
-\begin{tabular}{|l|c|c|c|c|}
+\begin{tabular}{|l|c|c|c|c|c|}
 \hline
-Feature & HTTP/0.9 & HTTP/1.1 & HTTP/2 & HTTP/3 \\
+Feature & HTTP/0.9 & HTTP/1.0 & HTTP/1.1 & HTTP/2 & HTTP/3 \\
 \hline
-Transport Layer & TCP & TCP & TCP & QUIC (UDP-based) \\
-Multiplexing & No & No (pipelining only) & Yes (over TCP) & Yes (parallel over QUIC) \\
-Header Compression & No & No & Yes (HPACK) & Yes (QPACK) \\
-Persistent Connections & No & Yes & Yes & Yes \\
-HOL Blocking (Transport) & N/A & Yes & Yes & No \\
-Encryption & No & Optional (via TLS) & Optional (via TLS) & Yes (via QUIC) \\
+Transport Layer & TCP & TCP & TCP & TCP & QUIC (UDP-based) \\
+Methods Supported & GET only & GET, POST, HEAD & All standard methods & All standard methods & All standard methods \\
+Headers & No & Yes & Yes & Yes (compressed) & Yes (compressed) \\
+Status Codes & No & Yes & Yes & Yes & Yes \\
+Persistent Connections & No & No & Yes & Yes & Yes \\
+Multiplexing & No & No & No (pipelining only) & Yes (over TCP) & Yes (parallel over QUIC) \\
+Header Compression & No & No & No & Yes (HPACK) & Yes (QPACK) \\
+HOL Blocking (Transport) & N/A & N/A & Yes & Yes & No \\
+Encryption & No & No & Optional (via TLS) & Optional (via TLS) & Yes (via QUIC) \\
 \hline
 \end{tabular}%
 }
