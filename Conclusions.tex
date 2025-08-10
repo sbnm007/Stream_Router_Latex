@@ -70,7 +70,7 @@ The solution must be evaluated on a larger scale in terms of number of clients o
 At present, HTTP/3 connections end at the router to be processed on the application layer. Future studies may take into consideration pushing HTTP/3 streams all the way to the microservices and be able to communicate end-to-end with QUIC and low-latency.
 
 \subsection{Integration with CDN and Streaming Platforms}
-The proposed solution could be extended to forward processed streams (e.g., video, audio, chat) to a Content Delivery Network (CDN) or streaming server for broadcasting to end-users. This would complete the streaming use case and enable large-scale deployments.
+The proposed solution could be extended to forward processed streams, such as video, audio, chat, to a Content Delivery Network (CDN) or streaming server for broadcasting to end-users. This would complete the streaming use case and enable large-scale deployments.
 
 \subsection{Optimizing Fragmentation Handling}
 The fragmentation rate observed during experiments highlights the need for optimization. Future work could focus on improving packet handling algorithms at client side to reduce fragmentation to enhance throughput.

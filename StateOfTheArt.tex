@@ -17,7 +17,7 @@ The Open Systems Interconnection (OSI) Model \cite{kurose2017} essentially break
 Internet Protocol (IP) Frames, also called Packets, are a protocol structure that operates at the networking layer, which encapsulates the data. In its structure there are source and destination IP addresses, which are responsible for inter-network routing. An IP packet consists of a header that contains the IP address and protocol type, and a payload which contains the data from the underlying protocol that was used. IP packets are most critical for routing TCP, UDP, or QUIC transport data across the internet.
 
 \subsection{Network Interface}
-Network interfaces operate between the Physical and Data Link layers,. It acts as an interface between the hardware and software for network communication. Examples are Ethernet Network Interface Cards (NICs) (e.g., eth0) and wireless adapters (e.g., wlan0), which is responsible for converting raw bits to signals and for processing Ethernet frames. Any form of communication passes through a network interface. Heres a snapshot of some network interfaces on my device.
+Network interfaces operate between the Physical and Data Link layers,. It acts as an interface between the hardware and software for network communication. Examples are Ethernet Network Interface Cards (NICs) - such as eth0 - and wireless adapters - such as wlan0 -, which is responsible for converting raw bits to signals and for processing Ethernet frames. Any form of communication passes through a network interface. Heres a snapshot of some network interfaces on my device.
 Note that we have an Maximum Transmission Unit (MTU) parameter equal to 1500.
 
 \begin{figure}[h]
@@ -26,7 +26,7 @@ Note that we have an Maximum Transmission Unit (MTU) parameter equal to 1500.
 \includegraphics[width=1\textwidth]{SOA/NIC.png}
 \end{figure}
 
-\subsection{MTU (Maximum Transmission Unit)}
+\subsection{Maximum Transmission Unit}
 
 The MTU decides the maximum packet size that can be transmitted over a network without being subject to fragmentation (splitting of packets). In the images above it is seen that all the network interfaces have an MTU of 1500 Bytes. In order to work with larger sized data, modiications to the protocols MTU must be done to accomadate the changes
 
@@ -68,7 +68,7 @@ In linux machines, TCP's state is exposed  through the /proc/next/tcp path which
 
 \subsubsection{TCP Congestion and Flow Control}
 
-TCP’s congestion control is managed by the sender with the congestion window ('cwnd'), its initialized with a small value at the start (e.g., 10 segments) and adjusted based on network feedback from the server. During the slow start phase, 'cwnd' grows exponentially with reception of acknowledgments (ACKs), when a packet loss is detected via duplicate ACKs or timeouts, it triggers a reduction in 'cwnd' to mitigate network congestion with the help of flow control which is managed by the receiver’s advertised window ('rwnd'), it prevents buffer overflow by limiting the sender’s transmission rate.
+TCP’s congestion control is managed by the sender with the congestion window ('cwnd'), its initialized with a small value at the start, such as 10 segments, and adjusted based on network feedback from the server. During the slow start phase, 'cwnd' grows exponentially with reception of acknowledgments (ACKs), when a packet loss is detected via duplicate ACKs or timeouts, it triggers a reduction in 'cwnd' to mitigate network congestion with the help of flow control which is managed by the receiver’s advertised window ('rwnd'), it prevents buffer overflow by limiting the sender’s transmission rate.
 
 
 
@@ -124,7 +124,7 @@ QUIC operates within a layered architecture, encapsulated as follows:
     \item \textbf{Ethernet Frame}: Contains MAC addresses and control information for physical transmission.
     \item \textbf{IP Packet}: Encapsulates source and destination IP addresses for network routing.
     \item \textbf{UDP Datagram}: Provides a lightweight, connectionless transport layer for QUIC packets.
-    \item \textbf{QUIC Packet}: Includes a header (e.g., Short Header with Destination Connection ID and Packet Number) and an encrypted payload containing frames such as ACK, STREAM, and datagram frames.
+    \item \textbf{QUIC Packet}: Includes a header, such as Short Header with Destination Connection ID and Packet Number, and an encrypted payload containing frames such as ACK, STREAM, and datagram frames.
 \end{itemize}
 
 \begin{figure}[H]
@@ -139,9 +139,9 @@ For example, in above figure \cite{marx2021-http3} depicting QUIC Packet structu
 
 \subsubsection{Congestion and Flow Control}
 
-QUIC implements congestion control at the connection level, using a sender-managed congestion window (\texttt{cwnd}) that adjusts based on network conditions, similar to TCP. The sender initializes \texttt{cwnd} conservatively (e.g., 10 segments) and increases it exponentially during the slow-start phase or linearly during congestion avoidance, reducing it upon detecting packet loss. Flow control, managed by the receiver’s advertised window (\texttt{rwnd}), operates at the stream level, ensuring that senders do not overwhelm receiver buffers.
+QUIC implements congestion control at the connection level, using a sender-managed congestion window (\texttt{cwnd}) that adjusts based on network conditions, similar to TCP. The sender initializes \texttt{cwnd} conservatively, such as 10 segments, and increases it exponentially during the slow-start phase or linearly during congestion avoidance, reducing it upon detecting packet loss. Flow control, managed by the receiver’s advertised window (\texttt{rwnd}), operates at the stream level, ensuring that senders do not overwhelm receiver buffers.
 
-Stream prioritization, supported by QUIC’s APIs, allows developers to assign higher priority to critical streams (e.g., audio over video), optimizing resource allocation. Frame coalescing further enhances efficiency by packing multiple frame types into a single UDP datagram, following the Maximum Transmission Unit (MTU).
+Stream prioritization, supported by QUIC’s APIs, allows developers to assign higher priority to critical streams (such as audio over video), optimizing resource allocation. Frame coalescing further enhances efficiency by packing multiple frame types into a single UDP datagram, following the Maximum Transmission Unit (MTU).
 
 \subsubsection{Implementation Considerations}
 
@@ -204,9 +204,9 @@ HTTP/3 is an application-layer protocol built on top of QUIC, developed to overc
 
 HTTP/3 benefits directly from QUIC’s architecture, which provides independent, multiplexed streams within a single connection. This means that packet loss on one stream doesn’t block others, resolving the HOL blocking issue thats present in TCP. It allows more efficient and smoother data delivery, especially over unreliable or variable networks.
 
-QUIC also implements stream-level flow control, ensuring that each stream can progress without interfering with others. Additionally, it features advanced congestion control algorithms (e.g., BBR or CUBIC), similar to TCP, but designed to react faster and recover more effectively in poor network conditions. These mechanisms enable HTTP/3 to maintain low latency and high performance across diverse network environments.
+QUIC also implements stream-level flow control, ensuring that each stream can progress without interfering with others. Additionally, it features advanced congestion control algorithms, such as BBR or CUBIC, similar to TCP, but designed to react faster and recover more effectively in poor network conditions. These mechanisms enable HTTP/3 to maintain low latency and high performance across diverse network environments.
 
-HTTP/3, through QUIC, provides several key enhancements including faster connection establishment via reduced round trips, encryption by default using TLS 1.3, stream multiplexing without HOL blocking, connection migration in case of IP changes (e.g., switching from Wi-Fi to mobile data), and 0-RTT support allowing faster repeat connections.
+HTTP/3, through QUIC, provides several key enhancements including faster connection establishment via reduced round trips, encryption by default using TLS 1.3, stream multiplexing without HOL blocking, connection migration in case of IP changes, such as switching from Wi-Fi to mobile data, and 0-RTT support allowing faster repeat connections.
 
 
 \subsubsection{Implementation and Adoption}
@@ -248,7 +248,7 @@ WebTransport’s architecture encapsulates data within QUIC packets, which are t
 
 WebTransport Streams provide a reliable, ordered, and flow-controlled mechanism for data transfer, analogous to TCP but with QUIC’s performance benefits. Each stream operates independently within a QUIC connection, identified by a unique Stream ID (Quic streams in background), allowing concurrent data transfers without inter-stream HOL blocking. For example, a single QUIC packet can carry multiple STREAM frames, such as HTML data and image data, as demonstrated in the provided content.
 
-Streams are particularly suited for applications requiring guaranteed delivery, such as file downloads or structured data exchanges. However, intra-stream HOL blocking persists, as data within a single stream must be delivered in order, requiring retransmission of lost packets. Stream prioritization APIs enable developers to assign higher priority to critical streams (e.g., audio over video), optimizing resource allocation. In the implementation section, WebTransport Streams will be selected as the protocol of choice due to their reliability and suitability for structured web applications.
+Streams are particularly suited for applications requiring guaranteed delivery, such as file downloads or structured data exchanges. However, intra-stream HOL blocking persists, as data within a single stream must be delivered in order, requiring retransmission of lost packets. Stream prioritization APIs enable developers to assign higher priority to critical streams - such as audio over video -, optimizing resource allocation. In the implementation section, WebTransport Streams will be selected as the protocol of choice due to their reliability and suitability for structured web applications.
 
 \subsection{WebTransport API}
 
@@ -312,15 +312,15 @@ const payload = new Uint8Array([...new TextEncoder().encode(header), ...binaryAu
 await writer.write(payload);
 \end{verbatim}
 
-On the receiving end (e.g., in a server or reverse proxy), the application parses this prefixed header to determine how to route or process the incoming stream—such as directing it to the appropriate microservice (e.g., audio handler vs. video handler). While this provides flexibility, it introduces additional complexity in parsing logic and requires robust message framing techniques. Since we are working with WebTransport Protocol we will be exploring this further in the implementation.
+On the receiving end, such as in a server or reverse proxy, the application parses this prefixed header to determine how to route or process the incoming stream—such as directing it to the appropriate microservice, such as audio handler vs. video handler. While this provides flexibility, it introduces additional complexity in parsing logic and requires robust message framing techniques. Since we are working with WebTransport Protocol we will be exploring this further in the implementation.
 
 
 WebTransport is a new method to send data over the internet using modern web technologies. Its main version works over HTTP/3 and is explained in RFC 9297, but it is not yet an official standard. The WebTransport API used in web browsers is also still a Working Draft by the W3C, meaning it may change before becoming a standard. This opens an area if research for this protocol.
 \section{Wireshark (Packet Capturing Tool)}
 
-Wireshark is a widely used open-source network protocol analyzer that allows real-time capture and inspection of network traffic across various protocols and interfaces. By selecting a network interface (e.g., Ethernet, Wi-Fi, or loopback), users can monitor all incoming and outgoing packets exchanged between a client and server. This level of visibility makes it an essential tool for network diagnostics, debugging, and protocol analysis, especially in complex distributed environments. Wireshark provides a graphical interface that breaks down packet details across different OSI layers, offering timestamps, protocol headers, payloads, and flow sequences.
+Wireshark is a widely used open-source network protocol analyzer that allows real-time capture and inspection of network traffic across various protocols and interfaces. By selecting a network interface, such as Ethernet, Wi-Fi, or loopback, users can monitor all incoming and outgoing packets exchanged between a client and server. This level of visibility makes it an essential tool for network diagnostics, debugging, and protocol analysis, especially in complex distributed environments. Wireshark provides a graphical interface that breaks down packet details across different OSI layers, offering timestamps, protocol headers, payloads, and flow sequences.
 
-One of Wireshark’s key features is its ability to decrypt encrypted traffic, including packets protected by TLS, provided the necessary session keys (e.g., pre-master secrets) are available. This is particularly useful when analyzing secure protocols like HTTPS, HTTP/3, or QUIC, which rely heavily on TLS 1.3 for encryption. By decrypting the payload, Wireshark enables developers and analysts to troubleshoot issues related to application-layer behavior, latency, or data integrity, even within secure connections (See  section 5.4.3 in implementation). This powerful functionality makes Wireshark a critical tool for both performance tuning and ensuring secure, reliable communication across networks. We will leverage this tool for our implementation in order to understand what exactly is going on.
+One of Wireshark’s key features is its ability to decrypt encrypted traffic, including packets protected by TLS, provided the necessary session keys, such as pre-master secrets, are available. This is particularly useful when analyzing secure protocols like HTTPS, HTTP/3, or QUIC, which rely heavily on TLS 1.3 for encryption. By decrypting the payload, Wireshark enables developers and analysts to troubleshoot issues related to application-layer behavior, latency, or data integrity, even within secure connections (See  section 5.4.3 in implementation). This powerful functionality makes Wireshark a critical tool for both performance tuning and ensuring secure, reliable communication across networks. We will leverage this tool for our implementation in order to understand what exactly is going on.
 
 
 \begin{figure}[H]
@@ -347,13 +347,13 @@ Containers are lightweight, portable, and consistent runtime environments that p
 
 \section{Kubernetes Concepts}
 \subsection{Kubernetes Architecture Overview}
-Kubernetes is built on a distributed architecture consisting of a Control Plane and multiple Worker Nodes. The Control Plane manages the cluster's desired state and handles decisions such as scheduling, scaling, and responding to cluster events. It includes components like the API Server, etcd (a consistent, distributed key-value store), Scheduler, and Controller Manager. The Control Plane acts as the brain of the system, making high-level decisions and continuously monitoring and adjusting the cluster to match the user-defined configuration.
+Kubernetes is built on a distributed architecture consisting of a Control Plane and multiple Worker Nodes. The Control Plane manages the cluster's desired state and handles decisions such as scheduling, scaling, and responding to cluster events. It includes components like the API Server, etcd - a consistent, distributed key-value store -, Scheduler, and Controller Manager. The Control Plane acts as the brain of the system, making high-level decisions and continuously monitoring and adjusting the cluster to match the user-defined configuration.
 
-The Worker Nodes run the actual containerized applications. Each node hosts essential services: the kubelet (which ensures containers are running properly as specified by the control plane), the container runtime (e.g., containerd), and the kube-proxy, which handles networking and service discovery. Kubernetes follows a declarative model, where users define the desired state (like the number of replicas, image versions, etc.), and the system uses control loops to match the actual state with the desired state, ensuring continuous compliance and fault tolerance. Various core components within these layers work together to ensure reliability, scalability, and self-healing of applications across the cluster.
+The Worker Nodes run the actual containerized applications. Each node hosts essential services: the kubelet (which ensures containers are running properly as specified by the control plane), the container runtime, such as containerd, and the kube-proxy, which handles networking and service discovery. Kubernetes follows a declarative model, where users define the desired state, such as the number of replicas, image versions, etc., and the system uses control loops to match the actual state with the desired state, ensuring continuous compliance and fault tolerance. Various core components within these layers work together to ensure reliability, scalability, and self-healing of applications across the cluster.
 
 \subsection{Kubernetes Components}
 \subsubsection{API Server}
-The Kubernetes API Server (kube-apiserver) serves as the central management interface, exposing the Kubernetes API for communication between cluster components and external clients. It processes RESTful requests, validates and stores object configurations (e.g., Pods, Services) in the etcd database, and coordinates cluster operation. Any operation in the cluster goes through the API Server.
+The Kubernetes API Server (kube-apiserver) serves as the central management interface, exposing the Kubernetes API for communication between cluster components and external clients. It processes RESTful requests, validates and stores object configurations, such as Pods, Services, in the etcd database, and coordinates cluster operation. Any operation in the cluster goes through the API Server.
 
 \subsubsection{etcd}
 etcd is a distributed key-value store that maintains the cluster's configuration and state data, ensuring consistency and fault tolerance. It stores all Kubernetes objects, such as Pod definitions and Service configurations, providing a single source of truth for the control plane. The etcd allows to rollback to a previous cluster state.
@@ -362,28 +362,28 @@ etcd is a distributed key-value store that maintains the cluster's configuration
 The Controller Manager (kube-controller-manager) runs control loops that monitor the cluster's state and match it with the desired state defined in manifests. It includes controllers like the Node Controller (managing node lifecycle), ReplicaSet Controller (ensuring pod replicas), and Service Controller (integrating with load balancers). 
 
 \subsubsection{Scheduler}
-The Scheduler (kube-scheduler) assigns pods to nodes based on resource requirements, constraints, and policies (e.g., affinity, taints). It optimizes resource utilization by evaluating node capacity and workload demands. For streaming use cases, the Scheduler ensures that Pulsar brokers or services are placed on nodes with sufficient resources, enhancing performance.
+The Scheduler (kube-scheduler) assigns pods to nodes based on resource requirements, constraints, and policies, such as affinity, taints. It optimizes resource utilization by evaluating node capacity and workload demands. For streaming use cases, the Scheduler ensures that Pulsar brokers or services are placed on nodes with sufficient resources, enhancing performance.
 
 \subsubsection{Kubelet}
-The Kubelet, running on each worker node, manages pod lifecycle by communicating with the API Server and container runtime (e.g., containerd, CRI-O). It ensures containers are running, healthy, and configured per pod specifications. In HTTP/3 deployments, Kubelets manage containers hosting QUIC-based services, as seen in prior Angie configurations.
+The Kubelet, running on each worker node, manages pod lifecycle by communicating with the API Server and container runtime, such as containerd, CRI-O. It ensures containers are running, healthy, and configured per pod specifications. In HTTP/3 deployments, Kubelets manage containers hosting QUIC-based services, as seen in prior Angie configurations.
 
 \subsubsection{Kube-Proxy}
 Kube-Proxy, also running on worker nodes, manages network rules to enable communication between pods, services, and external clients. It supports modes like iptables and IPVS, facilitating load balancing for services. In this dissertation, MetalLB setup \cite{metallb-docs}, Kube-Proxy worked alongside MetalLB to expose HTTP/3 services via UDP passthrough.
 
 \subsubsection{Container Runtime}
-The container runtime (e.g., containerd, CRI-O) executes containers within pods, handling image pulling, container creation, and lifecycle management. It interfaces with the Kubelet to ensure containers adhere to pod specifications.
+The container runtime, such as containerd, CRI-O, executes containers within pods, handling image pulling, container creation, and lifecycle management. It interfaces with the Kubelet to ensure containers adhere to pod specifications.
 
 \subsubsection{Storage Provisioner}
 The Storage Provisioner dynamically allocates persistent storage to pods via PersistentVolumeClaims (PVCs) and PersistentVolumes (PVs) (see section 2.6.2.16). It interfaces with storage backends (ie volumes) to provision volumes based on StorageClass definitions. In this dissertation, for Apache Pulsar \cite{pulsar-helm-repo}, the Storage Provisioner ensures bookies have access to persistent storage for ledgers, supporting fault-tolerant data retention. Also configurations, involving MetalLB and Pulsar, relied on Storage Provisioners to manage storage for stateful workloads.
 
 \subsubsection{CoreDNS}
-CoreDNS, the default DNS service in Kubernetes, provides service discovery and name resolution within the cluster. Running as a pod, it resolves service names (e.g., http3-service.default.svc.cluster.local) to Pod IP addresses, enabling communication between pods and services. In HTTP/3 deployments, CoreDNS resolves backend service names for QUIC-based traffic, as seen in prior Angie and MetalLB setups. Its plugin-based architecture supports customization, such as integrating with external DNS providers.
+CoreDNS, the default DNS service in Kubernetes, provides service discovery and name resolution within the cluster. Running as a pod, it resolves service names, such as http3-service.default.svc.cluster.local, to Pod IP addresses, enabling communication between pods and services. In HTTP/3 deployments, CoreDNS resolves backend service names for QUIC-based traffic, as seen in prior Angie and MetalLB setups. Its plugin-based architecture supports customization, such as integrating with external DNS providers.
 
 \subsubsection{Namespaces}
 Namespaces are logical separation of resources into groups. For example, all of the core architecture components run in a separate namespace kube-system.
 
 \subsubsection{Pods}
-A Pod is the smallest and simplest unit in the Kubernetes object model. It represents a single instance of a running process in a cluster. A pod can contain one or more containers that share the same network namespace, IP address, and storage volumes. Containers in the same pod can communicate using localhost and share mounted storage, making them ideal for tightly coupled workloads (e.g., a main app container and a sidecar for logging). Pods are ephemeral—once deleted or crashed, they aren't recreated unless managed by a higher-level controller like a Deployment or StatefulSet.
+A Pod is the smallest and simplest unit in the Kubernetes object model. It represents a single instance of a running process in a cluster. A pod can contain one or more containers that share the same network namespace, IP address, and storage volumes. Containers in the same pod can communicate using localhost and share mounted storage, making them ideal for tightly coupled workloads, such as a main app container and a sidecar for logging. Pods are ephemeral—once deleted or crashed, they aren't recreated unless managed by a higher-level controller like a Deployment or StatefulSet.
 
 
 \begin{figure}[H]
@@ -395,7 +395,7 @@ A Pod is the smallest and simplest unit in the Kubernetes object model. It repre
 The above figure shows the pods present in the namespace kube-system
 
 \subsubsection{Deployments}
-A Deployment is a controller that manages the lifecycle of pods. It ensures the desired number of pod replicas are running and updates them in a controlled manner. With deployments, users can perform rolling updates, rollbacks, and maintain zero downtime during application changes. When you update a deployment (e.g., to use a new container image), Kubernetes gradually replaces the old pods with new ones, ensuring stability throughout the process. Deployments abstract the complexity of pod creation and replication, offering scalability and resilience.
+A Deployment is a controller that manages the lifecycle of pods. It ensures the desired number of pod replicas are running and updates them in a controlled manner. With deployments, users can perform rolling updates, rollbacks, and maintain zero downtime during application changes. When you update a deployment, such as to use a new container image, Kubernetes gradually replaces the old pods with new ones, ensuring stability throughout the process. Deployments abstract the complexity of pod creation and replication, offering scalability and resilience.
 
 \begin{figure}[H]
 \caption{Deployments}
@@ -430,20 +430,20 @@ ConfigMaps allows to externalize configuration from container images, separating
 Secrets are similar to ConfigMaps but designed specifically for sensitive data like passwords, tokens, SSH keys, or certificates. Secrets are base64-encoded (not encrypted by default) and can be mounted as volumes or exposed as environment variables. They help protect confidential data by controlling access through RBAC and reducing the risk of hardcoding secrets into application images or code.
 
 \subsubsection{Persistent Volumes (PVs) and Persistent Volume Claims (PVCs)}
-Kubernetes provides an abstraction layer for storage through Persistent Volumes (PVs) and Persistent Volume Claims (PVCs). A PV is a piece of storage (e.g., a disk in a cloud provider or an NFS mount) provisioned by an admin or dynamically via StorageClasses. A PVC is a user's request for storage with specific requirements (like size, access mode).
+Kubernetes provides an abstraction layer for storage through Persistent Volumes (PVs) and Persistent Volume Claims (PVCs). A PV is a piece of storage, such as a disk in a cloud provider or an NFS mount, provisioned by an admin or dynamically via StorageClasses. A PVC is a user's request for storage with specific requirements, such as size, access mode.
 
 This decouples storage provisioning from storage consumption, allowing pods to request storage without knowing the details of the underlying storage infrastructure. PVs can outlive pods and enable stateful applications like databases to persist data even when pods are recreated.
 
 \subsubsection{StatefulSets}
 StatefulSets are a Kubernetes controller used to manage stateful applications that require stable network identities and persistent storage. Unlike Deployments, which treat all pods as interchangeable, StatefulSets assign each pod a unique, stable identity (including name and network address) and ensure ordered, graceful deployment, scaling, and deletion.
 
-StatefulSets are ideal for workloads like databases (e.g., MongoDB, PostgreSQL), distributed systems (e.g., Kafka, ZooKeeper \cite{zookeeper-docs}), and any application that requires persistent storage tied to a specific pod. Each pod in a StatefulSet can be connected via a predictable DNS name and retains its associated PVC even when restarted.
+StatefulSets are ideal for workloads like databases, such as MongoDB, PostgreSQL, distributed systems, such as Kafka, ZooKeeper \cite{zookeeper-docs}, and any application that requires persistent storage tied to a specific pod. Each pod in a StatefulSet can be connected via a predictable DNS name and retains its associated PVC even when restarted.
 
 \subsection{Cloud Kubernetes Clusters}
 As Kubernetes adoption continues to rise across industries, cloud providers have responded with fully managed solutions to simplify deployment, scaling, and maintenance. Among the most prominent managed Kubernetes offerings are Amazon Elastic Kubernetes Service (EKS), Azure Kubernetes Service (AKS), and Google Kubernetes Engine (GKE). This section reviews these platforms, examining their design principles, cloud integration capabilities, and recent developments, with a focus on their maturity and positioning in the cloud-native ecosystem.
 
 \subsubsection{EKS}
-Amazon Elastic Kubernetes Service (EKS), introduced by AWS in 2018, offers a fully managed control plane that spans multiple Availability Zones to ensure high availability and resilience \cite{aws-docs}. It leverages the security and scalability of AWS infrastructure while supporting native Kubernetes tooling. EKS integrates tightly with AWS services such as Identity and Access Management (IAM) for access control, CloudWatch for observability, and Elastic Load Balancer (ELB) for load balancing. Recent additions like EKS Anywhere (for on-premises Kubernetes) and Bottlerocket (a container-optimized OS) reflect AWS's commitment to extending Kubernetes beyond cloud boundaries (AWS, 2025). However, EKS has historically been more complex to configure than its competitors, particularly due to its networking model, which tightly couples pods to Virtual Private Cloud (VPC) configurations (Smith & Alqahtani, 2024).
+Amazon Elastic Kubernetes Service (EKS), introduced by AWS in 2018, offers a fully managed control plane that spans multiple Availability Zones to ensure high availability and resilience \cite{aws-docs}. It leverages the security and scalability of AWS infrastructure while supporting native Kubernetes tooling. EKS integrates tightly with AWS services such as Identity and Access Management (IAM) for access control, CloudWatch for observability, and Elastic Load Balancer (ELB) for load balancing. Recent additions like EKS Anywhere - for on-premises Kubernetes - and Bottlerocket - a container-optimized Operating System (OS) - reflect AWS's commitment to extending Kubernetes beyond cloud boundaries (AWS, 2025). However, EKS has historically been more complex to configure than its competitors, particularly due to its networking model, which tightly couples pods to Virtual Private Cloud (VPC) configurations (Smith & Alqahtani, 2024).
 
 \subsubsection{AKS}
 Azure Kubernetes Service (AKS) represents Microsoft's managed Kubernetes platform and is particularly favored in enterprise environments with existing Azure investments \cite{azure-docs}. AKS manages the Kubernetes control plane free of cost and supports features like node auto-scaling, Azure Active Directory (AD) integration, and Virtual Node support via Azure Container Instances (ACI). As of 2025, Microsoft has enhanced its hybrid cloud capabilities through Azure Arc, enabling consistent Kubernetes management across cloud and on-prem infrastructure (Microsoft Docs, 2025). Though AKS is generally user-friendly and well-integrated with Azure DevOps and Visual Studio, it sometimes lags behind Google Kubernetes Engine (GKE) in offering the latest Kubernetes versions (Nguyen et al., 2023).
@@ -483,7 +483,7 @@ Instead, leaning towards a local Kubernetes solution would be much more benefici
 Due to the high cost of managed Kubernetes services, especially for smaller research or academic projects, local Kubernetes setups have become the preferred and practical alternative. Running clusters locally avoids the ongoing expenses of cloud infrastructure and gives developers full control over their environments. While exposing services or configuring networking can take more effort, local clusters help in understanding the inner workings of Kubernetes, making them valuable for hands-on learning and experimentation. Today, local clusters are widely used in educational, testing, and CI/CD environments, making them a state-of-the-art solution for development purposes. This section explores three widely adopted tools used for local Kubernetes deployments: Minikube, kind, and K3s.
 
 \subsubsection{Minikube}
-Minikube is one of the most widely used tools for spinning up a local Kubernetes cluster \cite{minikube-docs}. It supports running a single-node cluster inside a VM or container and works on Windows, macOS, and Linux. Minikube offers a rich set of built-in features like a Kubernetes dashboard, Ingress controllers, metrics-server, and support for multiple drivers (VirtualBox, Docker, etc.). It also allows testing across different Kubernetes versions. The documentation is well maintained, and the active user community makes troubleshooting and learning much easier. These characteristics make Minikube a solid choice for learners, developers, and small project environments.
+Minikube is one of the most widely used tools for spinning up a local Kubernetes cluster \cite{minikube-docs}. It supports running a single-node cluster inside a VM or container and works on Windows, macOS, and Linux. Minikube offers a rich set of built-in features like a Kubernetes dashboard, Ingress controllers, metrics-server, and support for multiple drivers, such as VirtualBox, Docker, etc. It also allows testing across different Kubernetes versions. The documentation is well maintained, and the active user community makes troubleshooting and learning much easier. These characteristics make Minikube a solid choice for learners, developers, and small project environments.
 
 \subsubsection{kind}
 Kind (Kubernetes IN Docker) is a fast and lightweight tool that runs Kubernetes clusters inside Docker containers \cite{kind-docs}. It's designed mainly for testing Kubernetes itself or running automated CI/CD pipelines. Kind is quick to start and destroy, making it ideal for scenarios where clusters need to be recreated often. However, it doesn't provide many built-in add-ons, and setting up networking features like Ingress or LoadBalancer typically needs more manual configuration. Kind is more suitable for automated testing than hands-on experimentation with services or full-featured deployments.
@@ -514,7 +514,7 @@ After comparing all three tools, it was decided to proceed with Minikube for thi
 ALl of the internal component communication in the local clusters are based in TCP and HTTP 1.1. Neither of the Kubernetes solutions support forwarding QUIC connections natively hence, alternative workarounds are needed.
 
 \subsection{Custom Resource Definitions (CRDs)}
-Custom Resource Definitions (CRDs) let users add new types of objects to Kubernetes, such as Gateway API (see section 2.6.10). These custom resources behave like built-in ones (e.g., Pods, Services), allowing teams to manage them using tools like kubectl. A CRD only defines the structure of a custom resource. To make it work, a separate program called a controller watches for changes and performs actions to match the desired state. Controllers are often built using tools like Kubebuilder or Operator SDK.
+Custom Resource Definitions (CRDs) let users add new types of objects to Kubernetes, such as Gateway API (see section 2.6.10). These custom resources behave like built-in ones, such as Pods, Services, allowing teams to manage them using tools like kubectl. A CRD only defines the structure of a custom resource. To make it work, a separate program called a controller watches for changes and performs actions to match the desired state. Controllers are often built using tools like Kubebuilder or Operator SDK.
 
 CRDs are widely used in tools like Prometheus Operator to automate tasks and manage infrastructure. While building controllers can be complex, they allow teams to create powerful, reusable, and automated workflows inside Kubernetes. In this project, CRDs help manage Apache Pulsar clusters automatically within Kubernetes, making deployment and scaling much easier.
 
@@ -637,7 +637,7 @@ One of the defining features of the Gateway API is its emphasis on supporting a 
 
 
 \subsubsection{Architecture and Core Components}
-The Gateway API introduces modular CRDs for fine-grained network traffic control in Kubernetes. GatewayClass defines types of gateways (e.g., Envoy, HAProxy), managed by admins, while Gateway instances configure ports, protocols, and TLS settings. Routing is handled by resources like HTTPRoute, TCPRoute, and UDPRoute, which forward traffic based on specific rules. Additional resources like ReferencePolicy support cross-namespace and security configurations. This design separates infrastructure and application concerns, improving scalability, security, and maintainability
+The Gateway API introduces modular CRDs for fine-grained network traffic control in Kubernetes. GatewayClass defines types of gateways, such as Envoy, HAProxy, managed by admins, while Gateway instances configure ports, protocols, and TLS settings. Routing is handled by resources like HTTPRoute, TCPRoute, and UDPRoute, which forward traffic based on specific rules. Additional resources like ReferencePolicy support cross-namespace and security configurations. This design separates infrastructure and application concerns, improving scalability, security, and maintainability
 
 
 \subsubsection{Gateway API Implementation for HTTP3 Support}
@@ -738,8 +738,8 @@ The observed packet flow is as follows:
 
 The Gateway API introduces a clean separation of responsibilities:
 \begin{itemize}
-  \item \textbf{Infrastructure providers} manage the GatewayClass resources (e.g., HAProxy, NGINX).
-  \item \textbf{Cluster administrators} handle gateway resources (TLS, listeners, ports).
+  \item \textbf{Infrastructure providers} manage the GatewayClass resources, such as HAProxy, NGINX.
+  \item \textbf{Cluster administrators} handle gateway resources, such as TLS, listeners, ports.
   \item \textbf{Application developers} define HTTPRoute or TCPRoute objects, configuring hostnames and routing rules.
 \end{itemize}
 
@@ -797,7 +797,7 @@ While Aioquic is not yet widely deployed in commercial production environments d
 Quic-go is a Go-based implementation of the QUIC protocol, maintained by the open-source community and initially developed by lucas-clemente, with substantial contributions from the Chromium networking team. Quic-go is designed for robustness and performance and has been widely integrated into real-world systems, including browsers and cloud-native applications.
 
 \paragraph{Architecture and Design}
-Quic-go leverages Go's lightweight concurrency model through goroutines and channels, making it highly scalable for managing thousands of concurrent QUIC sessions. The library adheres closely to the IETF QUIC specification and includes a complete implementation of HTTP/3, along with transport features such as packet pacing, congestion control (CUBIC, BBR), retransmissions, connection ID rotation, stateless resets, and forward error correction (FEC).
+Quic-go leverages Go's lightweight concurrency model through goroutines and channels, making it highly scalable for managing thousands of concurrent QUIC sessions. The library adheres closely to the IETF QUIC specification and includes a complete implementation of HTTP/3, along with transport features such as packet pacing, congestion control, such as CUBIC, BBR, retransmissions, connection ID rotation, stateless resets, and forward error correction.
 
 The internal architecture comprises multiple interacting subsystems: the connection package manages connection-level state, streams handles stream multiplexing, and ackhandler is responsible for packet acknowledgment and retransmission tracking. The integration of Go's cryptographic primitives allows native handling of TLS 1.3 through the crypto/tls library.
 
@@ -853,7 +853,7 @@ Quic-go is embedded in the Chromium browser stack, where it underpins HTTP/3 com
 Quiche is a QUIC and HTTP/3 implementation written in Rust by Cloudflare, focusing on performance, security, and integration into high-speed, production-grade systems. Quiche is used extensively within Cloudflare's global CDN infrastructure, where it handles millions of QUIC connections across edge locations.
 
 \paragraph{Architecture and Design}
-Quiche benefits from Rust's safety guarantees and zero-cost abstractions, which make it ideal for low-level network programming. The library is designed to operate as a "no-std" Rust crate, enabling usage in environments with limited standard library support (e.g., embedded systems or unikernels).
+Quiche benefits from Rust's safety guarantees and zero-cost abstractions, which make it ideal for low-level network programming. The library is designed to operate as a "no-std" Rust crate, enabling usage in environments with limited standard library support - such as embedded systems or unikernels.
 
 The architecture revolves around a stateful Connection object, which manages packet parsing, stream states, congestion control, and cryptographic negotiation. The library implements advanced features such as 0-RTT data resumption, QPACK header compression, packet coalescing, and stream prioritization. Quiche also offers tight integration with qlog tracing and supports ALPN negotiation for HTTP/3 and custom application protocols.
 

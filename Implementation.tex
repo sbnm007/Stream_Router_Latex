@@ -324,7 +324,7 @@ The client's user interface is created for clarity and functionality, offering a
     \item \textbf{System Logs Panel} (\texttt{.logs}): This acts as a console, displaying critical information about stream creation, packet transmission, and error events, which is essential for monitoring and debugging during development and testing.
 \end{itemize}
 
-The visual design adopts a dark theme using CSS, enhancing readability in low-light conditions and providing a modern aesthetic. Buttons are styled with distinct colors (\texttt{.btn-start}, \texttt{.btn-stop}, \texttt{.btn-toggle}) to clearly indicate their actions and current states (e.g., \texttt{disabled} styling).
+The visual design adopts a dark theme using CSS, enhancing readability in low-light conditions and providing a modern aesthetic. Buttons are styled with distinct colors (\texttt{.btn-start}, \texttt{.btn-stop}, \texttt{.btn-toggle}) to clearly indicate their actions and current states, such as \texttt{disabled} styling.
 
 % Describing WebTransport connection setup
 \subsection{WebTransport Connection Setup}
@@ -413,9 +413,9 @@ A custom packet format is implemented to encapsulate various data types for tran
 Each packet sent over a WebTransport stream adheres to a predefined format consisting of a \textbf{32-byte header} followed by a variable-length \textbf{payload}. The header provides essential metadata:
 
 \begin{itemize}
-    \item \textbf{\texttt{track\_id} (16 bytes)}: A string identifier (e.g., \texttt{'live\_video'}, \texttt{'test\_audio'}, \texttt{'live\_chat'}) used by the receiver to identify the packet's content within its stream, padded with null bytes if shorter than 16 bytes.
+    \item \textbf{\texttt{track\_id} (16 bytes)}: A string identifier, such as \texttt{'live\_video'}, \texttt{'test\_audio'}, \texttt{'live\_chat'}, used by the receiver to identify the packet's content within its stream, padded with null bytes if shorter than 16 bytes.
     \item \textbf{\texttt{payload\_length} (4 bytes)}: A 32-bit unsigned integer (big-endian) indicating the exact size of the payload in bytes, crucial for correct payload reading.
-    \item \textbf{\texttt{track\_type} (12 bytes)}: A string (e.g., \texttt{'video'}, \texttt{'audio'}, \texttt{'chat'}, \texttt{'file'}, \texttt{'screen'}) classifying the general type of data, padded to 12 bytes.
+    \item \textbf{\texttt{track\_type} (12 bytes)}: A string, such as \texttt{'video'}, \texttt{'audio'}, \texttt{'chat'}, \texttt{'file'}, \texttt{'screen'}, classifying the general type of data, padded to 12 bytes.
 \end{itemize}
 
 The \texttt{buildPacket()} function assembles this structure:
@@ -466,7 +466,7 @@ async loggedWrite(writer, packet, streamType) {
 }
 \end{lstlisting}
 
-This function logs every successful packet transmission, including its type and size, aiding in real-time monitoring. In case of failure (e.g., stream closed, network issue), an error is logged, ensuring communication issues are immediately visible. The \texttt{writer.releaseLock()} is used after sending test packets to allow re-acquisition for continuous streaming.
+This function logs every successful packet transmission, including its type and size, aiding in real-time monitoring. In case of failure, such as stream closed, network issue, an error is logged, ensuring communication issues are immediately visible. The \texttt{writer.releaseLock()} is used after sending test packets to allow re-acquisition for continuous streaming.
 
 % Describing video streaming implementation
 \subsection{Video Streaming Implementation}
@@ -1327,7 +1327,7 @@ For each request, the handler reads the raw data stream and metadata, such as \t
 
 % Describing service startup and configuration watcher
 \subsection{Service Startup and Configuration Watcher}
-This component launches an asynchronous HTTP server on a configurable port and exposes a dynamic route based on the service name (e.g., \texttt{/process\_video}). It continuously monitors the configuration file and reinitializes Pulsar connections if settings change, enabling dynamic adaptability without service restarts.
+This component launches an asynchronous HTTP server on a configurable port and exposes a dynamic route based on the service name, such as \texttt{/process\_video}. It continuously monitors the configuration file and reinitializes Pulsar connections if settings change, enabling dynamic adaptability without service restarts.
 
 \begin{lstlisting}
 import asyncio
@@ -1363,7 +1363,7 @@ This function starts the \texttt{aiohttp} server with a route specific to the se
 
 % Describing the complete microservice flow
 \subsection{Microservice Complete Flow}
-At startup, the microservice loads its configuration from a YAML file, defining settings such as the service name, port, Pulsar broker URL, and whether data should be forwarded to Apache Pulsar. Based on these settings, it establishes a Pulsar connection if enabled, allowing real-time data publication to a designated topic. The service exposes an HTTP endpoint named according to its role (e.g., \texttt{/process\_video}, \texttt{/process\_audio}, or \texttt{/process\_chat}). Upon receiving data through this endpoint, the HTTP handler processes the raw payload and associated metadata, such as a tracking ID, and optionally forwards it to Pulsar for downstream processing. Concurrently, the service monitors the configuration file for changes. If modifications are detected—such as updates to the broker URL or toggling data forwarding—it reloads the configuration and reinitializes the Pulsar connection without restarting. This design yields a reusable codebase capable of handling multiple streaming data types, ensuring flexibility, scalability, and operational robustness across deployments.
+At startup, the microservice loads its configuration from a YAML file, defining settings such as the service name, port, Pulsar broker URL, and whether data should be forwarded to Apache Pulsar. Based on these settings, it establishes a Pulsar connection if enabled, allowing real-time data publication to a designated topic. The service exposes an HTTP endpoint named according to its role, such as \texttt{/process\_video}, \texttt{/process\_audio}, or \texttt{/process\_chat}. Upon receiving data through this endpoint, the HTTP handler processes the raw payload and associated metadata, such as a tracking ID, and optionally forwards it to Pulsar for downstream processing. Concurrently, the service monitors the configuration file for changes. If modifications are detected—such as updates to the broker URL or toggling data forwarding—it reloads the configuration and reinitializes the Pulsar connection without restarting. This design yields a reusable codebase capable of handling multiple streaming data types, ensuring flexibility, scalability, and operational robustness across deployments.
 
 
 
@@ -1395,7 +1395,7 @@ docker push sbnm007/quic_router:0.0.0
 
 This process successfully created a container image for the router, ready for deployment to the Kubernetes cluster.
 
-The \texttt{router\_config.yaml} file, which defines routing rules for microservices, was deployed as a Kubernetes \texttt{ConfigMap}. This practice enhances extensibility by allowing dynamic addition or removal of microservices through endpoint configuration, avoiding hardcoded values and the need to rebuild the image. The \texttt{router.yaml} file encapsulates the complete Kubernetes configuration for the WebTransport Router, enabling dynamic routing of real-time data (e.g., video, audio, and chat) to respective microservices. It includes:
+The \texttt{router\_config.yaml} file, which defines routing rules for microservices, was deployed as a Kubernetes \texttt{ConfigMap}. This practice enhances extensibility by allowing dynamic addition or removal of microservices through endpoint configuration, avoiding hardcoded values and the need to rebuild the image. The \texttt{router.yaml} file encapsulates the complete Kubernetes configuration for the WebTransport Router, enabling dynamic routing of real-time data, such as video, audio, and chat, to respective microservices. It includes:
 
 \begin{itemize}
     \item A \texttt{ConfigMap} containing \texttt{router\_config.yaml}, supporting hot-reloading of routing rules such as endpoint, port, data format, and custom headers.

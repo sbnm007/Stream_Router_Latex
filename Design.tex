@@ -55,7 +55,7 @@ Experimental QUIC and HTTP/3 support have been added to Kubernetes Ingress Contr
 Moreover, proxies like Angie and HAProxy along with the ingress controller cannot inspect or manage individual QUIC streams (Sections 2.6.12, 2.6.13, 2.6.14). This limitation prevents features like stream-aware routing, prioritization, etc which are essential for low-latency applications such as real-time streaming or telemetry. As a result, building efficient, stream-aware systems in Kubernetes remains a challenge.
 
 \subsection{Challenges in Load Balancing for QUIC-Based Traffic}
-Unlike the traditional TCP-based protocols, QUIC uses UDP, so it becomes a challenge in Kubernetes environments where the traffic is heavily built on TCP traffic. The cloud service providers, such as Google Cloud, has already implemented support of QUIC in their load balancers with protocol downgrade, whereas on-premise load balancer implementations (such as MetalLB) do not have advanced features such as supporting stream-level routing, autoscaling, or failover (Section 2.6.15.4). MetalLB doesnt support quic proxying and treats HTTP as UDP packets. This creates a challenge in managing QUIC-based traffic in a cluster, which is on-prem, local or privately owned, thus encapsulating the scalability of HTTP/3 applications.
+Unlike the traditional TCP-based protocols, QUIC uses UDP, so it becomes a challenge in Kubernetes environments where the traffic is heavily built on TCP traffic. The cloud service providers, such as Google Cloud, has already implemented support of QUIC in their load balancers with protocol downgrade, whereas on-premise load balancer implementations, such as MetalLB, do not have advanced features such as supporting stream-level routing, autoscaling, or failover (Section 2.6.15.4). MetalLB doesnt support quic proxying and treats HTTP as UDP packets. This creates a challenge in managing QUIC-based traffic in a cluster, which is on-prem, local or privately owned, thus encapsulating the scalability of HTTP/3 applications.
 
 
 \subsection{Operational Complexity and Observability}
@@ -122,7 +122,7 @@ This section outlines the design and implementation goals for the proposed solut
 \subsubsection*{Implementation Goals}
 \begin{itemize}
     \item \textbf{Comprehensive Installation and Configuration}: Provide detailed guidance on installing and configuring the solution, including Kubernetes, Pulsar, and the custom proxy.
-    \item \textbf{Multiplexed Client Streams}: Develop client-side logic to create and manage live, multiplexed streams (e.g., audio, video, chat).
+    \item \textbf{Multiplexed Client Streams}: Develop client-side logic to create and manage live, multiplexed streams, such as audio, video, chat.
     \item \textbf{End-to-End Stream Demultiplexing and Routing}: Build software to demultiplex streams and route them to appropriate microservices based on header metadata.
     \item \textbf{YAML-Driven Configurations}: Enable YAML-driven ConfigMaps and Secrets for hot-reloadable, declarative routing and service configurations.
     \item \textbf{Protocol Translation and Analysis}: Use Wireshark to analyze and validate QUIC and HTTP/3 traffic, ensuring correct protocol translation and performance.
@@ -202,7 +202,7 @@ The packets are built with a infixed size of header (32 bytes) and variable leng
 \hline
 track\_id & 0 & 16 & Stream/track identifier \\
 payload\_len & 16 & 4 & Payload length (big-endian uint32) \\
-track\_type & 20 & 12 & Type of stream (e.g., video, chat) \\
+track\_type & 20 & 12 & Type of stream, such as video, chat \\
 \hline
 \end{tabular}
 \caption{Header Structure}
@@ -218,7 +218,7 @@ The \texttt{track\_id} field is a unique identifier of logical stream or source 
 The payload length after the header is given by the \texttt{payload\_len} field. This enables the receiver to allocate buffers accurately and read those exact number of payload bytes thus making the process more efficient and avoiding the reading of excess payload. The cross platform compatibility can be seen in working with the big-endian format, since it presents a standard network byte order. Payloads can be up to 4GB with a 4-byte field, which is sufficient for delivering live streams.
 
 \paragraph{track\_type (12 bytes)}
-The \texttt{track\_type} element holds the type of an information in the payload i.e. \texttt{video}, \texttt{audio}, or \texttt{chat}. It helps to direct packets to the correct microservice or handler and also enables extensibility by letting new types (e.g. ``subtitle'' or ``control'') without having to reshape the packet header. The 12-byte field stores descriptive type names and makes shorter types null-padded, and is consistent.
+The \texttt{track\_type} element holds the type of an information in the payload i.e. \texttt{video}, \texttt{audio}, or \texttt{chat}. It helps to direct packets to the correct microservice or handler and also enables extensibility by letting new types, such as "subtitle" or "control", without having to reshape the packet header. The 12-byte field stores descriptive type names and makes shorter types null-padded, and is consistent.
 
 \paragraph{Variable-Length Payload}
 The payload holds the actual, e.g. media frames or messages. This architecture enables a wide range of data types and sizes of data, such as small chat messages, and video frames. The \texttt{payload\_len} field is explicit and thereby allows the use of efficient fragmentation and reassembly routines because the receiver knows the number of bytes to receive accurately and it improves buffer handling.
@@ -306,7 +306,7 @@ This section presents the design of the routing and processing system for a WebT
 
 
 
-The system adopts a configuration-driven routing approach that allows for dynamic changes and streamlined service management. A central `ServiceConfig` structure defines essential parameters—such as host, port, and endpoint—for each microservice (e.g., audio, video, chat). These configurations are written in a YAML file that is loaded during runtime using a dedicated `ConfigManager` component in Kubernetes. This component enables hot-reloading, so the routing logic can be changed without restarting services. The routing system can therefore be extremely flexible and extensible and easily reconfigured to accommodate emerging needs or varying deployment environments during operation of the system.
+The system adopts a configuration-driven routing approach that allows for dynamic changes and streamlined service management. A central `ServiceConfig` structure defines essential parameters—such as host, port, and endpoint—for each microservice, such as audio, video, chat. These configurations are written in a YAML file that is loaded during runtime using a dedicated `ConfigManager` component in Kubernetes. This component enables hot-reloading, so the routing logic can be changed without restarting services. The routing system can therefore be extremely flexible and extensible and easily reconfigured to accommodate emerging needs or varying deployment environments during operation of the system.
 
 The architecture is intended to operate in Kubernetes and utilizes Kubernetes constructs such as ConfigMaps and Secrets to pass routing definitions and TLS credentials to the downstream code.As far as it is concerned, the Router Config is a central configuration file that encapsulates the rules of service routing and protocol behaviors. The router serves as a fast proxy, reading the configuration from this file and redirecting client search requests to the correct backend microservices. This decoupled and declarative model leads to routing behavior that is fully controlled entirely outside of the application's code. This approach aligns with CI/CD principles. The system supports dynamic scaling, safe updates, and operational agility, thereby enabling the router to be deployed in modern cloud-native operations that demand responsiveness and maintainability.
 
@@ -440,7 +440,7 @@ The figure shows the router forwarding packets to a proxy layer, which routes th
 
 \section{Pulsar Integration Design}
 
-After processing packets such as chat messages, audio streams, or video data, each microservice can optionally publish the output to an Apache Pulsar topic. This mechanism decouples real-time data processing from downstream distribution analytics, storage, or machine learning. The messages of each particular service are sent to a specifically-named topic (e.g., chat-topic, video-topic), which guarantees a separation of concerns as well as scalability.
+After processing packets such as chat messages, audio streams, or video data, each microservice can optionally publish the output to an Apache Pulsar topic. This mechanism decouples real-time data processing from downstream distribution analytics, storage, or machine learning. The messages of each particular service are sent to a specifically-named topic, such as chat-topic, video-topic, which guarantees a separation of concerns as well as scalability.
 
 This design enables easy integration with real-time data consumers, allows for per-service configuration of Pulsar usage and allows for flexibility in order to enable/disable publishing dynamically.
 
