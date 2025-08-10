@@ -1,0 +1,95 @@
+% \chapter{Conclusions \& Future Work}
+% \label{chap:Conclusions}
+
+
+
+
+
+
+% This chapter summarizes the work completed for this dissertation by providing a solution to the the problem stated in Chapter 3. This chapter follows by proposing what kind of mprovements could be made for our solution and what nearby areas could be explored providing  future work section
+
+
+% We successfully devised a solution to the problem and the solution was extensively created and deployed within kubernetes. Moreover an example was tested in the implementation which provided validity to the proposed approach. Our solution was extensively tested for the buffering component of our router. Metrics were evaluated and results were understood along with the limitations of our approach. 
+
+
+
+% chapter~\ref{chap:Evaluation}.
+
+
+% \section{Future Work}
+
+% This solution is a custom proof of concept solution proposed as an alternative to existing approaches and is requireed to be heavily tested with multiple clients across machines
+
+% HTTP3 was terminated at the proxy in order to process the data and send to microservices it would be interesting to see how forwarding h3 connections would look like and it can be explored.
+
+% The created solution could be extended by forwarding the processed messages ie chat, video and audio to a server/CDN to broadcast the streams. This would complete the streaming usecase. Also managing multiple users and processing could be done in Apache Pulsar.
+
+% The minikube cluster was limited by the MTU of 1500 Bytes for the network interface, a custom cluster which modified MTU could help with fragmentation  problem by increasing throughput.
+% Library extensibility was limited by Kubernetes and minikube local setup constraints. So a future work could be to set this up in a different environment with more resources. 
+
+% We are working on a streaming usecase where data is formatted into a custom packet format created by us in the application layer. This means our client only expects and accepts data in that format in order to proxy it to different services, so a more generalized approach could be seem.
+
+% Webservers are currently working on stream level development and it would be interesting to see how they would handle this stream level routing in future as currenty there exists no solution. Advanced ingress controllers are currently under development but there is no solution that works till now but its a good idea to keep an eye on web serversm ingress controllers and gateway apis
+
+% Media over quic is a new protocol currently in  draft and IETF is working on standardizing it and it would be interesting to explore that protocol which defines how media would be sent over quic.
+
+
+% The section may present a list of items that were beyond the scope of the dissertation.
+
+
+
+\chapter{Conclusions \& Future Work}
+\label{chap:Conclusions}
+
+This dissertation offers a new and practical way to handle HTTP/3 WebTransport streams in Kubernetes environments. It uses the QUIC protocol and WebTransport API, custom aioquic implementation of scalable routing system with apache pulsar and microservices integration to create a modular and live streaming application demonstrating the power of webtransport protocol over quic within kubernetes environment. The custom router, built with the \texttt{aioquic} library is built to manage connection termination and separate streams. It also allows addition of new microservices with update  of routing rules without stopping the service. This system successfully signifies the ability to see and control streams to help enable make smart routing and load balancing decisions. These features are important for real-time applications like video streaming, online gaming, and live chat.
+
+In addition to the router, the dissertation shows how different microservices can process video, audio, and chat streams. These services can send data in real-time to Apache Pulsar for further processing, analysis and storage. This setup supports fast and scalable data handling, which is needed for cloud applications. The system was tested under different client loads, and the results were evaluated show casing the efficiency and issues with the system. In summary, this work connects new web transport protocols with Kubernetes platforms. It provides a strong and flexible base for running real-time streaming applications at scale.
+
+\section{Key Findings}
+
+The evaluation demonstrates that the proposed system performs effectively across several critical dimensions. The router handles multiplexed WebTransport streams with low latency and high throughput, even under moderate fragmentation, confirming its suitability for real-time data handling. Buffer management is robust, preventing overflows and ensuring reliable packet reconstruction during high-load scenarios. Resource utilization across the router and microservices remains lightweight, enabling deployment in constrained environments such as Minikube.
+
+Scalability is another key strength, with the modular architecture supporting the seamless addition of new microservices or router replicas as demand increases. Finally, the configuration-driven approach allows for dynamic updates to routing rules and service endpoints at runtime, improving maintainability and reducing the need for service restarts. These findings validate the system’s design and highlight its potential for production use in modern cloud-native environments.
+
+These findings validate the effectiveness of the proposed solution and demonstrate its potential for adoption in production environments.
+
+\section{Limitations}
+
+Although this dissertation has managed to create an effective and working structure of HTTP/3 routing WebTransport streams within Kubernetes, few limitations are idenified which modifies the area of the applicability. It is worth mentioning that when some conditions of workload are observed, high fragmentation rates may degrade the performance which means that a subsequent optimization of packet handling and reconstruction is required. The use of Minikube in the experiment placed restrictions on the network interface MTU size constraining the systems ability to evaluate performance across higher packet sizes. Also, the router in the proposed solution terminates HTTP/3 connections and demultiplex the streams efficiently, but it does not forward HTTP/3 streams to backend microservice server, which hinders end-to-end protocol transparency and interoperability. Furthermore, the use of a custom application packet format in this application, can complicate the integration of the respective system with other conforming WebTransport-based systems. Besides, although multi-client was experimented, much more testing should be conducted in a larger, distributed setting to complete the picture of the resiliency and scaling of the system with different client machines.
+
+These limitations provide opportunities for further research and development.
+
+\section{Future Work}
+
+The solution presented in this dissertation serves as a proof of concept and can be implemented upon for future advancements, and there are several directions for future work. They are states as follows:
+
+\subsection{Scaling and Multi-Client Testing}
+The solution must be evaluated on a larger scale in terms of number of clients on distributed environments in order to assess its robustness and scalability to large-magnitude concurrent loads. This would help understand the usage of the system with a multi-node Kubernetes cluster where resource availability is increased.
+
+\subsection{HTTP/3 Stream Forwarding}
+At present, HTTP/3 connections end at the router to be processed on the application layer. Future studies may take into consideration pushing HTTP/3 streams all the way to the microservices and be able to communicate end-to-end with QUIC and low-latency.
+
+\subsection{Integration with CDN and Streaming Platforms}
+The proposed solution could be extended to forward processed streams (e.g., video, audio, chat) to a Content Delivery Network (CDN) or streaming server for broadcasting to end-users. This would complete the streaming use case and enable large-scale deployments.
+
+\subsection{Optimizing Fragmentation Handling}
+The fragmentation rate observed during experiments highlights the need for optimization. Future work could focus on improving packet handling algorithms at client side to reduce fragmentation to enhance throughput.
+
+\subsection{Exploration of Media over QUIC Protocol}
+The IETF is currently working on standardizing the Media over QUIC protocol. This draft defines how media streams are transmitted over QUIC. This protocol could be explored to enhance the solution's capabilities and align with emerging standards.
+
+\subsection{Generalizing the Packet Format}
+The current solution uses a custom packet format for stream identification and routing. Future work could focus on developing a more generalized approach that supports interoperability with other WebTransport implementations.
+
+\subsection{Advanced Ingress Controllers and Gateway APIs}
+The development of advanced ingress controllers and gateway APIs for Kubernetes could provide native support for HTTP/3 streams in future. Monitoring these developments is a good idea.
+
+% \section{Conclusion}
+
+% This dissertation demonstrates that it is both feasible and practical to integrate modern web protocols such as QUIC and WebTransport into Kubernetes environments, enabling stream-level routing and processing for real-time applications. The proposed solution addresses critical gaps in existing approaches, providing a robust foundation for deploying scalable and efficient streaming systems.
+
+% By leveraging the modular architecture, configuration-driven design, and seamless integration with Apache Pulsar, the solution achieves high performance, low latency, and operational flexibility. The findings from this research contribute to the growing body of knowledge on cloud-native networking and real-time web applications, paving the way for future advancements in the field.
+
+% While certain limitations remain, the proposed solution represents a significant step forward in bridging the gap between modern web protocols and container orchestration platforms. The future work outlined in this chapter provides a roadmap for further research and development, ensuring that the solution continues to evolve and adapt to emerging technologies and use cases.
+
+% In conclusion, this dissertation highlights the potential of WebTransport and QUIC protocols to revolutionize real-time applications, offering new possibilities for streaming, gaming, and interactive media in cloud-native environments. The integration of these protocols into Kubernetes represents a critical milestone in the journey toward scalable, efficient, and intelligent networking solutions for the modern web.

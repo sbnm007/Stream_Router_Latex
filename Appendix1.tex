@@ -1,0 +1,189 @@
+\chapter{List of Abbreviations}
+% Creating a standard table with key abbreviations
+\begin{table}[h!]
+\centering
+\begin{tabular}{p{2.5cm} p{12.5cm}}
+\textbf{Abbreviation} & \textbf{Full Form} \\ \hline
+API                  & Application Programming Interface \\
+ConfigMap           & Kubernetes ConfigMap resource \\
+CPU                 & Central Processing Unit \\
+CSV                 & Comma-Separated Values \\
+DNS                 & Domain Name System \\
+HTTP/3              & HyperText Transfer Protocol version 3 \\
+HTTPS               & HTTP over TLS \\
+IP                  & Internet Protocol \\
+JSON                & JavaScript Object Notation \\
+JPEG                & Joint Photographic Experts Group \\
+K8s                 & Kubernetes \\
+LB                  & Load Balancer \\
+Minikube            & Minimal single-node Kubernetes cluster \\
+Pulsar              & Apache Pulsar streaming platform \\
+QUIC                & Quick UDP Internet Connections \\
+Secret              & Kubernetes Secret resource \\
+Service             & Kubernetes Service resource \\
+TCP                 & Transmission Control Protocol \\
+TLS                 & Transport Layer Security \\
+UDP                 & User Datagram Protocol \\
+URL                 & Uniform Resource Locator \\
+WebTransport        & WebTransport API over HTTP/3 \\
+YAML                & YAML Ain’t Markup Language \\ \hline
+\end{tabular}
+\caption{List of Abbreviations}
+\label{tab:abbreviations}
+\end{table}
+
+\chapter{Protocol Layering Clarification}
+
+This appendix clarifies the relationship between \textbf{WebTransport} Streams, \textbf{HTTP/3} Streams, and \textbf{QUIC} Streams, as these terms are used interchangeably in parts of the dissertation.
+
+\begin{itemize}
+  \item \textbf{QUIC} (\emph{Quick UDP Internet Connections}) is a transport-layer protocol that operates over UDP and provides multiplexed, secure, low-latency streams.
+  \item \textbf{HTTP/3} is the application-layer protocol that defines how HTTP semantics are carried inside QUIC streams.
+  \item \textbf{WebTransport} is a web API that exposes both reliable (stream) and unreliable (datagram) communication channels to JavaScript clients. These channels are transported as HTTP/3 streams, which are themselves QUIC streams with additional HTTP/3 framing and control headers.
+\end{itemize}
+
+% \chapter{Writing Guidelines}
+
+% The intention of this document is two-fold: To provide a LaTeX template that facilitates the writing of a dissertation in LaTeX and to give guidance in writing a dissertation. As such, it attempts to serve two masters at once which is generally not a good idea. In order to address this, the content of this document has been split into the discussion of the structure of a dissertation document and the content that focusses on facilitating the writing of a dissertation using LaTeX.
+
+% The following section are meant as general guidelines for the writing of content for a dissertation and to provide guidance for the use of LaTeX features in order to avoid spending significant amount of time on tweaking LaTeX features to include content e.g. it is easy to waste significant amount of time on the inclusion of diagrams, especially for new users of LaTeX. The sections below are an attempt to avoid this waste of time and to allow students to concentrate on creating content instead of diving into LaTeX rabbitholes.
+
+% Read the tex sources i.e. the thesis.tex file and adapt the variables to suit your case. This file aslo includes some macros that facilitate the writing of the dissertation as LaTeX document.
+
+
+% \section{Style of English}
+% \label{sec:StyleOfEnglish}
+% %%TODO Revise text from 2000-version of project information
+
+% An impersonal style keeps the technical factors and ideas to the forefront of the discussion and you in the background. Try to be objective and quantitative in your conclusions. For example, it is not enough to say vaguely “because the compiler was unreliable the code produced was not adequate”. It would be much better to say “because the XYZ compiler produced code which ran 2-3 times slower than PQR (see Table x,y), a fast enough scheduler could not be written using this algorithm”. The second version gives the reader with definite statements and conveys a detailed understanding of the subject.
+
+% The following points are couple of {\it Do's \& Dont's} that I have noted down as feedback to reports over the years. The focus of this list is to encourage writers to be specific in writing reports - some of this is motivated by Strunk and White's The Elements of Style~(\cite{strunk}). Regarding reports that are submitted as part of a degree, examiners have to read and mark these reports - make it easy for these examiners to give good marks by following a number of simple points:
+
+% \begin{description}
+% 	\item [Titles:] No title should be immediately followed by another title i.e. whenever there are two titles without text between them, it is an indication that something is missing e.g. a chapter should always start with an introduction that explains what will be discussed in the chapter, what sections it includes and how these sections hang together. The title of a chapter should never be immediately followed by the title of the first section. 
+% 	\item [Figures:] Figures and graphs should have sufficient resolution; figures with low resolution appear blurred and require the reader to make assumptions.
+% 	\item  [Captions:] Use captions to describe a figure or table to the reader. The reader should not be forced to search through text to find a description of a figure or table. If you do not provide an interpretation of a figure or table, the reader will make up their own interpretation and given Murphy's law, will arrive at the polar opposite of what was intended by the figure or table.
+% 	\item [Backgrounds:] Backgrounds of figures and snapshots of screens should be light. Developers often use terminals or development environments with dark backgrounds. Snapshots of these terminals or developments are difficult to read when placed into a report. 
+% 	\item [Acronyms:] Acronyms should be introduced by the words they represent followed by the acronym in capitals enclosed in brackets e.g. "...TCP (Transmission Control Protocol)..." $\Rightarrow$  "... Transmission Control Protocol (TCP)..."
+% 	\item [Contractions:] I would generally suggest to avoid contractions such as "I'd", "They've", etc in reports. In some cases, they are ambiguous e.g. "I'd" $\Rightarrow$ "I would" or "I had" and can lead to misunderstandings.
+% 	\item [Avoid "do":] Be specific and use specific verbs to describe actions.
+% 	\item [Adverbs:] Adverbs and adjectives such as "easily", "generally", etc should be removed because they are unspecific e.g. the statement "can be easily implemented" depends very much on the developer. 
+% 	\item [Articles:] "A" and "an" are indefinite articles; they should be used if the subject is unknown. "The" is a definite article; which should be used if a specific subject is referred to. For example, the subject referred to in "allocated by the coordinator" is not determined at the time of writing and so the sentences should be changed to "allocated by a coordinator".
+% 	\item [Avoid brackets:] Brackets should not be used to hide sub-sentences, examples or alternatives. The problem with this use of brackets is that it is not specific and keeps the reader guessing the exact meaning that is intended. For example "... system entities (users, networks and services) through ..." should be replaced by "... system entities such as users, networks, and services through ...".
+% 	\item [Punctuation:] A statement is concluded with a period; a question with a question mark.  
+% 	\item [Spellcheckers:] Use a spellchecker!
+% \end{description}
+
+
+% \section{Figures} 
+% \label{app:figures}
+
+% The arranging of figures in Latex can lead to spending a lot of time on minor issues e.g. positioning a figure in a specific location on a page, fixing minor issues with an exact size of a figure, etc. Figure~\ref{fig:ImageOfAChick} provides a simple example that demonstrates the use of one of two macros for handling figures {\it includescalefigure}. Figures should always be readable without magnification when printed and the resolution of an image should be sufficient to provide a clear picture when printed.
+
+% \includescalefigure{fig:ImageOfAChick}{An Image of a chick}{A caption should describe the figure to the reader and explain to the reader the meaning of the figure. A Sub-clause of Murphy's Law: If the interpretation of a figure is left to a reader, the reader will misinterpret the figure, feel insulted or decide to ignore it. Do not leave it up to the reader!}{0.2}{image.png}
+
+% \begin{verbatim}
+%     \includescalefigure{fig:ImageOfAChick}{An Image of a chick}
+%     {A caption should describe the figure to the reader and 
+%     explain to the reader the meaning of the figure. A Sub-
+%     clause of Murphy's Law: If the interpretation of a figure
+%     is left to a reader, the reader will misinterpret the 
+%     figure, feel insulted or decide to ignore it. Do not 
+%     leave it up to the reader!}{0.2}{image.png}    
+% \end{verbatim}
+
+
+% \section{Code Snippets}
+
+% The following are two examples of how to incldue code snippets in your dissertation. - A dissertation or report should never include complete copies of an implementation; complete copies should be provided through online repositories or storage devices e.g. CDs, USB sticks, etc. 
+
+% The first example, listing~\ref{lst:snippet} demonstrates the use of macro that includes a code snippet from a file, snippet.py e.g. 
+
+% \begin{center}
+%     \begin{BVerbatim}
+
+% \includecode{Sample Code}{Lengthy caption explaining 
+% the code to the reader}{lst:snippet}{snippet.py}.
+
+%     \end{BVerbatim}
+% \end{center}
+
+% %% Short caption for the table of listings - long caption for the explanation for the reader
+% \includecode{Sample Code}{Lengthy caption explaining the code to the reader}{lst:snippet}{snippet.py}
+
+
+% The second example, listing~\ref{lst:snippet2}, uses the basic support for listings in LaTeX, where the code is directly included in the LaTeX file.
+
+% %% Short caption for the table of listings - long caption for the explanation for the reader
+% \begin{lstlisting}[caption={[Sample Code 2]Second Lengthy caption}, label={lst:snippet2}]
+% x = 1
+% if x == 1:
+%     # indented four spaces
+%     print("x is 1.")
+% \end{lstlisting}
+
+
+% %%
+% %%
+% \section{Tables}
+% \label{app:tables}
+
+% The table below, table~\ref{tab:SummaryProjects}, is a simplistic example of a table in LaTeX. When writing your dissertation, you can copy the content from the appendix file into the location in your document and adapt it, or use a tool to design your table.
+
+% \begin{table}[!ht]
+%     \begin{center}
+%         \begin{tabular}{|l|p{3cm}|p{3cm}|} 
+%         \hline
+%          \bf  & \bf Aspect \#1  & \bf Aspect \#2 \\
+%           \hline
+%         Row 1 & Item 1 & Item 2 \\
+%         Row 2 & Item 1 & Item 2 \\
+%         Row 3 & Item 1 & Item 2 \\
+%         Row 4 & Item 1 & Item 2 \\
+%         \hline
+%         \end{tabular} 
+%     \end{center}     
+%     \caption[Comparison of Closely-Related Projects]{Caption that explains the table to the reader}	
+%     \label{tab:SummaryProjects}
+%     \end{table}
+
+% The table~\ref{tab:ScaleSummaryProjects} demonstrates adapting the size of tables to the width of a document.
+
+%     \begin{table}[!ht]
+%         \begin{center}
+%             \begin{tabularx}{0.9\textwidth}{ 
+%                 | >{\raggedright\arraybackslash}p{2cm} 
+%                 | >{\centering\arraybackslash}X 
+%                 | >{\centering\arraybackslash}X | }
+%                 \hline
+%              \bf  & \bf Aspect \#1  & \bf Aspect \#2  \\
+%              \hline
+%             Row 1 & Item 1 & Item 2 \\
+%             Row 2 & Item 1 & Item 2 \\
+%             Row 3 & Item 1 & Item 2 \\
+%             Row 4 & Item 1 & Item 2 \\
+%             \hline
+%             \end{tabularx} 
+%         \end{center}     
+%         \caption[Salable Table]{Example of a scalable table with the first column being fixed to a very specific size and the two following columns splitting the remaining width between them and these columns being centered while the first column is aligned to the rigth.}	
+%         \label{tab:ScaleSummaryProjects}
+%         \end{table}
+    
+
+% \begin{table}[!ht]
+% \begin{center}
+% 	\begin{tabular}{|l|l|c|} 
+% 	\hline
+%  	\bf Parameter 1  & \bf Parameter 2  & \bf Measurements  \\
+%   	\hline
+% 	$Option_1,Option_2$ & $P_{11}, P_{12}$ & ? \\
+% 	$Option_2,Option_3$ & $P_{21}, P_{22}, P_{33}$ &  ? \\
+% 	$Option_3$ & $P_{31}, P_{32}$ & ? \\
+% 	$Option_4$ & $P_{41}, P_{42}, P_{43}$ & ? \\
+% 	\hline
+% 	\end{tabular}
+% \end{center}
+% \caption[Variables of the experiment]{Evaluation Matrix for experiment that lists the possible parameters that can be varied and the measurements that could be made for each experiment}	
+% \label{tab:experimentsetup}
+% \end{table}
+
