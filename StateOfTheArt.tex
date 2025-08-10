@@ -416,18 +416,18 @@ One of Wireshark’s key features is its ability to decrypt encrypted traffic, i
   \centering
   \includegraphics[width=\textwidth]{SOA/ws_interfaces.png}
   \caption{Network Interfaces}
-  % \label{fig:ws_interfaces} % optional label for referencing
+  \label{fig:ws_interfaces} % optional label for referencing
 \end{minipage}
 \hfill
 \begin{minipage}{0.9\textwidth}
   \centering
-  \includegraphics[width=\textwidth]{SOA/ws_packet.png}
+  \includegraphics[width=\textwidth]{SOA/ws_packets.png}
   \caption{Network Packets}
-  % \label{fig:ws_packet} % optional label for referencing
+  \label{fig:ws_packets} % optional label for referencing
 \end{minipage}
 \end{figure}
 
-
+Figure~\ref{fig:ws_interfaces} and Figure~\ref{fig:ws_packets} above illustrates the Wireshark interface, showing the available network interfaces and captured packets. The left side displays the list of interfaces, while the right side shows the captured packets in the loopback interface with detailed information about each packet's protocol, source, destination, and other relevant metadata.
 
 \section{Containers}
 Containers are lightweight, portable, and consistent runtime environments that package an application along with all its dependencies, configuration files, and system libraries. Unlike traditional virtual machines, containers share the host operating system kernel, making them faster to start and more resource-efficient. Containers are created with a container image and all the information is bundled into an image and stored in a registry. This makes it ideal for deploying and scaling applications in a microservices architecture. In context for this dissertation, in order to deploy and run applications in Kubernetes, the prerequisite is having a Docker image ready.
@@ -444,6 +444,15 @@ The Worker Nodes run the actual containerized applications. Each node hosts esse
 \subsection{Kubernetes Components}
 
 Kubernetes operates through a collection of interconnected components that work together to manage containerized applications across a cluster. These components are divided between the control plane, which manages the overall cluster state and makes decisions, and the worker nodes, which run the actual application workloads. Understanding these components is crucial for comprehending how Kubernetes schedules, manages, and maintains applications, especially when deploying modern protocols like HTTP/3 and QUIC-based services. This subsection examines each core component and its role in the Kubernetes ecosystem.
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=1\textwidth]{SOA/kubernetes-cluster-architecture.png}
+\caption{Kubernetes Architecture and Components}
+\label{fig:k8s-architecture}
+\end{figure}
+
+Figure~\ref{fig:k8s-architecture} illustrates the complete Kubernetes architecture, showing the separation between the control plane components such as API Server, etcd, Scheduler, Controller Manager and the worker node components such as kubelet, kube-proxy, container runtime. This architecture follows the official Kubernetes design principles as documented in the Kubernetes documentation \cite{kubernetes-docs}.
 
 \subsubsection{API Server}
 The Kubernetes API Server (kube-apiserver) serves as the central management interface, exposing the Kubernetes API for communication between cluster components and external clients. It processes RESTful requests, validates and stores object configurations, such as Pods, Services, in the etcd database, and coordinates cluster operation. Any operation in the cluster goes through the API Server.
@@ -577,6 +586,15 @@ Due to the high cost of managed Kubernetes services, especially for smaller rese
 
 \subsubsection{Minikube}
 Minikube is one of the most widely used tools for spinning up a local Kubernetes cluster \cite{minikube-docs}. It supports running a single-node cluster inside a VM or container and works on Windows, macOS, and Linux. Minikube offers a rich set of built-in features like a Kubernetes dashboard, Ingress controllers, metrics-server, and support for multiple drivers, such as VirtualBox, Docker, etc. It also allows testing across different Kubernetes versions. The documentation is well maintained, and the active user community makes troubleshooting and learning much easier. These characteristics make Minikube a solid choice for learners, developers, and small project environments.
+
+\begin{figure}[H]
+\caption{Design of Minikube}
+\centering
+\includegraphics[width=0.9\textwidth]{Design/minikube_driver.png}
+\end{figure}
+\label{fig:minikube_driver}
+Fig~\ref{fig:minikube_driver} illustrates the architecture of Minikube, showing how it can run on various drivers like Docker, VirtualBox, or KVM. It highlights the flexibility of Minikube in adapting to different environments while providing a consistent Kubernetes experience.
+Minikube's architecture allows it to run on various drivers like Docker, VirtualBox, or KVM, providing flexibility in how the local cluster is set up. It can also be easily integrated with other tools like Helm for package management and kubectl for command-line operations. Minikube is particularly useful for learning Kubernetes concepts, testing applications, and developing locally before deploying to production clusters.
 
 \subsubsection{kind}
 Kind (Kubernetes IN Docker) is a fast and lightweight tool that runs Kubernetes clusters inside Docker containers \cite{kind-docs}. It's designed mainly for testing Kubernetes itself or running automated CI/CD pipelines. Kind is quick to start and destroy, making it ideal for scenarios where clusters need to be recreated often. However, it doesn't provide many built-in add-ons, and setting up networking features like Ingress or LoadBalancer typically needs more manual configuration. Kind is more suitable for automated testing than hands-on experimentation with services or full-featured deployments.

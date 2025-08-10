@@ -263,15 +263,9 @@ Docker runs on linux kernel whereas minikube when using docker driver would crea
 \subsubsection{Shared Networking}
 The services which would run inside Minikube cluster can be accessed with other applications in the system.
 
-The following figure depitcs the architecture of minikube what would be constructed. It is to note that with docker as the driver, minikube runs on a single container within the docker interface which allows it to use interact with the host linux machine through the network interface. For simplicity and avoidance of configurational challenges, the solution is running on one node where the data plane and control plane both runs on a single node. This is not a production setup but ensures a clear development setup.
+With Docker as the driver, Minikube runs on a single container within the Docker interface, which allows it to interact with the host Linux machine through the network interface. For simplicity and avoidance of configurational challenges, the solution runs on one node where both the data plane and control plane operate on a single node. This is not a production setup but ensures a clear development environment.
 
-\begin{figure}[H]
-\caption{Design of Minikube}
-\centering
-\includegraphics[width=0.9\textwidth]{Design/minikube_driver.png}
-\end{figure}
-
-Each component specified in the state of the art for kubernetes will be deployed into this cluster via minikube. This design ensures seamless deployment, developer friendly and extensible scalable design.
+Each component specified in the state of the art for Kubernetes will be deployed into this cluster via Minikube. This design ensures seamless deployment, developer-friendly configuration, and an extensible, scalable architecture.
 
 
 \subsection{Network Exposure Design in Kubernetes}
