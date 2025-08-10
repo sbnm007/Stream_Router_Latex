@@ -10,15 +10,15 @@ In conjunction, we will look at Kubernetes \cite{kubernetes-docs}, which is one 
 
 \section{Networking Concepts}
 \subsection{OSI Model}
-The OSI Model (Open Systems Interconnection) \cite{kurose2017} essentially breaks down communication networks into 7 layers, viz., Physical, Data Link, Network, Transport, Session, Presentation, and Application Layer. Each of these layers handles specific tasks and abstracts its functionality from the other layers. The physical layer is responsible for moving raw bits wired using cables or wireless using links. The data link layer deals with the management of data and ensures it is error-free as it travels to other devices. The network layer is responsible for handling routing decisions and deals with the transmission and reception of messages. The session, presentation, and application layers deal with managing sessions, formatting data, and running and creating application-formatted data. It's where the application services run. With respect to our dissertation topic, QUIC is a transport layer protocol, whereas HTTP/3 and WebTransport are application layer protocols.
+The Open Systems Interconnection (OSI) Model \cite{kurose2017} essentially breaks down communication networks into 7 layers, viz., Physical, Data Link, Network, Transport, Session, Presentation, and Application Layer. Each of these layers handles specific tasks and abstracts its functionality from the other layers. The physical layer is responsible for moving raw bits wired using cables or wireless using links. The data link layer deals with the management of data and ensures it is error-free as it travels to other devices. The network layer is responsible for handling routing decisions and deals with the transmission and reception of messages. The session, presentation, and application layers deal with managing sessions, formatting data, and running and creating application-formatted data. It's where the application services run. With respect to our dissertation topic, QUIC is a transport layer protocol, whereas HTTP/3 and WebTransport are application layer protocols.
 
 
 \subsection{IP Frames}
-IP Frames, also called Packets, are a protocol structure that operates at the networking layer, which encapsulates the data. In its structure there are source and destination IP addresses, which are responsible for inter-network routing. An IP packet consists of a header (containing the IP address and protocol type) and a payload, which contains the data from the underlying protocol that was used. IP packets are most critical for routing TCP, UDP, or QUIC transport data across the internet.
+Internet Protocol (IP) Frames, also called Packets, are a protocol structure that operates at the networking layer, which encapsulates the data. In its structure there are source and destination IP addresses, which are responsible for inter-network routing. An IP packet consists of a header that contains the IP address and protocol type, and a payload which contains the data from the underlying protocol that was used. IP packets are most critical for routing TCP, UDP, or QUIC transport data across the internet.
 
 \subsection{Network Interface}
-Network interfaces operate between the Physical and Data Link layers,. It acts as an interface between the hardware and software for network communication. Examples are Ethernet NICs (e.g., eth0) and wireless adapters (e.g., wlan0), which is responsible for converting raw bits to signals and for processing Ethernet frames. Any form of communication passes through a network interface. Heres a snapshot of some network interfaces on my device.
-Note that we have an MTU parameter equal to 1500.
+Network interfaces operate between the Physical and Data Link layers,. It acts as an interface between the hardware and software for network communication. Examples are Ethernet Network Interface Cards (NICs) (e.g., eth0) and wireless adapters (e.g., wlan0), which is responsible for converting raw bits to signals and for processing Ethernet frames. Any form of communication passes through a network interface. Heres a snapshot of some network interfaces on my device.
+Note that we have an Maximum Transmission Unit (MTU) parameter equal to 1500.
 
 \begin{figure}[h]
 \caption{Network Interfaces}
@@ -35,7 +35,7 @@ The MTU decides the maximum packet size that can be transmitted over a network w
 
 \subsection{Packets}
 
-Packets are bundled units of data that is transmitted across network interfaces. It is idenitified as: bits  for Physical Layer, frames for Data Link, packets for Network, and segments or datagrams for Transport Layer. For Http3 App data, Ethernet frames encapsulates IP packets which contain UDP datagrams which carry QUIC Pakcets with multiple streams enabling multiplexing.
+Packets are bundled units of data that is transmitted across network interfaces. It is idenitified as: bits  for Physical Layer, frames for Data Link, packets for Network, and segments or datagrams for Transport Layer. For HTTP/3 App data, Ethernet frames encapsulates IP packets which contain UDP datagrams which carry QUIC Pakcets with multiple streams enabling multiplexing.
 
 \begin{figure}[H]
 \caption{Flow of Packets}
@@ -46,7 +46,7 @@ Packets are bundled units of data that is transmitted across network interfaces.
 \subsection{TCP (Transmission Control Protocol)}
 
 
-TCP is a connection oriented protcol which ensures data reliability with several mechanisms such as Acks, Retransmissions and in-order delivery \cite{kurose2017}. TCP fucntions by establishing a three-way handshake between client and server. The handshakes can be seen in the figure below. TCP requires roundtrups to initiate communication and when it works with higher level application protocols which require TLS, it impacts performance introducing latency particularly during the connection setup.
+TCP is a connection oriented protcol which ensures data reliability with several mechanisms such as Acknowledgments (Acks), Retransmissions and in-order delivery \cite{kurose2017}. TCP fucntions by establishing a three-way handshake between client and server. The handshakes can be seen in the figure below. TCP requires roundtrups to initiate communication and when it works with higher level application protocols which require TLS, it impacts performance introducing latency particularly during the connection setup.
 
 
 \begin{figure}[H]
@@ -61,7 +61,7 @@ TCP's design introduced challenges such as Head of Line Blocking. This is an iss
 TCP guarantees reliability making it ideal for application which require stringent ordered delivery. However, due to middle box configurations and TCPs reliance on outdated implementations restricts it from being highly performative.
 
 
-\subsubsection{OS Configurations for TCP}
+\subsubsection{Operating System (OS) Configurations for TCP}
 
 In linux machines, TCP's state is exposed  through the /proc/next/tcp path which is a virtual filesystem part of the procfs interface. This provides dynamically generated real time information about the active TCP connections which includes local addresses, remote addresses, port numbers, connection states and sequence number. Each entry persists for 60s  in the TIME\_WAIT state. (Protocol Compliance Requirement). The confgurations for handling concurrent tcp connections are monitored via parameters such as tcp\_max\_orphans, fs.file-max, and ulimit -n. Modification to these parameter increases the set limits to increase performance. 
 
@@ -80,14 +80,14 @@ Middleboxes become bottlenecks because of its old implementation and inability t
 
 \subsection{UDP}
 
-UDP, is a connectionless protocol that focuses low latency than reliability \cite{kurose2017}. This is due to the fact that it lacks the built-in mechanisms for retransmission, ordering, or congestion control and hence makes it suitable for applications where speed is critical, and occasional packet loss is tolerated. Due to this it enables one-RTT communication which is ideal for DNS queries and real-time media streaming like online gaming, video streaming, etc. But, its lack of reliability, security, and congestion control makes it unsuitable for use in cases requiring guaranteed delivery.
+User Datagram Protocol (UDP), is a connectionless protocol that focuses low latency than reliability \cite{kurose2017}. This is due to the fact that it lacks the built-in mechanisms for retransmission, ordering, or congestion control and hence makes it suitable for applications where speed is critical, and occasional packet loss is tolerated. Due to this it enables one-RTT communication which is ideal for Domain Name System (DNS) queries and real-time media streaming like online gaming, video streaming, etc. But, its lack of reliability, security, and congestion control makes it unsuitable for use in cases requiring guaranteed delivery.
 
 \subsubsection{UDP Packet Structure}
 
 UDP operates within a simple packet structure encapsulated as follows:
 
 \begin{itemize}
-    \item \textbf{Ethernet Frame}: It contains the MAC addresses(source and destination) and the control information for physical transmission.
+    \item \textbf{Ethernet Frame}: It contains the Media Access Control (MAC) addresses(source and destination) and the control information for physical transmission.
     \item \textbf{IP Packet}: It encapsulates the source and destination IP addresses for routing.
     \item \textbf{UDP Datagram}: It includes the source and destination ports and the data(payload), with no reliability or ordering mechanisms.
 \end{itemize}
@@ -100,7 +100,7 @@ UDP, lacking connection state, does not maintain persistent entries in /proc(the
 
 The foundational transport protocols of the internet, TCP and UDP, face well-documented limitations that hinder performance, scalability, and adaptability in modern network environments.
 
-TCP suffers mostly from \textit{head-of-line (HOL) blocking}, a condition where the loss of a single packet holds up the delivery of all subsequent packets in that stream, thereby leading to increase in latency and degrading user experience. In addition to internal limitations, TCP evolution is impeded by \textit{middlebox ossification} see section 2.1.7. Network devices like legacy firewalls and NAT gateways often do not recognize newer TCP features, such as, TCP Fast Open or Multipath TCP, blocking their deployment and stalling protocol innovation across the wider internet.
+TCP suffers mostly from \textit{head-of-line (HOL) blocking}, a condition where the loss of a single packet holds up the delivery of all subsequent packets in that stream, thereby leading to increase in latency and degrading user experience. In addition to internal limitations, TCP evolution is impeded by \textit{middlebox ossification} see section 2.1.7. Network devices like legacy firewalls and Network Address Translation (NAT) gateways often do not recognize newer TCP features, such as, TCP Fast Open or Multipath TCP, blocking their deployment and stalling protocol innovation across the wider internet.
 
 On the other hand, UDP, designed as a minimal transport layer, circumvents many of TCP’s internal restrictions but introduces its own set of challenges. It lacks built-in mechanisms for reliability, packet ordering, and congestion control, forcing developers to reimplement these features at the application level. Moreover, UDP is susceptible to \textit{NAT rebinding}, where NAT devices revoke and reassign port mappings after idle periods, leading to unexpected connection drops.
 
@@ -110,7 +110,7 @@ These protocol-level and systemic challenges have led to the development of next
 
 \subsection{QUIC Protocol}
 
-The QUIC (Quick UDP Internet Connections) protocol represents an innovative transport layer solution designed to address the limitations of traditional TCP-based protocols, particularly in the context of modern web applications. Unlike TCP, which relies on sequential TLS and TCP handshakes, QUIC leverages UDP to combine transport and security handshakes into a single step, significantly reducing connection setup latency.
+The Quick UDP Internet Connections (QUIC) protocol represents an innovative transport layer solution designed to address the limitations of traditional TCP-based protocols, particularly in the context of modern web applications. Unlike TCP, which relies on sequential TLS and TCP handshakes, QUIC leverages UDP to combine transport and security handshakes into a single step, significantly reducing connection setup latency.
 
 QUIC’s design aims to provide TCP-like reliability, stream multiplexing, and congestion control (see section 2.1.10.2) while mitigating TCP’s drawbacks, such as HOL blocking and the need for kernel-level updates across network infrastructure. By operating over UDP, QUIC enables deployment without requiring modifications to middleboxes like firewalls or routers, which often struggle with outdated TCP configurations. 
 
@@ -410,7 +410,7 @@ Kubernetes Services provide a stable networking endpoint to access pods, abstrac
 \begin{itemize}
     \item ClusterIP (default): Exposes the service on a cluster-internal IP. It is only accessible within the cluster, useful for internal communication between services.
     \item NodePort: Exposes the service on a static port (between 30000–32767) on each worker node's IP. Traffic to this port is forwarded to the underlying pods. It makes services accessible outside the cluster using  NodeIP:NodePort.
-    \item LoadBalancer: Provisions an external load balancer (in cloud environments like AWS or GCP) and routes traffic from the external world to the service. It provides a single external IP and balances traffic to the appropriate pods.
+    \item LoadBalancer: Provisions an external load balancer (in cloud environments like Amazon Web Services (AWS) or Google Cloud Platform (GCP)) and routes traffic from the external world to the service. It provides a single external IP and balances traffic to the appropriate pods.
 \end{itemize}
 
 \begin{figure}[H]
@@ -443,10 +443,10 @@ StatefulSets are ideal for workloads like databases (e.g., MongoDB, PostgreSQL),
 As Kubernetes adoption continues to rise across industries, cloud providers have responded with fully managed solutions to simplify deployment, scaling, and maintenance. Among the most prominent managed Kubernetes offerings are Amazon Elastic Kubernetes Service (EKS), Azure Kubernetes Service (AKS), and Google Kubernetes Engine (GKE). This section reviews these platforms, examining their design principles, cloud integration capabilities, and recent developments, with a focus on their maturity and positioning in the cloud-native ecosystem.
 
 \subsubsection{EKS}
-Amazon EKS, introduced by AWS in 2018, offers a fully managed control plane that spans multiple Availability Zones to ensure high availability and resilience \cite{aws-docs}. It leverages the security and scalability of AWS infrastructure while supporting native Kubernetes tooling. EKS integrates tightly with AWS services such as IAM for access control, CloudWatch for observability, and ELB for load balancing. Recent additions like EKS Anywhere (for on-premises Kubernetes) and Bottlerocket (a container-optimized OS) reflect AWS's commitment to extending Kubernetes beyond cloud boundaries (AWS, 2025). However, EKS has historically been more complex to configure than its competitors, particularly due to its networking model, which tightly couples pods to VPC configurations (Smith & Alqahtani, 2024).
+Amazon Elastic Kubernetes Service (EKS), introduced by AWS in 2018, offers a fully managed control plane that spans multiple Availability Zones to ensure high availability and resilience \cite{aws-docs}. It leverages the security and scalability of AWS infrastructure while supporting native Kubernetes tooling. EKS integrates tightly with AWS services such as Identity and Access Management (IAM) for access control, CloudWatch for observability, and Elastic Load Balancer (ELB) for load balancing. Recent additions like EKS Anywhere (for on-premises Kubernetes) and Bottlerocket (a container-optimized OS) reflect AWS's commitment to extending Kubernetes beyond cloud boundaries (AWS, 2025). However, EKS has historically been more complex to configure than its competitors, particularly due to its networking model, which tightly couples pods to Virtual Private Cloud (VPC) configurations (Smith & Alqahtani, 2024).
 
 \subsubsection{AKS}
-Azure Kubernetes Service (AKS) represents Microsoft's managed Kubernetes platform and is particularly favored in enterprise environments with existing Azure investments \cite{azure-docs}. AKS manages the Kubernetes control plane free of cost and supports features like node auto-scaling, Azure Active Directory (AD) integration, and Virtual Node support via Azure Container Instances (ACI). As of 2025, Microsoft has enhanced its hybrid cloud capabilities through Azure Arc, enabling consistent Kubernetes management across cloud and on-prem infrastructure (Microsoft Docs, 2025). Though AKS is generally user-friendly and well-integrated with Azure DevOps and Visual Studio, it sometimes lags behind GKE in offering the latest Kubernetes versions (Nguyen et al., 2023).
+Azure Kubernetes Service (AKS) represents Microsoft's managed Kubernetes platform and is particularly favored in enterprise environments with existing Azure investments \cite{azure-docs}. AKS manages the Kubernetes control plane free of cost and supports features like node auto-scaling, Azure Active Directory (AD) integration, and Virtual Node support via Azure Container Instances (ACI). As of 2025, Microsoft has enhanced its hybrid cloud capabilities through Azure Arc, enabling consistent Kubernetes management across cloud and on-prem infrastructure (Microsoft Docs, 2025). Though AKS is generally user-friendly and well-integrated with Azure DevOps and Visual Studio, it sometimes lags behind Google Kubernetes Engine (GKE) in offering the latest Kubernetes versions (Nguyen et al., 2023).
 
 \subsubsection{GKE}
 GKE is widely considered the most advanced managed Kubernetes platform, owing to Google's foundational role in developing Kubernetes \cite{gcp-docs}. It offers both a Standard mode (with user-managed nodes) and Autopilot mode, where Google handles infrastructure completely. GKE is known for its rapid adoption of upstream Kubernetes versions, robust autoscaling features (including vertical and horizontal autoscaling), and seamless integration with Istio, Anthos, and Cloud Monitoring. In 2025, GKE continues to be the platform of choice for use cases involving AI/ML and latency-sensitive applications, driven by GCP's high-performance network and container runtime optimizations. However, the opinionated nature of GKE Autopilot may limit low-level customization, which could be a drawback for advanced users.
