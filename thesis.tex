@@ -138,12 +138,14 @@
 \lstset{% setup parameters for listings:
   columns=fullflexible,  % avoids addition of extra spaces in unexpected positions
   keepspaces,            % causes alignment-by-spaces to be preserved in output
-  basicstyle=\ttfamily,  % With fullflexible and keepspaces, using a non-monospaced
+  basicstyle=\small\ttfamily,  % With fullflexible and keepspaces, using a non-monospaced
                          % font causes incorrect alignment of plain-text columns.
   backgroundcolor=\color{gray!10},
   keywordstyle=\bfseries\color{black!90},
   showstringspaces=false,
-  numbers=none, numberstyle=\small\sffamily, stepnumber=0, numbersep=5pt}
+  numbers=none, numberstyle=\small\sffamily, stepnumber=0, numbersep=5pt,
+  breaklines=true,
+  frame=single}
 
 %%------------------------------------------------
 %% Listing macros

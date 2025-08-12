@@ -11,14 +11,14 @@ The host operating system of the machine at work is Linux Mint, a Debian-based o
 % Providing installation commands
 To install Minikube, execute the following commands in the terminal:
 
-\begin{lstlisting}
+\begin{lstlisting}[breaklines=true,basicstyle=\small\ttfamily,frame=single]
 curl -LO https://github.com/kubernetes/minikube/releases/latest/download/minikube-linux-amd64
 sudo install minikube-linux-amd64 /usr/local/bin/minikube && rm minikube-linux-amd64
 \end{lstlisting}
 
 After executing these commands, Minikube is successfully installed and operational. To verify the installation, start Minikube with the following command:
 
-\begin{lstlisting}
+\begin{lstlisting}[breaklines=true,basicstyle=\small\ttfamily,frame=single]
 minikube start
 \end{lstlisting}
 
@@ -38,7 +38,7 @@ Since Minikube operates within a container, it leverages the host operating syst
 % Describing kubectl installation
 It is important to note that \texttt{kubectl}, the Kubernetes command-line tool, is automatically installed alongside Minikube. To confirm the presence of pods in the cluster, you can run the following command:
 
-\begin{lstlisting}
+\begin{lstlisting}[breaklines=true,basicstyle=\small\ttfamily,frame=single]
 kubectl get pods
 \end{lstlisting}
 
@@ -112,20 +112,20 @@ MetalLB is a load balancer that operates at Layer 4, which is essential for expo
 % Listing available addons
 To view the available addons provided by Minikube, execute the following command:
 
-\begin{lstlisting}
+\begin{lstlisting}[breaklines=true,basicstyle=\small\ttfamily,frame=single]
 minikube addons list
 \end{lstlisting}
 
 This command lists several addons provided by Minikube. Among them, you will notice that MetalLB is disabled by default. To enable it, run the following command:
 
-\begin{lstlisting}
+\begin{lstlisting}[breaklines=true,basicstyle=\small\ttfamily,frame=single]
 minikube addons enable metallb
 \end{lstlisting}
 
 % Explaining IP range configuration for MetalLB
 MetalLB requires a range of IP addresses to assign to services created within the Kubernetes cluster. When the Minikube container was started with the \texttt{minikube start} command, it created a network interface in the background for the Minikube (i.e., Kubernetes) environment. This can be verified by running:
 
-\begin{lstlisting}
+\begin{lstlisting}[breaklines=true,basicstyle=\small\ttfamily,frame=single]
 ifconfig
 \end{lstlisting}
 
@@ -134,13 +134,13 @@ For the machine in use, the network interface was named \texttt{br-5d..} and had
 % Configuring MetalLB IP range
 To configure MetalLB with an appropriate IP address range, execute the following command:
 
-\begin{lstlisting}
+\begin{lstlisting}[breaklines=true,basicstyle=\small\ttfamily,frame=single]
 minikube addons configure metallb
 \end{lstlisting}
 
 During the configuration process, you will be prompted to enter the start and end IP addresses for the load balancer:
 
-\begin{lstlisting}
+\begin{lstlisting}[breaklines=true,basicstyle=\small\ttfamily,frame=single]
 Enter Load Balancer Start IP: 192.168.49.1
 Enter Load Balancer End IP: 192.168.49.250
 \end{lstlisting}
@@ -159,20 +159,20 @@ This configures the MetalLB load balancer to operate within the specified IP add
 
 
 % Describing Wireshark installation and usage process
-\section{Wireshark for Network Traffic Capture}
+\section{Network Traffic Capture}
 To install Wireshark and successfully capture network traffic on a Linux Mint system, the following process was followed.
 
 % Providing installation commands
 \subsection{Run Commands}
 First, install Wireshark using the package manager by executing the following command:
 
-\begin{lstlisting}
+\begin{lstlisting}[breaklines=true,basicstyle=\small\ttfamily,frame=single]
 sudo apt install wireshark
 \end{lstlisting}
 
 Once installed, launch Wireshark by running:
 
-\begin{lstlisting}
+\begin{lstlisting}[breaklines=true,basicstyle=\small\ttfamily,frame=single]
 wireshark
 \end{lstlisting}
 
@@ -187,13 +187,13 @@ To log the TLS session keys for the Chromium client, the following steps were pe
 % Providing commands for logging TLS keys
 First, terminate any running instances of Chromium by executing the following command:
 
-\begin{lstlisting}
+\begin{lstlisting}[breaklines=true,basicstyle=\small\ttfamily,frame=single]
 pkill chromium
 \end{lstlisting}
 
 Next, set the environment variable to specify the path for the TLS key log file:
 
-\begin{lstlisting}
+\begin{lstlisting}[breaklines=true,basicstyle=\small\ttfamily,frame=single]
 export SSLKEYLOGFILE=$HOME/premaster-secret/sslkeylogfile.log
 \end{lstlisting}
 
@@ -258,13 +258,13 @@ This process enables Wireshark to decrypt the TLS-encrypted data captured over t
 
 
 % Describing certificate management process
-\section{Certificate Management Process}
+\section{Certificate Management}
 To enable secure communication with the state-of-the-art WebTransport Streams HTTP/3 Router, it was determined that a certificate is essential, as data transmission over the specified protocol requires encryption. Since acquiring a domain was not feasible, the approach of creating a self-signed certificate was adopted.
 
 % Providing commands for creating a self-signed certificate
 The following command was used to generate a self-signed certificate for a custom domain:
 
-\begin{lstlisting}
+\begin{lstlisting}[breaklines=true,basicstyle=\small\ttfamily,frame=single]
 openssl req -x509 -newkey rsa:4096 -keyout tls.key -out tls.crt -days 365 -nodes -subj "/CN=quic-aioquic.com"
 \end{lstlisting}
 
@@ -299,7 +299,7 @@ To enable domain name resolution for the local setup, a DNS entry must be config
 % Providing the DNS entry configuration
 For the system in use, the following line was added to the \texttt{/etc/hosts} file:
 
-\begin{lstlisting}
+\begin{lstlisting}[breaklines=true,basicstyle=\small\ttfamily,frame=single]
 192.168.49.201 quic-aioquic.com
 \end{lstlisting}
 
@@ -330,7 +330,7 @@ The visual design adopts a dark theme using CSS, enhancing readability in low-li
 \subsection{WebTransport Connection Setup}
 Establishing a reliable connection to the WebTransport server is the foundational step for all streaming operations. This is managed within the \texttt{WebTransportStreamer} class's \texttt{startStreaming()} method. The connection is initiated by creating a new \texttt{WebTransport} instance, specifying the server URL (\texttt{https://quic-aioquic.com:4433/wt}), which points to the secure QUIC endpoint of the server.
 
-\begin{lstlisting}
+\begin{lstlisting}[breaklines=true,basicstyle=\small\ttfamily,frame=single]
 this.transport = new WebTransport(this.serverUrl);
 \end{lstlisting}
 
@@ -341,7 +341,7 @@ To ensure robust operation, event listeners are set up for \textbf{connection st
     \item \texttt{onerror}: Catches any underlying transport errors, logs them to the console, and initiates \texttt{stopStreaming()} to clean up resources.
 \end{itemize}
 
-\begin{lstlisting}
+\begin{lstlisting}[breaklines=true,basicstyle=\small\ttfamily,frame=single]
 this.transport.onstatechange = () => {
     this.log(`Transport state: ${this.transport.state}`, 'info');
     if (this.transport.state === 'closed') {
@@ -368,7 +368,7 @@ Media access is requested using the \textbf{WebRTC \texttt{getUserMedia} API}, w
     \item \texttt{audio}: Includes \texttt{echoCancellation} and \texttt{noiseSuppression} to improve audio clarity.
 \end{itemize}
 
-\begin{lstlisting}
+\begin{lstlisting}[breaklines=true,basicstyle=\small\ttfamily,frame=single]
 const constraints = {
     video: {
         width: this.isHighQuality ? 1280 : 640,
@@ -397,7 +397,7 @@ WebTransport's strength lies in its support for \textbf{multiplexing} via indivi
     \item \texttt{this.screenStream}: For sending screen share data.
 \end{itemize}
 
-\begin{lstlisting}
+\begin{lstlisting}[breaklines=true,basicstyle=\small\ttfamily,frame=single]
 this.videoStream = await this.transport.createUnidirectionalStream();
 this.audioStream = await this.transport.createUnidirectionalStream();
 this.chatStream = await this.transport.createUnidirectionalStream();
@@ -420,7 +420,7 @@ Each packet sent over a WebTransport stream adheres to a predefined format consi
 
 The \texttt{buildPacket()} function assembles this structure:
 
-\begin{lstlisting}
+\begin{lstlisting}[breaklines=true,basicstyle=\small\ttfamily,frame=single]
 buildPacket(trackId, trackType, payload, forceSize = null) {
     let finalPayload = payload;
     if (forceSize && forceSize > payload.length) {
@@ -453,7 +453,7 @@ The \texttt{forceSize} parameter allows the client to artificially inflate packe
 \subsubsection{Sending Logic}
 Data is sent using the \texttt{WritableStreamDefaultWriter} associated with each WebTransport stream. The \texttt{loggedWrite()} helper function wraps the \texttt{writer.write()} operation, providing robust error handling and immediate logging feedback:
 
-\begin{lstlisting}
+\begin{lstlisting}[breaklines=true,basicstyle=\small\ttfamily,frame=single]
 async loggedWrite(writer, packet, streamType) {
     try {
         await writer.write(packet);
@@ -464,7 +464,7 @@ async loggedWrite(writer, packet, streamType) {
         return false;
     }
 }
-\end{lstlisting}
+\end{lstlisting>
 
 This function logs every successful packet transmission, including its type and size, aiding in real-time monitoring. In case of failure, such as stream closed, network issue, an error is logged, ensuring communication issues are immediately visible. The \texttt{writer.releaseLock()} is used after sending test packets to allow re-acquisition for continuous streaming.
 
@@ -472,7 +472,7 @@ This function logs every successful packet transmission, including its type and 
 \subsection{Video Streaming Implementation}
 Video streaming is handled by continuously capturing frames from the local video feed, processing them, and sending them over the dedicated video WebTransport stream. The \texttt{startVideoCapture()} method uses a hidden \texttt{HTMLCanvasElement} as an intermediary to process video frames:
 
-\begin{lstlisting}
+\begin{lstlisting}[breaklines=true,basicstyle=\small\ttfamily,frame=single]
 const canvas = document.createElement('canvas');
 const ctx = canvas.getContext('2d');
 canvas.width = this.isHighQuality ? 1280 : 640;
@@ -496,7 +496,7 @@ This approach provides granular control over video encoding and packet size, fac
 \subsection{Audio Streaming Implementation}
 Audio streaming leverages the \textbf{Web Audio API} for efficient capture and processing of microphone input. The \texttt{startAudioCapture()} method sets up an audio processing pipeline:
 
-\begin{lstlisting}
+\begin{lstlisting}[breaklines=true,basicstyle=\small\ttfamily,frame=single]
 const audioContext = new (window.AudioContext || window.webkitAudioContext)();
 await audioContext.resume();
 const source = audioContext.createMediaStreamSource(this.mediaStream);
@@ -515,7 +515,7 @@ In the \texttt{processor.onaudioprocess} event handler:
 \begin{enumerate}
     \item \textbf{Audio Data Extraction}: \texttt{event.inputBuffer.getChannelData(0)} retrieves raw floating-point audio samples.
     \item \textbf{PCM Conversion}: Samples are converted to 16-bit PCM format:
-    \begin{lstlisting}
+    \begin{lstlisting}[breaklines=true,basicstyle=\small\ttfamily,frame=single]
 const pcmData = new Int16Array(inputData.length);
 for (let i = 0; i < inputData.length; i++) {
     pcmData[i] = Math.max(-32768, Math.min(32767, inputData[i] * 32768));
@@ -535,7 +535,7 @@ The live chat functionality enables real-time text communication using a dedicat
 \begin{enumerate}
     \item \textbf{Message Retrieval and Validation}: The message is retrieved from \texttt{this.elements.chatInput.value} and trimmed, exiting if empty.
     \item \textbf{Data Structuring}: The message is encapsulated in a JSON object:
-    \begin{lstlisting}
+    \begin{lstlisting}[breaklines=true,basicstyle=\small\ttfamily,frame=single]
 const chatData = {
     message_id: Date.now(),
     timestamp: Date.now(),
@@ -810,7 +810,7 @@ Implementing QUIC and HTTP/3 protocols from scratch is complex due to their requ
 
 The \texttt{aioquic} library \cite{aioquic-repo} is a mature, open-source Python \cite{python-docs} library that implements QUIC and HTTP/3 protocols entirely in Python, designed for integration with \texttt{asyncio}. It provides a high-level API, including \texttt{QuicConnectionProtocol} and \texttt{H3Connection}, and employs an event-driven programming model, simplifying development.
 
-\begin{lstlisting}
+\begin{lstlisting}[breaklines=true,basicstyle=\small\ttfamily,frame=single]
 from aioquic.asyncio import serve
 from aioquic.asyncio.protocol import QuicConnectionProtocol
 from aioquic.quic.configuration import QuicConfiguration
@@ -825,7 +825,7 @@ This library abstracts low-level transport and cryptographic concerns, allowing 
 \subsection{Event-Driven Router}
 The router is implemented as a subclass of \texttt{QuicConnectionProtocol}, leveraging its event-driven capabilities. The central entry point for handling protocol events is the \texttt{quic\_event\_received} method, which dispatches incoming events—such as connection negotiation, termination, or HTTP stream updates—to appropriate handlers.
 
-\begin{lstlisting}
+\begin{lstlisting}[breaklines=true,basicstyle=\small\ttfamily,frame=single]
 class WebTransportRouter(QuicConnectionProtocol):
     def quic_event_received(self, event: QuicEvent) -> None:
         if isinstance(event, ProtocolNegotiated):
@@ -849,7 +849,7 @@ Modular methods like \texttt{\_handle\_http\_event} and \texttt{\_handle\_wt\_st
 \subsection{Packet Buffering and Parsing}
 Managing data streams over QUIC is challenging due to their continuous byte stream nature, which may include fragmented or concatenated packets. The router maintains a dedicated buffer for each QUIC stream, stored in a dictionary keyed by \texttt{stream\_id}. Incoming data chunks are appended to the stream-specific buffer, which adheres to a fixed packet format: a 32-byte header followed by the payload. The header includes a 16-byte track ID, a 4-byte payload length, and a 12-byte track type.
 
-\begin{lstlisting}
+\begin{lstlisting}[breaklines=true,basicstyle=\small\ttfamily,frame=single]
 self._stream_buffers = {}
 
 def _handle_wt_stream_data(self, stream_id: int, data: bytes, stream_ended: bool, _recursive_call: bool = False):
@@ -878,7 +878,7 @@ This approach ensures accurate reassembly of fragmented packets and sequential p
 \subsection{Configuration-Driven Routing}
 To avoid hardcoding microservice addresses, a flexible configuration system was designed using a YAML file to define services, global parameters, and routing behavior. A custom \texttt{ConfigManager} class parses this file into Python dictionaries and objects. Hot-reloading is implemented by periodically checking the file’s modification time, allowing configuration updates without interrupting the router or active client sessions.
 
-\begin{lstlisting}
+\begin{lstlisting}[breaklines=true,basicstyle=\small\ttfamily,frame=single]
 class ConfigManager:
     def __init__(self, config_path: str):
         self.config_path = config_path
@@ -905,7 +905,7 @@ This design enhances maintainability and system uptime, allowing administrators 
 \subsection{Proxying Layer}
 Once a packet is parsed, it is forwarded to the appropriate microservice, each exposing an HTTP/1.1 endpoint. The router uses \texttt{aiohttp} for non-blocking I/O and concurrent forwarding via asynchronous POST requests. The \texttt{\_forward\_to\_service} method constructs requests using configuration metadata and implements a retry mechanism with exponential backoff to handle temporary service outages.
 
-\begin{lstlisting}
+\begin{lstlisting}[breaklines=true,basicstyle=\small\ttfamily,frame=single]
 async def _forward_to_service(self, service_url: str, payload: bytes, retries: int = 3):
     backoff = 0.5
     for attempt in range(retries):
@@ -925,7 +925,7 @@ This integration layer ensures reliable packet delivery to microservices, even i
 \subsection{Metrics and Logging}
 For performance evaluation and debugging, the router includes a \texttt{MetricsLogger} class that logs metrics such as throughput, stream activity, and memory usage to CSV and structured event logs. The \texttt{psutil} library is used to monitor system resources periodically.
 
-\begin{lstlisting}
+\begin{lstlisting}[breaklines=true,basicstyle=\small\ttfamily,frame=single]
 class MetricsLogger:
     def log_metrics(self, router_metrics: dict, performance_data: dict = None):
         # Writes performance and routing metrics to CSV and logs
@@ -952,7 +952,7 @@ Handling the QUIC and HTTP/3 protocols from scratch is prohibitively complex due
 
 \texttt{aioquic} is a mature, open-source Python library that implements QUIC and HTTP/3 entirely in Python and is designed for integration with \texttt{asyncio}. It exposes a high-level API, including \texttt{QuicConnectionProtocol} and \texttt{H3Connection}, and uses an event-driven programming model, significantly simplifying development.
 
-\begin{lstlisting}
+\begin{lstlisting}[breaklines=true,basicstyle=\small\ttfamily,frame=single]
 from aioquic.asyncio import serve
 from aioquic.asyncio.protocol import QuicConnectionProtocol
 from aioquic.quic.configuration import QuicConfiguration
@@ -967,7 +967,7 @@ This library abstracts the low-level transport and cryptographic concerns, allow
 
 The router was implemented as a subclass of \texttt{QuicConnectionProtocol}, leveraging its event-driven capabilities. The central entry point for handling protocol events is the \texttt{quic\_event\_received} method. Inside this method, incoming events—such as connection negotiation, termination, or HTTP stream updates—are dispatched to appropriate handlers.
 
-\begin{lstlisting}
+\begin{lstlisting}[breaklines=true,basicstyle=\small\ttfamily,frame=single]
 class WebTransportRouter(QuicConnectionProtocol):
     def quic_event_received(self, event: QuicEvent) -> None:
         if isinstance(event, ProtocolNegotiated):
@@ -993,7 +993,7 @@ Handling data streams over QUIC presented one of the most technically demanding 
 
 To manage this, the router maintains a dedicated buffer for each QUIC stream, using a dictionary keyed by \texttt{stream\_id}. Each incoming data chunk is appended to the stream-specific buffer. The router uses a fixed packet format: a 32-byte header followed by the payload. The header consists of a 16-byte track ID, a 4-byte payload length, and a 12-byte track type.
 
-\begin{lstlisting}
+\begin{lstlisting}[breaklines=true,basicstyle=\small\ttfamily,frame=single]
 self._stream_buffers = {}
 
 def _handle_wt_stream_data(self, stream_id: int, data: bytes, stream_ended: bool, _recursive_call: bool = False):
@@ -1024,7 +1024,7 @@ Rather than hardcoding microservice addresses into the codebase, a flexible conf
 
 Hot-reloading was implemented by periodically checking the file’s modification time. If the timestamp changes, the configuration is reloaded without interrupting the router or active client sessions.
 
-\begin{lstlisting}
+\begin{lstlisting}[breaklines=true,basicstyle=\small\ttfamily,frame=single]
 class ConfigManager:
     def __init__(self, config_path: str):
         self.config_path = config_path
@@ -1053,7 +1053,7 @@ Once a valid packet is extracted and parsed, it must be forwarded to the appropr
 
 The \texttt{\_forward\_to\_service} method constructs requests using configuration metadata and includes a retry mechanism with exponential backoff to tolerate temporary service outages.
 
-\begin{lstlisting}
+\begin{lstlisting}[breaklines=true,basicstyle=\small\ttfamily,frame=single]
 async def _forward_to_service(self, service_url: str, payload: bytes, retries: int = 3):
     backoff = 0.5
     for attempt in range(retries):
@@ -1073,7 +1073,7 @@ This integration layer ensures packets are delivered reliably to microservices, 
 
 To enable performance evaluation and debugging, the router includes a \texttt{MetricsLogger} class. This component logs metrics such as throughput, stream activity, and memory usage to CSV and structured event logs. The \texttt{psutil} library is used to monitor system resources periodically.
 
-\begin{lstlisting}
+\begin{lstlisting}[breaklines=true,basicstyle=\small\ttfamily,frame=single]
 class MetricsLogger:
     def log_metrics(self, router_metrics: dict, performance_data: dict = None):
         # Writes performance and routing metrics to CSV and logs
@@ -1110,7 +1110,7 @@ This chapter detailed the implementation of a robust and modular WebTransport Ro
 
 % The configuration manager loads the microservice’s runtime settings from a YAML file. This allows operators to change how the service behaves—such as enabling/disabling Pulsar integration or changing broker URLs—without restarting the service. It automatically reloads the configuration when the file changes, enabling zero downtime updates and greater operational flexibility.
 
-% \begin{lstlisting}
+% \begin{lstlisting}[breaklines=true,basicstyle=\small\ttfamily,frame=single]
 % import os
 % import yaml
 
@@ -1138,7 +1138,7 @@ This chapter detailed the implementation of a robust and modular WebTransport Ro
 
 % This component manages connecting to the Apache Pulsar broker and creating a message producer for the microservice’s specific topic. It handles reinitialization if configuration changes occur, ensuring the service always connects to the correct broker with the right settings.
 
-% \begin{lstlisting}
+% \begin{lstlisting}[breaklines=true,basicstyle=\small\ttfamily,frame=single]
 % import pulsar
 
 % pulsar_client = None
@@ -1165,7 +1165,7 @@ This chapter detailed the implementation of a robust and modular WebTransport Ro
 
 % This is the core request handler that processes incoming HTTP POST requests containing data streams from the WebTransport Router. It extracts the payload and metadata, optionally sends the data to Pulsar, and replies with confirmation. The design supports multiple media types using the same logic, improving code reuse and simplicity.
 
-% \begin{lstlisting}
+% \begin{lstlisting}[breaklines=true,basicstyle=\small\ttfamily,frame=single]
 % from aiohttp import web
 
 % class GenericServiceHandler:
@@ -1195,7 +1195,7 @@ This chapter detailed the implementation of a robust and modular WebTransport Ro
 
 % This component starts the asynchronous HTTP server on a configurable port and exposes a dynamic route based on the service name (e.g., \texttt{/process\_video}). It continuously monitors the configuration file and reinitializes Pulsar connections if relevant settings change, achieving dynamic adaptability without service restarts.
 
-% \begin{lstlisting}
+% \begin{lstlisting}[breaklines=true,basicstyle=\small\ttfamily,frame=single]
 % import asyncio
 % from aiohttp import web
 
@@ -1244,7 +1244,7 @@ This section details the implementation of a generic HTTP-based microservice des
 \subsection{Configuration Manager}
 The configuration manager loads the microservice’s runtime settings from a YAML file, enabling operators to modify behavior—such as enabling or disabling Pulsar integration or updating broker URLs—without restarting the service. It supports hot-reloading by detecting file changes, ensuring zero-downtime updates and enhanced operational flexibility.
 
-\begin{lstlisting}
+\begin{lstlisting}[breaklines=true,basicstyle=\small\ttfamily,frame=single]
 import os
 import yaml
 
@@ -1272,7 +1272,7 @@ This class reads the YAML configuration file and stores its contents in memory. 
 \subsection{Apache Pulsar Client Initialization}
 This component manages the connection to the Apache Pulsar broker and creates a message producer for the microservice’s specific topic. It supports reinitialization if configuration changes occur, ensuring the service connects to the correct broker with updated settings.
 
-\begin{lstlisting}
+\begin{lstlisting}[breaklines=true,basicstyle=\small\ttfamily,frame=single]
 import pulsar
 
 pulsar_client = None
@@ -1299,7 +1299,7 @@ The function closes any existing Pulsar client to prevent resource leaks and che
 \subsection{HTTP Data Handler}
 The HTTP data handler processes incoming HTTP POST requests containing data streams from the WebTransport Router. It extracts the payload and metadata, optionally forwards the data to Pulsar, and responds with a confirmation. The design supports multiple media types with unified logic, enhancing code reuse and simplicity.
 
-\begin{lstlisting}
+\begin{lstlisting}[breaklines=true,basicstyle=\small\ttfamily,frame=single]
 from aiohttp import web
 
 class GenericServiceHandler:
@@ -1329,7 +1329,7 @@ For each request, the handler reads the raw data stream and metadata, such as \t
 \subsection{Service Startup and Configuration Watcher}
 This component launches an asynchronous HTTP server on a configurable port and exposes a dynamic route based on the service name, such as \texttt{/process\_video}. It continuously monitors the configuration file and reinitializes Pulsar connections if settings change, enabling dynamic adaptability without service restarts.
 
-\begin{lstlisting}
+\begin{lstlisting}[breaklines=true,basicstyle=\small\ttfamily,frame=single]
 import asyncio
 from aiohttp import web
 
@@ -1376,7 +1376,7 @@ This implementation is critical for the completion of the proposed WebTransport 
 \subsection{Deployment Secrets}
 To enable the router to listen for WebTransport streams, Kubernetes must securely store the necessary certificates. Certificates are stored as secrets within the cluster, allowing resources in the default namespace to access them when mounted on a specified path. The following command was used to create a TLS secret:
 
-\begin{lstlisting}
+\begin{lstlisting}[breaklines=true,basicstyle=\small\ttfamily,frame=single]
 kubectl create secret tls quic-cert --cert=path/.crt --key=path/.key
 \end{lstlisting}
 
@@ -1388,7 +1388,7 @@ The router deployment involves containerization, creating ConfigMaps, defining a
 
 The router code was containerized using a Dockerfile placed in the same directory as the router code, with the \texttt{router\_config.yaml} file kept external to the image. The following commands built and pushed the Docker image to a DockerHub repository:
 
-\begin{lstlisting}
+\begin{lstlisting}[breaklines=true,basicstyle=\small\ttfamily,frame=single]
 docker build -t sbnm007/quic_router:0.0.0 .
 docker push sbnm007/quic_router:0.0.0
 \end{lstlisting}
@@ -1407,13 +1407,13 @@ The \texttt{router\_config.yaml} file, which defines routing rules for microserv
 
 The resources were deployed using:
 
-\begin{lstlisting}
+\begin{lstlisting}[breaklines=true,basicstyle=\small\ttfamily,frame=single]
 kubectl apply -f router.yaml
 \end{lstlisting}
 
 To verify the deployment, the following commands were used to check resources:
 
-\begin{lstlisting}
+\begin{lstlisting}[breaklines=true,basicstyle=\small\ttfamily,frame=single]
 kubectl get pods
 kubectl get svc
 \end{lstlisting}
@@ -1428,7 +1428,7 @@ Each microservice is deployed via a dedicated \texttt{Deployment} resource, runn
 
 The modular architecture allows new microservices to be added by replicating and modifying deployment and service blocks. Key configuration parameters for Pulsar integration include:
 
-\begin{lstlisting}
+\begin{lstlisting}[breaklines=true,basicstyle=\small\ttfamily,frame=single]
 pulsar_broker_url: "pulsar://10.100.48.76:6650"
 send_to_pulsar: true
 \end{lstlisting}
@@ -1441,24 +1441,24 @@ Deploying Apache Pulsar in a constrained Minikube environment presented challeng
 
 \begin{itemize}
     \item Add the DataStax Helm chart repository:
-    \begin{lstlisting}
+    \begin{lstlisting}[breaklines=true,basicstyle=\small\ttfamily,frame=single]
 helm repo add datastax-pulsar https://datastax.github.io/pulsar-helm-chart
     \end{lstlisting}
     \item Update the Helm repository:
-    \begin{lstlisting}
+    \begin{lstlisting}[breaklines=true,basicstyle=\small\ttfamily,frame=single]
 helm repo update
     \end{lstlisting}
     \item Download the development configuration:
-    \begin{lstlisting}
+    \begin{lstlisting}[breaklines=true,basicstyle=\small\ttfamily,frame=single]
 curl -LOs https://datastax.github.io/pulsar-helm-chart/examples/dev-values.yaml
     \end{lstlisting}
     \item Modify \texttt{dev-values.yaml} to disable monitoring for reduced resource consumption:
-    \begin{lstlisting}
+    \begin{lstlisting}[breaklines=true,basicstyle=\small\ttfamily,frame=single]
 kube-prometheus-stack:
   enabled: false
     \end{lstlisting}
     \item Deploy Pulsar with the modified configuration:
-    \begin{lstlisting}
+    \begin{lstlisting}[breaklines=true,basicstyle=\small\ttfamily,frame=single]
 helm install pulsar -f dev-values.yaml datastax-pulsar/pulsar
     \end{lstlisting}
 \end{itemize}
@@ -1474,7 +1474,7 @@ This deployment created two key services: \texttt{pulsar-broker} for internal me
 
 A sample Python consumer was developed to demonstrate real-time message consumption, subscribing to a specified topic with a shared subscription type and reporting end-to-end latency:
 
-\begin{lstlisting}
+\begin{lstlisting}[breaklines=true,basicstyle=\small\ttfamily,frame=single]
 consumer = client.subscribe(TOPIC_NAME, SUBSCRIPTION_NAME,
                             consumer_type=pulsar.ConsumerType.Shared)
 msg = consumer.receive(timeout_millis=5000)
@@ -1500,7 +1500,7 @@ This consumer supports real-time consumption of video, audio, or chat streams an
 \subsection{Retrieving Results}
 Metrics are logged in a CSV file within the router pod. To retrieve these files locally for evaluation, the following commands were executed:
 
-\begin{lstlisting}
+\begin{lstlisting}[breaklines=true,basicstyle=\small\ttfamily,frame=single]
 mkdir metrics-in-pod
 kubectl cp webtransport-router-deployment-65cf75d584-njmqf:/app/metrics_logs ./metrics-in-pod
 \end{lstlisting}

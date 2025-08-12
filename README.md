@@ -104,6 +104,7 @@ make all
 rm -f *.aux *.bbl *.blg *.log *.out *.toc *.lof *.lot
 rm -f Introduction.aux StateOfTheArt.aux Design.aux Implementation.aux Evaluation.aux Conclusions.aux
 pdflatex thesis.tex && bibtex thesis && pdflatex thesis.tex && pdflatex thesis.tex
+pdflatex -interaction=nonstopmode thesis.tex
 ```
 
 ## 📁 Project Structure

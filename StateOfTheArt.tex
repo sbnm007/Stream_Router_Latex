@@ -101,7 +101,7 @@ UDP, lacking connection state, does not maintain persistent entries in /proc(the
 
 \subsection{Limitations of Traditional Transport Layer Protocols}
 
-The foundational transport protocols of the internet, TCP and UDP, face well-documented limitations that hinder performance, scalability, and adaptability in modern network environments.
+The standard transport protocols, TCP and UDP, face several limitations that impact performance, scalability, and adaptability in modern networks.
 
 TCP suffers mostly from \textit{head-of-line (HOL) blocking}, a condition where the loss of a single packet holds up the delivery of all subsequent packets in that stream, thereby leading to increase in latency and degrading user experience. In addition to internal limitations, TCP evolution is impeded by \textit{middlebox ossification} see section 2.1.7. Network devices like legacy firewalls and Network Address Translation (NAT) gateways often do not recognize newer TCP features, such as, TCP Fast Open or Multipath TCP, blocking their deployment and stalling protocol innovation across the wider internet.
 
@@ -113,7 +113,7 @@ These protocol-level and systemic challenges have led to the development of next
 
 \subsection{QUIC Protocol}
 
-The Quick UDP Internet Connections (QUIC) protocol represents an innovative transport layer solution designed to address the limitations of traditional TCP-based protocols, particularly in the context of modern web applications. Unlike TCP, which relies on sequential TLS and TCP handshakes, QUIC leverages UDP to combine transport and security handshakes into a single step, significantly reducing connection setup latency.
+The Quick UDP Internet Connections (QUIC) protocol represents an innovative transport layer solution designed to address the limitations of traditional TCP-based protocols, particularly in the context of modern web applications. Unlike TCP, which relies on seperate TLS and TCP handshakes, QUIC leverages UDP to combine transport and security handshakes into a single step, significantly reducing connection setup latency.
 
 QUIC’s design aims to provide TCP-like reliability, stream multiplexing, and congestion control (see section 2.1.10.2) while mitigating TCP’s drawbacks, such as HOL blocking and the need for kernel-level updates across network infrastructure. By operating over UDP, QUIC enables deployment without requiring modifications to middleboxes like firewalls or routers, which often struggle with outdated TCP configurations. 
 
@@ -347,7 +347,7 @@ The Streams API provides bidirectional and unidirectional streams that ensure re
 Bidirectional Stream Example  
 A client can open a stream and write data reliably to the server:
 
-\begin{verbatim}
+\begin{lstlisting}[breaklines=true,basicstyle=\small\ttfamily,frame=single]
 const transport = new WebTransport('https://example.com:4999'); 
 await transport.ready; 
 
@@ -355,14 +355,14 @@ const stream = await transport.createBidirectionalStream();
 const writer = stream.writable.getWriter(); 
 
 await writer.write(new TextEncoder().encode('<html><head>')); 
-\end{verbatim}
+\end{lstlisting}
 
 Unidirectional Stream Example  
 Used for sending data in one direction only:
 
-\begin{verbatim}
+\begin{lstlisting}[breaklines=true,basicstyle=\small\ttfamily,frame=single]
 const stream = await transport.createUnidirectionalStream();
-\end{verbatim}
+\end{lstlisting}
 
 These stream methods are part of the WebTransport session object. createBidirectionalStream() and createUnidirectionalStream() return stream instances, which can be accessed using .writable or .readable interfaces for sending and receiving data. Encoders like TextEncoder() convert strings into binary format suitable for transport.
 
@@ -372,12 +372,12 @@ The Datagram API allows for lightweight, unreliable, and unordered data exchange
 
 Datagram Example:
 
-\begin{verbatim}
+\begin{lstlisting}[breaklines=true,basicstyle=\small\ttfamily,frame=single]
 const transport = new WebTransport('https://example.com:4999');
 await transport.ready;
 
 await transport.sendDatagram(new TextEncoder().encode('x:10,y:20'));
-\end{verbatim}
+\end{lstlisting}
 
 The sendDatagram() function transmits a raw byte payload over QUIC datagrams. Since datagrams are not guaranteed to arrive or preserve order, developers must handle any necessary retries or loss-tolerance logic in the application layer.
 
@@ -387,12 +387,12 @@ A key implementation challenge with WebTransport streams is the absence of built
 
 For example, when sending audio or video data over a stream, a header might be prefixed to indicate the type:
 
-\begin{verbatim}
+\begin{lstlisting}[breaklines=true,basicstyle=\small\ttfamily,frame=single]
 const header = 'audio';
 const payload = new Uint8Array([...new TextEncoder().encode(header), ...binaryAudioData]);
 
 await writer.write(payload);
-\end{verbatim}
+\end{lstlisting}
 
 On the receiving end, such as in a server or reverse proxy, the application parses this prefixed header to determine how to route or process the incoming stream—such as directing it to the appropriate microservice, such as audio handler vs. video handler. While this provides flexibility, it introduces additional complexity in parsing logic and requires robust message framing techniques. This challenge will be explored further in the implementation section of this dissertation.
 
@@ -637,7 +637,7 @@ An Ingress Controller is a critical component in Kubernetes used to expose servi
 For platform-independent or more advanced use cases, several third-party ingress controllers are widely adopted. The NGINX Ingress Controller is the most common, known for its flexibility and ease of use across any Kubernetes setup. Traefik is a modern alternative that auto-discovers services and integrates well into dynamic or CI/CD-heavy environments. For API-first architectures, the Kong Ingress Controller doubles as an API gateway, offering authentication, rate limiting, and monitoring features. Istio's Ingress Gateway, designed for service meshes, provides advanced capabilities like mTLS, circuit breaking, and traffic splitting—ideal for secure, production-grade microservices deployments.
 
 The following is the syntax for ingress controllers
-\begin{lstlisting}[language=yaml]
+\begin{lstlisting}[breaklines=true,basicstyle=\small\ttfamily,frame=single]
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
@@ -675,18 +675,18 @@ At the core, HTTP/3 support in the underlying NGINX web server is provided via t
 
 To investigate support at the Kubernetes ingress level, attempts were made to pass relevant parameters via Helm during deployment:
 
-\begin{verbatim}
+\begin{lstlisting}[breaklines=true,basicstyle=\small\ttfamily,frame=single]
 helm install ingress-nginx ingress-nginx/ingress-nginx \
   --namespace ingress-nginx --create-namespace
-\end{verbatim}
+\end{lstlisting}
 
 This opened TCP ports in the service. To enable QUIC support, UDP traffic must also be allowed to reach the ingress. Therefore, the following patch was applied to the service to expose UDP on port 443:
 
-\begin{verbatim}
+\begin{lstlisting}[breaklines=true,basicstyle=\small\ttfamily,frame=single]
 kubectl patch svc ingress-nginx-controller -n ingress-nginx \
   --type='json' -p='[{"op": "add", "path": "/spec/ports/-", 
   "value": {"name":"quic","port":443,"protocol":"UDP","targetPort":443}}]'
-\end{verbatim}
+\end{lstlisting}
 
 In the latest versions of the NGINX Ingress Controller, the HTTP/3 module appears to be compiled in by default. Additional configurations to expose QUIC via UDP were attempted.
 
@@ -702,15 +702,15 @@ To test HTTP/3 support in a Kubernetes environment, the following steps were per
 
 \begin{enumerate}
   \item The HAProxy Helm repository was added and updated:
-  \begin{verbatim}
+  \begin{lstlisting}[breaklines=true,basicstyle=\small\ttfamily,frame=single]
   helm repo add haproxytech https://haproxytech.github.io/helm-charts
   helm repo update
-  \end{verbatim}
+  \end{lstlisting}
 
   \item The HAProxy ingress controller was installed with a custom values file:
-  \begin{verbatim}
+  \begin{lstlisting}[breaklines=true,basicstyle=\small\ttfamily,frame=single]
   helm install haproxy-quic haproxytech/kubernetes-ingress -f haproxy-quic-values.yaml
-  \end{verbatim}
+  \end{lstlisting}
 
   In the \texttt{haproxy-quic-values.yaml} file, the configuration exposed UDP port 443 and passed the flag \texttt{--quic-bind-port=443} to enable QUIC and HTTP/3 support.
 
@@ -719,16 +719,16 @@ To test HTTP/3 support in a Kubernetes environment, the following steps were per
 
 Once deployed, HTTP/3 functionality was tested using \texttt{curl}:
 
-\begin{verbatim}
+\begin{lstlisting}[breaklines=true,basicstyle=\small\ttfamily,frame=single]
 curl --http3-only --verbose --insecure https://192.168.49.4 \
   -H "Host: quic-aioquic.com"
-\end{verbatim}
+\end{lstlisting}
 
 The response confirmed that HTTP/3 was successfully negotiated. However, backend service logs indicated that the request was received using HTTP/1.1:
 
-\begin{verbatim}
+\begin{lstlisting}[breaklines=true,basicstyle=\small\ttfamily,frame=single]
 10.244.1.122 - - [07/Aug/2025:12:55:39 +0000] "GET / HTTP/1.1" ...
-\end{verbatim}
+\end{lstlisting}
 
 This confirms that HAProxy terminates the HTTP/3 connection and opens a new one to the backend using a lower protocol version.
 
@@ -761,13 +761,13 @@ The following steps were performed:
 
 \begin{itemize}
   \item Added the Helm repository:
-\begin{lstlisting}[language=bash]
+\begin{lstlisting}[breaklines=true,basicstyle=\small\ttfamily,frame=single]
 helm repo add haproxytech https://haproxytech.github.io/helm-charts
 helm repo update
 \end{lstlisting}
 
   \item Installed the controller with Gateway API support:
-\begin{lstlisting}[language=bash]
+\begin{lstlisting}[breaklines=true,basicstyle=\small\ttfamily,frame=single]
 helm install haproxy-gateway-controller haproxytech/kubernetes-ingress \
   --namespace haproxy-gateway-system --create-namespace \
   --set controller.kubernetesGateway.enabled=true \
@@ -778,7 +778,7 @@ helm install haproxy-gateway-controller haproxytech/kubernetes-ingress \
 
 Once deployed, a LoadBalancer service was exposed, including a UDP port for QUIC:
 
-\begin{lstlisting}[language=bash]
+\begin{lstlisting}[breaklines=true,basicstyle=\small\ttfamily,frame=single]
 NAME                                            TYPE           CLUSTER-IP     EXTERNAL-IP    PORT(S)                                                                  AGE
 haproxy-gateway-controller-kubernetes-ingress   LoadBalancer   10.104.20.31   192.168.49.5   80:31433/TCP,443:32261/TCP,443:32261/UDP,1024:30450/TCP,6060:31286/TCP   117s
 \end{lstlisting}
@@ -787,7 +787,7 @@ haproxy-gateway-controller-kubernetes-ingress   LoadBalancer   10.104.20.31   19
 
 The Gateway resource was created to expose HTTPS and QUIC traffic:
 
-\begin{lstlisting}[language=yaml]
+\begin{lstlisting}[breaklines=true,basicstyle=\small\ttfamily,frame=single]
 apiVersion: gateway.networking.k8s.io/v1
 kind: Gateway
 metadata:
@@ -817,7 +817,7 @@ spec:
 
 An HTTPRoute was defined to route requests based on hostname:
 
-\begin{lstlisting}[language=yaml]
+\begin{lstlisting}[breaklines=true,basicstyle=\small\ttfamily,frame=single]
 apiVersion: gateway.networking.k8s.io/v1
 kind: HTTPRoute
 metadata:
@@ -884,7 +884,7 @@ Aioquic also includes built-in support for logging using qlog, a standardized QU
 \paragraph{Implementation Example}
 A typical Aioquic application involves initializing a QUIC configuration, creating a connection context, and using asynchronous tasks to send and receive data. Below is a simplified example of a client establishing a secure QUIC connection and sending data over a stream:
 
-\begin{lstlisting}[language=python]
+\begin{lstlisting}[breaklines=true,basicstyle=\small\ttfamily,frame=single]
 from aioquic.asyncio import connect
 from aioquic.quic.configuration import QuicConfiguration
 import asyncio
@@ -915,7 +915,7 @@ The internal architecture comprises multiple interacting subsystems: the connect
 \paragraph{Implementation Example}
 The following snippet illustrates a basic QUIC server using Quic-go, which listens for incoming connections and echoes received data:
 
-\begin{lstlisting}[language=go]
+\begin{lstlisting}[breaklines=true,basicstyle=\small\ttfamily,frame=single]
 package main
 
 import (
@@ -973,7 +973,7 @@ Quiche is built to be embedded into other C/C++/Rust programs via its Foreign Fu
 \paragraph{Implementation Example}
 A basic HTTP/3 server using Quiche is more complex due to Rust's strict safety model, but the following pseudocode outlines the core flow:
 
-\begin{lstlisting}[language=rust]
+\begin{lstlisting}[breaklines=true,basicstyle=\small\ttfamily,frame=single]
 let mut conn = quiche::accept(&scid, None, local_addr, peer_addr, &mut config)?;
 let (read, _) = socket.recv_from(&mut buf)?;
 let recv_info = quiche::RecvInfo { from: peer_addr, to: local_addr };
@@ -1005,7 +1005,7 @@ Despite these limitations, Angie presents a stable and efficient reverse proxy s
 \subsubsection{Angie Configuration for HTTP/3 Forwarding}
 Angie's architecture supports HTTP/3 by enabling QUIC listeners alongside traditional TCP listeners. The proxy was deployed Angie using the Docker image docker.angie.software/angie:latest in a Kubernetes environment, configured via a ConfigMap as shown below:
 
-\begin{lstlisting}[language=yaml]
+\begin{lstlisting}[breaklines=true,basicstyle=\small\ttfamily,frame=single]
 apiVersion: v1
 kind: ConfigMap
 metadata:
