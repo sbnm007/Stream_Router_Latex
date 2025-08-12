@@ -55,7 +55,7 @@ Current networking solutions for kubernetes such as ingress controllers - such a
 
 The shift to real-time web communication is currently the next big thing. The rise of streaming platforms such as Twitch, YouTube, and Kick demonstrates the growing demand for delivering real-time streams of data to millions of users across the world \cite{kreps2011}. With this surge in real-time big data, it is interesting to explore the potential advancements that could be achieved through lower-latency and more efficient performance outcomes enabled by the adoption of the WebTransport protocol.
 
-During my time as a Development Operations (DevOps) Engineer, I personally observed the heavy dependency on the TCP networking protocol when working with Kubernetes-based solutions. My initial motivation stemmed from asking myself a few key questions about this dependency.
+During my time as a Development Operations (DevOps) Engineer, I personally observed the heavy dependency on the TCP networking protocol when working with Kubernetes based solutions. My initial motivation stemmed from asking myself a few key questions about this dependency.
 
 The core motivation discussed in this dissertation is the absence of native, stream-conscious routing support for WebTransport traffic in the Kubernetes environment. Although QUIC and HTTP/3 address many protocol-level performance issues associated with TCP, they do not yet scale effectively for microservice ecosystems. This is due to the current inability of Kubernetes’ networking and ingress infrastructure to support granular stream-level routing and application-aware processing.
 
@@ -94,13 +94,13 @@ This dissertation aims to fill the gap described above with the development of a
 
 \item \textbf{Real-time Processing Use Case:} Demonstrate to the practical feasibility by building a scenario with live streaming of different data such as audio, video, and chat, to process and integrate with streaming backend systems like Apache Pulsar.
 
-\item \textbf{Performance Evaluation:} To evaluate the system wiht metrics such as backend performance buffer utilization, cpu and memory.
+\item \textbf{Performance Evaluation:} To evaluate the system with metrics such as backend performance buffer utilization, cpu and memory.
 
 \end{enumerate}
 
 \section{Methodology and Approach}
 
-This research follows a task decomposition approach by breaking down the large problem into manageable components and addressing each one iteratively and progressing towards a complete solution. The approach starts with dividing overall challenge of WebTransport stream routing into distinct phases that brings us closer to the goal. At a highlevel the divided tasks include configuring Kubernetes to accept incoming UDP traffic using tools, extracting individual WebTransport streams based on custom application-layer defined headers. Deploying each component in a configuration-driven mechanisms to classify and map stream types to corresponding backend services deployed within the Kubernetes cluster. Demultiplexing streams  and forwarding to its respective microservice. Finally establishing proper monitoring mechanisms for evaluation.
+This research follows a top down approach by breaking down the large problem into manageable components and addressing each one iteratively and progressing towards a complete solution. The approach starts with dividing overall challenge of WebTransport stream routing into distinct phases that brings us closer to the goal. At a highlevel the divided tasks include configuring Kubernetes to accept incoming UDP traffic using tools, extracting individual WebTransport streams based on custom application-layer defined headers. Deploying each component in a configuration-driven mechanisms to classify and map stream types to corresponding backend services deployed within the Kubernetes cluster. Demultiplexing streams  and forwarding to its respective microservice. Finally establishing proper monitoring mechanisms for evaluation.
 
 \section{Contributions}
 

@@ -469,7 +469,7 @@ The system exhibited excellent latency performance, with an average processing t
 These low latency values confirm the system's suitability for real-time applications requiring minimal processing delays.
 
 \subsubsection{Buffer Management}
-Buffer management for (\texttt{client\_134025892847376}), as recorded in the (\texttt{buffer\_metrics\_20250805\_180450.csv}) log between 18:05 and 18:15 on August 5, 2025, demonstrates effective handling of dynamic data loads. The buffer size (\texttt{buffer\_size\_bytes}) varied throughout the session, occasionally dropping to 0 bytes and peaking at 13{,}398 bytes. Initially, the maximum buffer capacity (\texttt{max\_buffer\_size\_bytes}) remained constant at 21{,}475 bytes until 18:08:35, after which it increased to 24{,}281 bytes, indicating an adaptive strategy to accommodate increased data traffic. Notably, no buffer overflows (\texttt{buffer\_overflows}) were recorded, reflecting the system’s robust buffer allocation and the ability to absorb traffic fluctuations without packet loss.
+Buffer management for (\texttt{client\_134025892847376}), as recorded in the (\texttt{buffer\_metrics\allowbreak{}\_20250805\_180450.csv}) log between 18:05 and 18:15 on August 5, 2025, demonstrates effective handling of dynamic data loads. The buffer size (\texttt{buffer\_size\_bytes}) varied throughout the session, occasionally dropping to 0 bytes and peaking at 13{,}398 bytes. Initially, the maximum buffer capacity (\texttt{max\_buffer\_size\_bytes}) remained constant at 21{,}475 bytes until 18:08:35, after which it increased to 24{,}281 bytes, indicating an adaptive strategy to accommodate increased data traffic. Notably, no buffer overflows (\texttt{buffer\_overflows}) were recorded, reflecting the system’s robust buffer allocation and the ability to absorb traffic fluctuations without packet loss.
 
 \subsection{Three-Client Performance Analysis}
 The three-client experiment characterizes the WebTransport router under a moderate, multi-tenant load.
@@ -509,7 +509,7 @@ Figure~\ref{fig:throughput-three-clients} displays the throughput performance pe
 Figure~\ref{fig:avg-throughput-aggregated} shows the combined throughput maintaining a steady 0.85–0.90 Mbps plateau, with no multi-second zero-throughput periods until deliberate shutdown.
 
 \subsubsection{Router Pod Overview}
-The router pod utilized 418 m (≈ 0.42 core) of CPU and 92 MiB of memory, with no restarts and stable performance throughout the 11-minute window, indicating modest control-plane and data-plane overhead for handling three clients.
+The router pod utilized 418 m (approximately 0.42 core) of CPU and 92 MiB of memory, with no restarts and stable performance throughout the 11-minute window, indicating modest control-plane and data-plane overhead for handling three clients.
 \begin{figure}[h!]
 \centering
 \includegraphics[width=0.8\textwidth]{Evaluation/three-clients-stats.png}

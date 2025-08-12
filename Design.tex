@@ -63,7 +63,7 @@ Unlike the traditional TCP-based protocols, QUIC uses UDP, so it becomes a chall
 QUIC’s encrypted headers and multiplexed streams in QUIC improve performance and security at the expense of making traffic inspection difficult. Kubernetes environment being largely based on tcp have weak weak support for QUIC, which makes it harder to debug and analyze performance (Section 2.6.10.6). Even the Gateway API decouples infrastructure and application considerations, a misconfiguration of work makes whole operation within kubernetes more difficult (Section 2.6.10.6). These issues create barriers to building reliable, real-time webtransport stream demultiplexers/Routers in kubernetes.
 
 % Section 3.2: Abstracted View of the Solution
-\section{Abstracted View of the Solution}
+\section{Abstracted Solution}
 
 
 The aim of this dissertation is to open a possibility of allowing independent WebTransport streams to be load balanced to various microservices that run on Kubernetes and  address the critical gap in stream-level inspection, routing, and observability. The recommended solution is the use of a custom HTTP/3/QUIC proxy server that is natively integrated with the cluster and multiplexed streams to internal services, based on content or metadata. WebTransport will have each stream as a separate a logical channel which can send its own data multiplexed over a single connection.
@@ -292,7 +292,7 @@ From the figure, we can see that MetalLB is intended to be the frontend of our K
 
 The client sends a request to the MetalLB IP address. The request is then forwarded through the Docker interface, as MetalLB is deployed on the Minikube cluster, which is running in a Docker container. MetalLB receives the IP address and proceeds to forward the request to the Kubernetes service. This design successfully exposes the Kubernetes service to the outside cluster and allows for the forwarding of raw TCP and UDP packets to our applications.
 
-\section{Design of Routing System}
+\section{Design of Backend}
 
 This section presents the design of the routing and processing system for a WebTransport stream-aware routing platform. Design focuses on optimization in configuration, connection managements, packets processing, use of metrics, integration of various microservices and flexibility in command line to facilitate a scalable and resilient streaming design.
 

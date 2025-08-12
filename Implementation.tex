@@ -318,7 +318,7 @@ The client's user interface is created for clarity and functionality, offering a
 
 \begin{itemize}
     \item \textbf{Video \& Audio Stream Panel} (\texttt{.panel}): This panel prominently displays the local video feed (\texttt{<video id="localVideo">}) and includes controls for initiating or stopping streaming, toggling video quality, and starting or stopping optional file and screen data streams.
-    \item \textbf{Live Chat Panel} (\texttt{.panel}): This features a scrollable message display area (\texttt{.chat-messages}) and an input field with a send button (\texttt{.chat-input}) for real-time text communication.
+    \item \textbf{Live Chat Panel} (\texttt{.panel}): This features a scrollable message display area (\texttt{.chat-\allowbreak{}messages}) and an input field with a send button (\texttt{.chat-input}) for real-time text communication.
     \item \textbf{Metrics Display} (\texttt{.metrics}): This provides at-a-glance performance indicators, including the count of video frames, audio packets, chat messages sent, and the calculated data transfer rate.
     \item \textbf{Status Bar} (\texttt{\#status}): This offers immediate feedback on the WebTransport connection state.
     \item \textbf{System Logs Panel} (\texttt{.logs}): This acts as a console, displaying critical information about stream creation, packet transmission, and error events, which is essential for monitoring and debugging during development and testing.
@@ -387,7 +387,7 @@ this.elements.localVideo.srcObject = this.mediaStream;
 The captured \texttt{mediaStream} is assigned to the \texttt{<video id="localVideo">} element, allowing the user to see their own video feed. A \texttt{Promise} is used to wait for the video element to trigger \texttt{loadeddata}, ensuring the media stream is fully ready before processing.
 
 \subsubsection{Stream Creation}
-WebTransport's strength lies in its support for \textbf{multiplexing} via individual streams over a single connection. The client leverages \textbf{unidirectional streams} (\texttt{createUnidirectionalStream()}) for each distinct data type:
+WebTransport's strength lies in its support for \textbf{multiplexing} via individual streams over a single connection. The client leverages \textbf{unidirectional streams} (\texttt{create\allowbreak{}Bidirectional\allowbreak{}Stream()}) for each distinct data type:
 
 \begin{itemize}
     \item \texttt{this.videoStream}: For outgoing video frames.
@@ -457,10 +457,10 @@ Data is sent using the \texttt{WritableStreamDefaultWriter} associated with each
 async loggedWrite(writer, packet, streamType) {
     try {
         await writer.write(packet);
-        this.log(`✈️ Sent ${streamType} packet: ${packet.length} bytes`, 'success');
+        this.log(`Sent ${streamType} packet: ${packet.length} bytes`, 'success');
         return true;
     } catch (error) {
-        this.log(`❌ Failed to send ${streamType} packet: ${error.message}`, 'error');
+        this.log(`Failed to send ${streamType} packet: ${error.message}`, 'error');
         return false;
     }
 }
@@ -483,7 +483,7 @@ this.videoWriter = this.videoStream.getWriter();
 A \texttt{captureLoop()} function recursively calls itself using \texttt{setTimeout} to maintain a consistent frame rate (15 FPS for standard quality, 30 FPS for high quality). The loop includes:
 
 \begin{enumerate}
-    \item \textbf{Frame Capture}: \texttt{ctx.drawImage(this.elements.localVideo, 0, 0, canvas.width, canvas.height);} draws the current video frame onto the canvas.
+    \item \textbf{Frame Capture}: \texttt{ctx.drawImage(this.elements.localVideo, 0, 0, canvas.width\allowbreak{}, canvas.height);} draws the current video frame onto the canvas.
     \item \textbf{Encoding}: \texttt{canvas.toDataURL('image/jpeg', quality);} converts the canvas content into a JPEG image data URL, with \texttt{quality} set to 0.7 for standard or 0.9 for high quality.
     \item \textbf{Binary Conversion}: The Base64-encoded image data is converted into a \texttt{Uint8Array} payload.
     \item \textbf{Packetization and Sending}: The \texttt{buildPacket()} method creates a packet with \texttt{track\_id 'live\_video'} and \texttt{track\_type 'video'}, applying a \texttt{forceSize} of 2500 bytes for high-quality streaming to test network handling. The packet is sent via \texttt{this.loggedWrite(this.videoWriter, packet, 'VIDEO')}.
@@ -505,7 +505,7 @@ this.audioWriter = this.audioStream.getWriter();
 \end{lstlisting}
 
 \begin{itemize}
-    \item \textbf{\texttt{AudioContext}}: Provides the framework for audio processing, with \texttt{audioContext.resume()} ensuring processing starts.
+    \item \textbf{\texttt{AudioContext}}: Provides the framework for audio processing, with \texttt{audioContext.re\allowbreak{}sume()} ensuring processing starts.
     \item \textbf{\texttt{MediaStreamSource}}: Creates an audio node from the \texttt{mediaStream} obtained via \texttt{getUserMedia}.
     \item \textbf{\texttt{ScriptProcessorNode}}: Uses a buffer size of 4096 samples with one input and output channel for mono audio.
 \end{itemize}
@@ -533,7 +533,7 @@ The \texttt{source} and \texttt{processor} nodes are connected to the \texttt{au
 The live chat functionality enables real-time text communication using a dedicated WebTransport stream. The \texttt{sendChatMessage()} method is triggered when the user presses "Enter" or clicks the "Send" button:
 
 \begin{enumerate}
-    \item \textbf{Message Retrieval and Validation}: The message is retrieved from \texttt{this.elements.chatInput.value} and trimmed, exiting if empty.
+    \item \textbf{Message Retrieval and Validation}: The message is retrieved from \texttt{this.elements\allowbreak{}.chatInput.value} and trimmed, exiting if empty.
     \item \textbf{Data Structuring}: The message is encapsulated in a JSON object:
     \begin{lstlisting}[breaklines=true,basicstyle=\small\ttfamily,frame=single]
 const chatData = {
@@ -546,7 +546,7 @@ const chatData = {
 const payload = this.encoder.encode(JSON.stringify(chatData));
     \end{lstlisting}
     \item \textbf{Packetization and Sending}: The JSON object is encoded into a \texttt{Uint8Array} and passed to \texttt{buildPacket()} with \texttt{track\_id 'live\_chat'} and \texttt{track\_type 'chat'}, then sent via \texttt{this.loggedWrite()}.
-    \item \textbf{Local Display and Metrics}: The message is appended to \texttt{this.elements.chatMessages}, scrolled to the bottom, the input field is cleared, and \texttt{this.chatMessageCount++} is incremented.
+    \item \textbf{Local Display and Metrics}: The message is appended to \texttt{this.elements.chatMe\allowbreak{}ssages}, scrolled to the bottom, the input field is cleared, and \texttt{this.chatMessageCount++} is incremented.
 \end{enumerate}
 
 This dedicated chat stream ensures low-latency communication, critical for interactive applications.
@@ -682,10 +682,10 @@ This dedicated chat stream ensures low-latency communication, critical for inter
 % async loggedWrite(writer, packet, streamType) {
 %     try {
 %         await writer.write(packet);
-%         this.log(`✈️ Sent ${streamType} packet: ${packet.length} bytes`, 'success');
+%         this.log(`Sent ${streamType} packet: ${packet.length} bytes`, 'success');
 %         return true;
 %     } catch (error) {
-%         this.log(`❌ Failed to send ${streamType} packet: ${error.message}`, 'error');
+%         this.log(`Failed to send ${streamType} packet: ${error.message}`, 'error');
 %         return false;
 %     }
 % }
