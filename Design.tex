@@ -143,17 +143,17 @@ This dissertation addresses the problem of a lack of solutions to understand Htt
 % The Design chapter should provide a description of the approach that addresses the problem identified above. The intention of this chapter is to discuss a proposed solution at an abstract, high level that is disconnected from an actual realisation of a solution. The motivation for this approach is that it should be possible to implement the proposed solution using a variety of methods; however, the abstract description of the solution should be applicable to a variety of possible realisation. For example, a solution for an issue may have been realised in as a Pascal or C program in the mid-1990s, whereas in the mid-2020s, the same issue may be addressed with a Python or Rust program. 
 
 
-This chapter outlines the major design decisions taken in this dissertation. The general problem is decomposed into smaller subproblems and each of them is solved one at a time. For every subproblem, the reasoning behind the chosen solution is explained and described using diagrams to understand the flow of communication. Once each part is solved, the solutions are combined to form the final system design
+This chapter outlines the major design decisions taken in this dissertation. The general problem is decomposed into smaller subproblems, and each of them is solved one at a time. For every subproblem, the reasoning behind the chosen solution is explained and described using diagrams to understand the flow of communication. Once each part is solved, the solutions are combined to form the final system design.
 
-The values taken by major parameters are also described here along with explanation. In the beginning of the chapter, it starts with the design of the WebTransport client, decision made in the process of its development. It then proceeds to explain the architecture of the Kubernetes-based infrastructure upon which the system will be deployed. Then it turns to the essence of the dissertation, namely the WebTransport router and gives detailed design for the same. Subsequently, the chapter will deal with the integration of microservices and Apache Pulsar and the design of this connection. At last, it gives the whole architecture of the system and concludes with a brief conclusion.
+The values taken by major parameters are also described here along with explanations. At the beginning of the chapter, it starts with the design of the WebTransport client and decisions made in the process of its development. It then proceeds to explain the architecture of the Kubernetes-based infrastructure upon which the system will be deployed. Then it turns to the essence of the dissertation, namely the WebTransport router, and gives a detailed design for the same. Subsequently, the chapter will deal with the integration of microservices and Apache Pulsar and the design of this connection. Finally, it gives the overall architecture of the system and concludes with a brief summary.
 
 
 
 \section{Design of Client}
-Webtransport Streams were the point of intererst so the first task was to designa  specific usecase for our proplem. The usecase of Webtreaming was considered as it would perfectly fit with our problem. From the gaps in k8s existing solutions,it was evident that a client would be required that sends multiplexed data streams to the kuberenetes cluster. For the streaming usecase in javascript client, Webtransport API supports multiplexing streams of data to be sent over a single connection. So there was a need to design the packet structure as to how the packet would be received at the destination end. 
+WebTransport streams were the point of interest, so the first task was to design a specific use case for our problem. The use case of web streaming was considered as it would perfectly fit with our problem. From the gaps in Kubernetes existing solutions, it was evident that a client would be required that sends multiplexed data streams to the Kubernetes cluster. For the streaming use case in JavaScript client, WebTransport API supports multiplexing streams of data to be sent over a single connection. So there was a need to design the packet structure as to how the packet would be received at the destination end. 
 
-\subsection{Webtransport Streams}
-Webtransport streams operates atop of Quic protocol which helps achieve enabling multiple concurrent unidirectional data streams to be sent within a single secure transport connection. It implied need for multiple dedicated streams. To fit our streaming usecase we have decided audio,video and chat datastreams. These act as seperate datastreams which would indicidually send with isolation. This circumvents the HOL problem. The following table shows the design for multiple streams to be multiplexed and sent over a single connection.
+\subsection{WebTransport Streams}
+WebTransport streams operate on top of the QUIC protocol, which helps achieve enabling multiple concurrent unidirectional data streams to be sent within a single secure transport connection. This implied a need for multiple dedicated streams. To fit our streaming use case, we have decided on audio, video, and chat data streams. These act as separate data streams which would individually send with isolation. This circumvents the HOL problem. The following table shows the design for multiple streams to be multiplexed and sent over a single connection.
 
 
 \begin{table}[h!]
@@ -179,17 +179,17 @@ Chat Stream & Transmit text messages & Unidirectional & High & Medium & Guarante
 
 
 
-With this clearly seperated we can individually holding different data allows to have a clear distinction of usecases allowing us to leverage the true power of multiplexing
+With this clear separation, we can individually hold different data, allowing us to have a clear distinction of use cases, enabling us to leverage the true power of multiplexing.
 
 
 \subsection{Designing the Complete Packet}
 
-In this section, the rationale used in the design of the packet structure relying on a WebTransport-based real-time streaming usecase is described. The design emphasizes performance, extensibility and robustness in achieving an efficient data transmission, routing and buffer management in a microservice-oriented architecture.
+In this section, the rationale used in the design of the packet structure relying on a WebTransport-based real-time streaming use case is described. The design emphasizes performance, extensibility, and robustness in achieving efficient data transmission, routing, and buffer management in a microservice-oriented architecture.
 
 \subsubsection{Overview}
-Each packet consists of a fixed-size header of 32 bytes followed by a variable-length payload. 
+Each packet consists of a fixed-size header of 32 bytes followed by a variable-length payload.
 
-The packets are built with a infixed size of header of 32 bytes and variable length payload. The header contains metadata to facilitate routing and processing, while the payload carries the actual data, such as audio, video, or chat messages.
+The packets are built with a fixed size header of 32 bytes and variable-length payload. The header contains metadata to facilitate routing and processing, while the payload carries the actual data, such as audio, video, or chat messages.
 
 
 \subsubsection{Packet Details}
@@ -209,33 +209,33 @@ track\_type & 20 & 12 & Type of stream, such as video, chat \\
 \label{tab:header_structure}
 \end{table}
 
-It has 32-byte fixed-size header and variable-length payload; the packet structure is defined as a 32-byte fixed header and an arbitrary-length field. There are three fields entered in the header:
+It has a 32-byte fixed-size header and variable-length payload; the packet structure is defined as a 32-byte fixed header and an arbitrary-length field. There are three fields in the header:
 
 \paragraph{track\_id - 16 bytes}
-The \texttt{track\_id} field is a unique identifier of logical stream or source like ``live\_video'' or ``live\_chat''. It allows the server or router to multiplex multiple logical streams into a single QUIC connection so that the connection can support features such as multi-user streaming. The 16-byte size allows for human-readable identifiers, null-padding for shorter IDs and ensures flexibility and simplicity.
+The \texttt{track\_id} field is a unique identifier of a logical stream or source like ``live\_video'' or ``live\_chat''. It allows the server or router to multiplex multiple logical streams into a single QUIC connection so that the connection can support features such as multi-user streaming. The 16-byte size allows for human-readable identifiers, null-padding for shorter IDs, and ensures flexibility and simplicity.
 
 \paragraph{payload\_len - 4 bytes, big-endian}
-The payload length after the header is given by the \texttt{payload\_len} field. This enables the receiver to allocate buffers accurately and read those exact number of payload bytes thus making the process more efficient and avoiding the reading of excess payload. The cross platform compatibility can be seen in working with the big-endian format, since it presents a standard network byte order. Payloads can be up to 4GB with a 4-byte field, which is sufficient for delivering live streams.
+The payload length after the header is given by the \texttt{payload\_len} field. This enables the receiver to allocate buffers accurately and read the exact number of payload bytes, thus making the process more efficient and avoiding the reading of excess payload. Cross-platform compatibility can be seen in working with the big-endian format, since it presents a standard network byte order. Payloads can be up to 4GB with a 4-byte field, which is sufficient for delivering live streams.
 
 \paragraph{track\_type - 12 bytes}
-The \texttt{track\_type} element holds the type of an information in the payload i.e. \texttt{video}, \texttt{audio}, or \texttt{chat}. It helps to direct packets to the correct microservice or handler and also enables extensibility by letting new types, such as "subtitle" or "control", without having to reshape the packet header. The 12-byte field stores descriptive type names and makes shorter types null-padded, and is consistent.
+The \texttt{track\_type} element holds the type of information in the payload, i.e., \texttt{video}, \texttt{audio}, or \texttt{chat}. It helps to direct packets to the correct microservice or handler and also enables extensibility by allowing new types, such as "subtitle" or "control", without having to reshape the packet header. The 12-byte field stores descriptive type names and makes shorter types null-padded, ensuring consistency.
 
 \paragraph{Variable-Length Payload}
-The payload holds the actual, e.g. media frames or messages. This architecture enables a wide range of data types and sizes of data, such as small chat messages, and video frames. The \texttt{payload\_len} field is explicit and thereby allows the use of efficient fragmentation and reassembly routines because the receiver knows the number of bytes to receive accurately and it improves buffer handling.
+The payload holds the actual data, e.g., media frames or messages. This architecture enables a wide range of data types and sizes, such as small chat messages and video frames. The \texttt{payload\_len} field is explicit and thereby allows the use of efficient fragmentation and reassembly routines because the receiver knows the number of bytes to receive accurately, and it improves buffer handling.
 
 \subsubsection{Benefits}
 
 \subsubsection{Multiplexing and Routing}
-With the help of \texttt{track\_id} and \texttt{track\_type} fields, the router can demultiplex packets that belong to one QUIC connection and send them to the corresponding service, e.g. audio, video, or chat microservice. This aids a modular, service-based architecture, which increases scalability and maintainability.
+With the help of \texttt{track\_id} and \texttt{track\_type} fields, the router can demultiplex packets that belong to one QUIC connection and send them to the corresponding service, e.g., audio, video, or chat microservice. This aids a modular, service-based architecture, which increases scalability and maintainability.
 
 \subsubsection{Buffer Management and Fragmentation}
-The \texttt{payload\_len} field will enable the router to buffer pending packets until a complete payload is received a reliable processing will be possible. The structure also helps to trace and analyse packet fragmentation which is essential in optimising performance and buffer analysis in real-time streaming.
+The \texttt{payload\_len} field will enable the router to buffer pending packets until a complete payload is received, ensuring reliable processing. The structure also helps to trace and analyze packet fragmentation, which is essential in optimizing performance and buffer analysis in real-time streaming.
 
 \subsubsection{Extensibility}
-The \texttt{track\_type} field supports the addition of new stream types, such as file transfer or screen sharing, without modifying the header structure. Older routers or clients can ignore unrecognized \texttt{track\_type} values, ensuring backward compatibility and supportinng gradual system upgrades.
+The \texttt{track\_type} field supports the addition of new stream types, such as file transfer or screen sharing, without modifying the header structure. Older routers or clients can ignore unrecognized \texttt{track\_type} values, ensuring backward compatibility and supporting gradual system upgrades.
 
 \subsubsection{Simplicity and Robustness}
-Clear length fields do not need delimiters or escape sequences, and minimize the parsing errors. Memory control becomes easy, and the occurrence of events such as buffer overflows is avoided by means of null-padding in fixed-size fields, which adds robustness to the system.
+Clear length fields do not need delimiters or escape sequences and minimize parsing errors. Memory control becomes easy, and the occurrence of events such as buffer overflows is avoided by means of null-padding in fixed-size fields, which adds robustness to the system.
 
 
 \subsubsection{Performance and Efficiency}
@@ -246,30 +246,30 @@ The 32-byte fixed-size header aligns with CPU word sizes and helps in optimizing
 
 
 \section{Kubernetes Design}
-As highlighted in the State of the Art, we proceeded to work with Minikube cluster
+As highlighted in the State of the Art, we proceeded to work with a Minikube cluster.
 
 \subsection{Driver Design for Kubernetes Cluster}
-Post the selection of a kubernetes solution for the local setup. A decision was required as to how the architecture of the cluster should look like. Questions like single node, multiple node, how control plane and data plane would look line needed answers . Minikube clusters can be created with several drivers. Few of them are docker driver, Virtual Machine Drivers. Docker Driver was chosen because of several reasons such as follows:
+After the selection of a Kubernetes solution for the local setup, a decision was required as to how the architecture of the cluster should look. Questions like single node, multiple nodes, how the control plane and data plane would look like needed answers. Minikube clusters can be created with several drivers. A few of them are Docker driver and Virtual Machine drivers. The Docker driver was chosen for several reasons as follows:
 
 \subsubsection{No Virtual Machine (VM) Overhead}
-Virtual Machine management can become challenging due to additional configuration management, resource constraints and increaased complexity. Linux natively support containers which allows for containerization eliminating the need for virtualization. 
+Virtual Machine management can become challenging due to additional configuration management, resource constraints, and increased complexity. Linux natively supports containers, which allows for containerization, eliminating the need for virtualization. 
 
 \subsubsection{Less Resource Usage}
-Secondly the machine being used is based on linux mint which has faster bootstrap times, lower cpu and memory comsumption and better performance when compared to windows machines.
+Secondly, the machine being used is based on Linux Mint, which has faster bootstrap times, lower CPU and memory consumption, and better performance when compared to Windows machines.
 
 \subsubsection{Logical Seperation}
-Docker runs on linux kernel whereas minikube when using docker driver would create a logical seperation by running in a seperate container which simplifies and adds necessary abstraction
+Docker runs on the Linux kernel, whereas Minikube, when using the Docker driver, would create a logical separation by running in a separate container, which simplifies and adds necessary abstraction.
 
 \subsubsection{Shared Networking}
-The services which would run inside Minikube cluster can be accessed with other applications in the system.
+The services which run inside the Minikube cluster can be accessed by other applications in the system.
 
-With Docker as the driver, Minikube runs on a single container within the Docker interface, which allows it to interact with the host Linux machine through the network interface. For simplicity and avoidance of configurational challenges, the solution runs on one node where both the data plane and control plane operate on a single node. This is not a production setup but ensures a clear development environment.
+With Docker as the driver, Minikube runs in a single container within the Docker interface, which allows it to interact with the host Linux machine through the network interface. For simplicity and avoidance of configurational challenges, the solution runs on one node where both the data plane and control plane operate on a single node. This is not a production setup but ensures a clear development environment.
 
 Each component specified in the state of the art for Kubernetes will be deployed into this cluster via Minikube. This design ensures seamless deployment, developer-friendly configuration, and an extensible, scalable architecture.
 
 
 \subsection{Network Exposure Design in Kubernetes}
-The ingestion of UDP traffic into Kubernetes was approached with the intent to provide a service load balancer and an IP address. This would allow us to create an endpoint for our application, enabling Kubernetes to proxy to the microservices with the help of the built application. Previous chapters discussed exposing UDP traffic as the first challenge to overcome for the realization of our final goal. In this section, the design inspiration stemmed from observing the large adoption of cloud networks and how they exposed Kubernetes services to the outside world. It became evident that there was a need for an external load balancer, which would assign an IP to our service load balancer. The Kubernetes solutions for exposing services in a local setup, as discussed in the state of the art, were limited. Hence, a solution utilizing MetalLB was proposed. MetalLB is a bare-metal load balancer for Kubernetes that allowed us to provide an entry point to our application. The following architecture shows how MetalLB was leveraged
+The ingestion of UDP traffic into Kubernetes was approached with the intent to provide a service load balancer and an IP address. This would allow us to create an endpoint for our application, enabling Kubernetes to proxy to the microservices with the help of the built application. Previous chapters discussed exposing UDP traffic as the first challenge to overcome for the realization of our final goal. In this section, the design inspiration stemmed from observing the large adoption of cloud networks and how they exposed Kubernetes services to the outside world. It became evident that there was a need for an external load balancer, which would assign an IP to our service load balancer. The Kubernetes solutions for exposing services in a local setup, as discussed in the state of the art, were limited. Hence, a solution utilizing MetalLB was proposed. MetalLB is a bare-metal load balancer for Kubernetes that allowed us to provide an entry point to our application. The following architecture shows how MetalLB was leveraged:
 
 
 
@@ -279,13 +279,13 @@ The ingestion of UDP traffic into Kubernetes was approached with the intent to p
 \includegraphics[width=0.8\textwidth]{Design/metal.png}
 \end{figure}
 
-From the figure, we can see that MetalLB is intended to be the frontend of our Kubernetes Cluster, ingesting data. It's important to note that MetalLB acts as a Layer 4 network load balancer, which allows it to proxy raw UDP packets into our cluster. This solves the problem of ingestion. The traffic will travel to and from the service, to MetalLB, and then to the outside cluster, and vice versa.
+From the figure, we can see that MetalLB is intended to be the frontend of our Kubernetes cluster, ingesting data. It's important to note that MetalLB acts as a Layer 4 network load balancer, which allows it to proxy raw UDP packets into our cluster. This solves the problem of ingestion. The traffic will travel to and from the service, to MetalLB, and then to the outside cluster, and vice versa.
 
 
 
-\subsubsection{Sequence Flow for metallb}
+\subsubsection{Sequence Flow for MetalLB}
 \begin{figure}[H]
-\caption{Sequence flow for metal-lb}
+\caption{Sequence flow for MetalLB}
 \centering
 \includegraphics[width=1\textwidth]{Design/metal_sequence.png}
 \end{figure}
@@ -294,15 +294,15 @@ The client sends a request to the MetalLB IP address. The request is then forwar
 
 \section{Design of Backend}
 
-This section presents the design of the routing and processing system for a WebTransport stream-aware routing platform. Design focuses on optimization in configuration, connection managements, packets processing, use of metrics, integration of various microservices and flexibility in command line to facilitate a scalable and resilient streaming design.
+This section presents the design of the routing and processing system for a WebTransport stream-aware routing platform. The design focuses on optimization in configuration, connection management, packet processing, use of metrics, integration of various microservices, and flexibility in command line to facilitate a scalable and resilient streaming design.
 
 \subsection{Configuration-Driven Routing Architecture}
 
 
 
-The system adopts a configuration-driven routing approach that allows for dynamic changes and streamlined service management. A central `ServiceConfig` structure defines essential parameters—such as host, port, and endpoint—for each microservice, such as audio, video, chat. These configurations are written in a YAML file that is loaded during runtime using a dedicated `ConfigManager` component in Kubernetes. This component enables hot-reloading, so the routing logic can be changed without restarting services. The routing system can therefore be extremely flexible and extensible and easily reconfigured to accommodate emerging needs or varying deployment environments during operation of the system.
+The system adopts a configuration-driven routing approach that allows for dynamic changes and streamlined service management. A central `ServiceConfig` structure defines essential parameters—such as host, port, and endpoint—for each microservice, such as audio, video, and chat. These configurations are written in a YAML file that is loaded during runtime using a dedicated `ConfigManager` component in Kubernetes. This component enables hot-reloading, so the routing logic can be changed without restarting services. The routing system can therefore be extremely flexible and extensible and easily reconfigured to accommodate emerging needs or varying deployment environments during operation of the system.
 
-The architecture is intended to operate in Kubernetes and utilizes Kubernetes constructs such as ConfigMaps and Secrets to pass routing definitions and TLS credentials to the downstream code.As far as it is concerned, the Router Config is a central configuration file that encapsulates the rules of service routing and protocol behaviors. The router serves as a fast proxy, reading the configuration from this file and redirecting client search requests to the correct backend microservices. This decoupled and declarative model leads to routing behavior that is fully controlled entirely outside of the application's code. This approach aligns with CI/CD principles. The system supports dynamic scaling, safe updates, and operational agility, thereby enabling the router to be deployed in modern cloud-native operations that demand responsiveness and maintainability.
+The architecture is intended to operate in Kubernetes and utilizes Kubernetes constructs such as ConfigMaps and Secrets to pass routing definitions and TLS credentials to the downstream code. As far as it is concerned, the Router Config is a central configuration file that encapsulates the rules of service routing and protocol behaviors. The router serves as a fast proxy, reading the configuration from this file and redirecting client requests to the correct backend microservices. This decoupled and declarative model leads to routing behavior that is controlled entirely outside of the application's code. This approach aligns with CI/CD principles. The system supports dynamic scaling, safe updates, and operational agility, thereby enabling the router to be deployed in modern cloud-native operations that demand responsiveness and maintainability.
 
 
 \begin{figure}[h]
@@ -434,9 +434,9 @@ The figure shows the router forwarding packets to a proxy layer, which routes th
 
 \section{Pulsar Integration Design}
 
-After processing packets such as chat messages, audio streams, or video data, each microservice can optionally publish the output to an Apache Pulsar topic. This mechanism decouples real-time data processing from downstream distribution analytics, storage, or machine learning. The messages of each particular service are sent to a specifically-named topic, such as chat-topic, video-topic, which guarantees a separation of concerns as well as scalability.
+After processing packets such as chat messages, audio streams, or video data, each microservice can optionally publish the output to an Apache Pulsar topic. This mechanism decouples real-time data processing from downstream distribution, analytics, storage, or machine learning. The messages of each particular service are sent to a specifically-named topic, such as chat-topic or video-topic, which guarantees separation of concerns as well as scalability.
 
-This design enables easy integration with real-time data consumers, allows for per-service configuration of Pulsar usage and allows for flexibility in order to enable/disable publishing dynamically.
+This design enables easy integration with real-time data consumers, allows for per-service configuration of Pulsar usage, and allows for flexibility to enable/disable publishing dynamically.
 
 
 
@@ -472,7 +472,7 @@ This design enables easy integration with real-time data consumers, allows for p
 
 \section{Complete System Architecture}
 
-The following architecture is a high-level technical architecture diagram which entails the complete proposed solution. The sections above delved deep into each components individually and this is the final high-level overview of our dissertation
+The following architecture is a high-level technical architecture diagram which entails the complete proposed solution. The sections above delved deep into each component individually, and this is the final high-level overview of our dissertation.
 
 \begin{figure}[H]
 \caption{System Architecture}
@@ -480,17 +480,17 @@ The following architecture is a high-level technical architecture diagram which 
 \includegraphics[width=1\textwidth]{Design/Design_Solution.png}
 \end{figure}
 
-The proposed architecture system is a real-time streaming system based on a modular structure built to support scaling, low latency communication, and efficient data processing and distribution within a cloud-native infrastructure. It starts with ingest layer where client sends streams of data with a webtransport client connects through HTTP/3 a QUIC-based protocol allowing to establish a single transport connection but with multiplexing multiple data streams in the connection video, audio, and chat. The load balancer in the Kubernetes cluster is MetalLB, which is exclusively enabled to provide UDP passthrough for the minikube ckuster to facilitate the forwarding of QUIC connection as entire UDP packets to the internal components. The system is centered around a custom proxy server that will terminate the HTTP/3 connection, demultiplexes the stream it receives, and forwards each individual data stream to the appropriate microservice over HTTP/1.1. This server effectively acts as both a protocol gateway and a routing mechanism.
+The proposed architecture system is a real-time streaming system based on a modular structure built to support scaling, low-latency communication, and efficient data processing and distribution within a cloud-native infrastructure. It starts with the ingestion layer where the client sends streams of data with a WebTransport client that connects through HTTP/3, a QUIC-based protocol allowing to establish a single transport connection but with multiplexing multiple data streams in the connection: video, audio, and chat. The load balancer in the Kubernetes cluster is MetalLB, which is exclusively enabled to provide UDP passthrough for the Minikube cluster to facilitate the forwarding of QUIC connections as entire UDP packets to the internal components. The system is centered around a custom proxy server that will terminate the HTTP/3 connection, demultiplex the stream it receives, and forward each individual data stream to the appropriate microservice over HTTP/1.1. This server effectively acts as both a protocol gateway and a routing mechanism.
 
-The application layer is based on different microservices of chat, video, and audio developed which is responsible for handling its own set of data and are independent from each other. These microservices publishes the data to Apache Pulsar after processing, acting as a producer in the event streaming system. The Pulsar cluster will have a broker handling the routing and dispatching of messages, different topics that logically segregate each type of data such as Text Topic, Video Topic, Audio Topic and it will have a persistent storage backend consisting of the Bookie pods of Apache BookKeeper so that persistant data storage and recovery from faults are possible. Finally, on the consumption level, independent consumer applications subscribes to the Pulsar topics and receive data asynchronously. This decouples the data ingestion and downstream processing, allowing to enable use cases of real-time streaming, analytics or storage with modularity and scalability in the system.
+The application layer is based on different microservices for chat, video, and audio developed which are responsible for handling their own set of data and are independent from each other. These microservices publish the data to Apache Pulsar after processing, acting as a producer in the event streaming system. The Pulsar cluster will have a broker handling the routing and dispatching of messages, different topics that logically segregate each type of data such as Text Topic, Video Topic, Audio Topic, and it will have a persistent storage backend consisting of the Bookie pods of Apache BookKeeper so that persistent data storage and recovery from faults are possible. Finally, on the consumption level, independent consumer applications subscribe to the Pulsar topics and receive data asynchronously. This decouples the data ingestion and downstream processing, enabling use cases of real-time streaming, analytics, or storage with modularity and scalability in the system.
 \label{sec:OverviewOfDesign}
 
-\section {Summary}
-The proposed system is a real-time streaming architecture that is modular and scalable, designed to support low-latency multimedia communication using WebTransport, Kubernetes, and Apache Pulsar. The architecture breaks the problem space into smaller modules which are developed independently and then combined to form a whole solution. On the client side, WebTransport is used to send data, and WebTransport runs on QUIC to enable data multiplexing across different data streams in a single connection i.e. audio, video and chat. The design will prevent Head-of-Line blocking. A typical packet transmitted has a 32-byte header composed of track\_id, payload\_len and track\_type fields and a variable length payload. The format is capable of extending; it is useful in routing for diversity of data types.
+\section{Summary}
+The proposed system is a real-time streaming architecture that is modular and scalable, designed to support low-latency multimedia communication using WebTransport, Kubernetes, and Apache Pulsar. The architecture breaks the problem space into smaller modules which are developed independently and then combined to form a complete solution. On the client side, WebTransport is used to send data, and WebTransport runs on QUIC to enable data multiplexing across different data streams in a single connection, i.e., audio, video, and chat. The design will prevent Head-of-Line blocking. A typical packet transmitted has a 32-byte header composed of track\_id, payload\_len, and track\_type fields and a variable-length payload. The format is capable of extending; it is useful in routing for a diversity of data types.
 
-Inside the Kubernetes cluster, a single-node Minikube setup is used for simplicity, leveraging the Docker driver to eliminate virtual machine overhead and enable shared networking. MetalLB is used as a bare metal load balancer that exposes QUIC-based UDP traffic to components of the kubernetes cluster, enabling the external WebTransport clients to connect to internal services. Its routing logic is config-driven, user-managed through YAML-based ConfigMaps and allows for dynamic updates and reloading of routing configurations without system restarts. The core of this solution is the WebTransportRouter, a custom component that accepts and deals with QUIC/HTTP3 streams by attaching each track with its own explicitly associated buffer of streams. This guarantees that audio, video and chat information is manipulated in a low latency basis for redirections. Once the component performs initial parsing, it sends each stream to its respective microservice through HTTP/1.1 via a proxy server that acts as a reliable gateway between the transport and application layers.
+Inside the Kubernetes cluster, a single-node Minikube setup is used for simplicity, leveraging the Docker driver to eliminate virtual machine overhead and enable shared networking. MetalLB is used as a bare-metal load balancer that exposes QUIC-based UDP traffic to components of the Kubernetes cluster, enabling external WebTransport clients to connect to internal services. Its routing logic is config-driven, user-managed through YAML-based ConfigMaps, and allows for dynamic updates and reloading of routing configurations without system restarts. The core of this solution is the WebTransportRouter, a custom component that accepts and deals with QUIC/HTTP3 streams by attaching each track with its own explicitly associated buffer of streams. This guarantees that audio, video, and chat information is manipulated on a low-latency basis for redirections. Once the component performs initial parsing, it sends each stream to its respective microservice through HTTP/1.1 via a proxy server that acts as a reliable gateway between the transport and application layers.
 
-At the application layer, separate stateless microservices are responsible for processing specific types of data such as audio, video, or chat. Each microservice publishes the processed data to its corresponding Apache Pulsar topic—for instance, chat-topic or video-topic—thereby enabling a decoupled and scalable processing model. Apache Pulsar is used as the main system for handling event streams. It consists of a broker which receives data for a specific topic and it stored multiple topic's logical association, with each topic keeping different types of data separate such as audio, video, or chat. To ensure data is safely stored and can be recovered if something goes wrong, Apache BookKeeper is used in the background through components called Bookie. On the receiving side, different consumer applications connect to Pulsar and subscribe to specific topics to get the data they need. By keeping the parts that send, process, and receive data separate, the system stays flexible, reliable, and easy to scale for real-time streaming or analytics tasks.
+At the application layer, separate stateless microservices are responsible for processing specific types of data such as audio, video, or chat. Each microservice publishes the processed data to its corresponding Apache Pulsar topic—for instance, chat-topic or video-topic—thereby enabling a decoupled and scalable processing model. Apache Pulsar is used as the main system for handling event streams. It consists of a broker which receives data for a specific topic and stores multiple topics' logical associations, with each topic keeping different types of data separate such as audio, video, or chat. To ensure data is safely stored and can be recovered if something goes wrong, Apache BookKeeper is used in the background through components called Bookies. On the receiving side, different consumer applications connect to Pulsar and subscribe to specific topics to get the data they need. By keeping the parts that send, process, and receive data separate, the system stays flexible, reliable, and easy to scale for real-time streaming or analytics tasks.
 
 
 % \section{Detail 1 of the Design}
