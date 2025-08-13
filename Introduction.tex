@@ -38,15 +38,15 @@
 \chapter{Introduction}
 \label{chap\:Introduction}
 
-The world of web communication has changed tremendously over the last couple of decades particularly because of growing demand for instance access to information. This results in need for ultra low-latency, high-throughput and resilient data-exchange mechanisms. The history of internet started with web traffic being based on HyperText Transfer Protocol HTTP/0.9, HTTP/1.0, each successive version, including HTTP/1.1 and HTTP/2, has managed to increase efficacy in the form of persistent connections and multiplexing \cite{kurose2017}. These enhancements have however been limited by their dependence on the Transmission Control Protocol (TCP), a transport layer protocol specifically designed for exchanging reliable information. TCP Head-of-Line (HOL) blocking has been one of the most persistent challenges that occurs in this scenario, as loss of packets in one stream blocks packets in other streams until TCP has successfully retransmitted the lost packet.
+The world of web communication has changed tremendously over the last couple of decades, particularly due to the growing demand for instant access to information. This has resulted in a need for ultra-low-latency, high-throughput, and resilient data-exchange mechanisms. The history of the internet started with web traffic being based on HyperText Transfer Protocol HTTP/0.9, HTTP/1.0; each successive version, including HTTP/1.1 and HTTP/2, has managed to increase efficiency in the form of persistent connections and multiplexing \cite{kurose2017}. These enhancements have, however, been limited by their dependence on the Transmission Control Protocol (TCP), a transport layer protocol specifically designed for reliable information exchange. TCP Head-of-Line (HOL) blocking has been one of the most persistent challenges that occurs in this scenario, as loss of packets in one stream blocks packets in other streams until TCP has successfully retransmitted the lost packet.
 
-To overcome such inherent limitations, the research community and Internet Engineering Task Force (IETF) have introduced Quick UDP Internet Connections (QUIC) \cite{rfc9000}, a modern transport layer protocol that is built on top of User Datagram Protocol (UDP). QUIC, and by extension HTTP/3 \cite{rfc9114}, its application-layer protocol, introduces several features such as stream-level multiplexing, reduced handshake latency via 0-Round Trip Time RTT connections, connection migration, and integrated encryption leveraging Transport Layer Security (TLS) 1.3 protocol. These features significantly increase performance particularly in environments which require critical real-time responsiveness such as video conferencing, online gaming, financial trading platforms, and interactive media.
+To overcome such inherent limitations, the research community and Internet Engineering Task Force (IETF) have introduced Quick UDP Internet Connections (QUIC) \cite{rfc9000}, a modern transport layer protocol that is built on top of User Datagram Protocol (UDP). QUIC, and by extension HTTP/3 \cite{rfc9114}, its application-layer protocol, introduces several features such as stream-level multiplexing, reduced handshake latency via 0-Round Trip Time (0-RTT) connections, connection migration, and integrated encryption leveraging Transport Layer Security (TLS) 1.3 protocol. These features significantly increase performance, particularly in environments which require critical real-time responsiveness such as video conferencing, online gaming, financial trading platforms, and interactive media.
 
-Another protocol building on QUIC like HTTP/3 is WebTransport \cite{webtransport-draft}. WebTransport is a web Application Programming Interface (API) designed to support unidirectional and bidirectional, multiplexed communication between web clients and servers, allowing developers to build applications that require granular, low-latency communication without resorting to workarounds like WebSockets, Polling, multipath TCP which is MTCP, etc. By exposing the different capabilities of HTTP/3 and QUIC through a secure and efficient JavaScript interface, WebTransport stands as a fundamental building block towards a next generation protocol suitable for real-time web applications.
+Another protocol building on QUIC like HTTP/3 is WebTransport \cite{webtransport-draft}. WebTransport is a web Application Programming Interface (API) designed to support unidirectional and bidirectional, multiplexed communication between web clients and servers, allowing developers to build applications that require granular, low-latency communication without resorting to workarounds like WebSockets, polling, multipath TCP (MPTCP), etc. By exposing the different capabilities of HTTP/3 and QUIC through a secure and efficient JavaScript interface, WebTransport stands as a fundamental building block towards next-generation protocols suitable for real-time web applications.
 
-However, even with these developments in the protocol, WebTransport adoption in the real world of the modern web and commonly deployed cloud-native, especially in Kubernetes \cite{kubernetes-docs}, remains a significant challenge. Kubernetes has emerged as the dominant container orchestration platform because of its robust support for scalability, self-healing, and infrastructure management using declarative syntax. Yet, within Kubernetes the networking abstractions and ingress controllers which allow the traffic into the environment are primarily designed for HTTP over TCP and UDP, offering limited to no support for the semantics of HTTP/3 or QUIC beyond generic UDP passthrough.
+However, even with these developments in the protocol, WebTransport adoption in the real world of modern web and commonly deployed cloud-native environments, especially in Kubernetes \cite{kubernetes-docs}, remains a significant challenge. Kubernetes has emerged as the dominant container orchestration platform due to its robust support for scalability, self-healing, and infrastructure management using declarative syntax. Yet, within Kubernetes, the networking abstractions and ingress controllers which allow traffic into the environment are primarily designed for HTTP over TCP and UDP, offering limited to no support for the semantics of HTTP/3 or QUIC beyond generic UDP passthrough.
 
-Current networking solutions for kubernetes such as ingress controllers - such as NGINX \cite{nginx-ingress-docs}, Traefik - and load balancers lack visibility into the multiplexed nature of QUIC streams. As a result, all streams within a QUIC connection are routed uniformly to a single backend service, regardless of their function or content type. This places limits on the potential benefits of WebTransport in microservice architectures, where different stream types—such as audio, video and chat could be directly proxied and sent to microservices that are optimized for their respective workloads.
+Current networking solutions for Kubernetes such as ingress controllers—such as NGINX \cite{nginx-ingress-docs}, Traefik—and load balancers lack visibility into the multiplexed nature of QUIC streams. As a result, all streams within a QUIC connection are routed uniformly to a single backend service, regardless of their function or content type. This limits the potential benefits of WebTransport in microservice architectures, where different stream types—such as audio, video, and chat—could be directly proxied and sent to microservices that are optimized for their respective workloads.
 
 
 
@@ -55,25 +55,25 @@ Current networking solutions for kubernetes such as ingress controllers - such a
 
 The shift to real-time web communication is currently the next big thing. The rise of streaming platforms such as Twitch, YouTube, and Kick demonstrates the growing demand for delivering real-time streams of data to millions of users across the world \cite{kreps2011}. With this surge in real-time big data, it is interesting to explore the potential advancements that could be achieved through lower-latency and more efficient performance outcomes enabled by the adoption of the WebTransport protocol.
 
-During my time as a  DevOps Engineer, I personally observed the heavy dependency on the TCP networking protocol when working with Kubernetes based solutions. My initial motivation stemmed from asking myself a few key questions about this dependency.
+During my time as a DevOps Engineer, I personally observed the heavy dependency on the TCP networking protocol when working with Kubernetes-based solutions. My initial motivation stemmed from asking myself a few key questions about this dependency.
 
 The core motivation discussed in this dissertation is the absence of native, stream-conscious routing support for WebTransport traffic in the Kubernetes environment. Although QUIC and HTTP/3 address many protocol-level performance issues associated with TCP, they do not yet scale effectively for microservice ecosystems. This is due to the current inability of Kubernetes’ networking and ingress infrastructure to support granular stream-level routing and application-aware processing.
 
-Specifically, the limitations of existing Kubernetes networking and ingress infrastructure are outlined in the following ways, which serve as the primary motivation for this dissertation
+Specifically, the limitations of existing Kubernetes networking and ingress infrastructure are outlined in the following ways, which serve as the primary motivation for this dissertation:
 
 \begin{itemize}
-\item \textbf{Lack of Stream-Level Visibility:} QUIC streams within a single connection are opaque to existing Layer 4 load balancers. Without visibility into individual streams, ingress controllers cannot differentiate between types of data meaning types of streams.
+\item \textbf{Lack of Stream-Level Visibility:} QUIC streams within a single connection are opaque to existing Layer 4 load balancers. Without visibility into individual streams, ingress controllers cannot differentiate between types of data, meaning they cannot distinguish between types of streams.
 
 \item \textbf{Monolithic Connection Handling:} The entire QUIC connection is treated as a single UDP session and directed to one backend, regardless of the number or nature of streams it carries. This eliminates the possibility of decomposing responsibilities across multiple microservices, leading to tightly coupled designs and inefficient resource utilization.
 
 \item \textbf{Absence of Application-Layer Intelligence:} Ingress controllers lack insight into the semantics of WebTransport streams, making it impossible to apply policies such as stream-based Quality of Service (QoS), content-based routing, or differentiated handling of critical and non-critical data flows.
 
-\item \textbf{Limited Protocol Translation Capabilities:} Many backend services still rely on HTTP/1.1 for communication. The absence of mechanisms to terminate HTTP/3 and understand individual streams by converting it to HTTP/1.1 requests further hinders interoperability and adoption in legacy-compatible environments.
+\item \textbf{Limited Protocol Translation Capabilities:} Many backend services still rely on HTTP/1.1 for communication. The absence of mechanisms to terminate HTTP/3 and understand individual streams by converting them to HTTP/1.1 requests further hinders interoperability and adoption in legacy-compatible environments.
 
 
 \end{itemize}
 
-This set of challenges are a major motivation to attempt productionizing WebTransport, especially when working with streams and microservices within Kubernetes-powered architecture, where one of the key architectural advantage is modularity, observability, and dynamic routing.
+This set of challenges provides major motivation to attempt productionizing WebTransport, especially when working with streams and microservices within Kubernetes-powered architectures, where one of the key architectural advantages is modularity, observability, and dynamic routing.
 
 \section{Research Objectives}
 
@@ -81,35 +81,35 @@ This research addresses the identified challenges by establishing clear objectiv
 
 \subsection{Primary Objective}
 
-This dissertation aims to fill the gap described above with the development of a WebTransport stream-aware routing system that will integrate easily within the Kubernetes environment. Application-layer routing decisions are facilitated using individual stream semantics that strives to change the management of real-time information within cloud-native platforms.
+This dissertation aims to fill the gap described above with the development of a WebTransport stream-aware routing system that will integrate easily within the Kubernetes environment. Application-layer routing decisions are facilitated using individual stream semantics that strive to change the management of real-time information within cloud-native platforms.
 
 \subsection{Secondary Objectives}
 
 \begin{enumerate}
-\item \textbf{Protocol Translation:} Support translation of HTTP/3, WebTransport to HTTP/1.1 and achieve the compatibility of the technology with current microservice backends that have still not implemented newer protocol types.
+\item \textbf{Protocol Translation:} Support translation of HTTP/3 WebTransport to HTTP/1.1 and achieve compatibility of the technology with current microservice backends that have still not implemented newer protocol types.
 
-\item \textbf{Stream Demultiplexing:} Establish effective systems to understand QUIC streams on the basis of a fixed packet structure, thus logically isolating the various data data like audio, video and control messages.
+\item \textbf{Stream Demultiplexing:} Establish effective systems to understand QUIC streams based on a fixed packet structure, thus logically isolating various data types like audio, video, and control messages.
 
 \item \textbf{Dynamic Configuration:} Develop a flexible, configuration-driven routing mechanism that supports hot-reloading and dynamic updates via Kubernetes-native objects such as ConfigMaps and Secrets.
 
-\item \textbf{Real-time Processing Use Case:} Demonstrate to the practical feasibility by building a scenario with live streaming of different data such as audio, video, and chat, to process and integrate with streaming backend systems like Apache Pulsar.
+\item \textbf{Real-time Processing Use Case:} Demonstrate the practical feasibility by building a scenario with live streaming of different data types such as audio, video, and chat, to process and integrate with streaming backend systems like Apache Pulsar.
 
-\item \textbf{Performance Evaluation:} To evaluate the system with metrics such as backend performance buffer utilization, cpu and memory.
+\item \textbf{Performance Evaluation:} Evaluate the system with metrics such as backend performance, buffer utilization, CPU, and memory.
 
 \end{enumerate}
 
 \section{Methodology and Approach}
 
-This research follows a top down approach by breaking down the large problem into manageable components and addressing each one iteratively and progressing towards a complete solution. The approach starts with dividing overall challenge of WebTransport stream routing into distinct phases that brings us closer to the goal. At a highlevel the divided tasks include configuring Kubernetes to accept incoming UDP traffic using tools, extracting individual WebTransport streams based on custom application-layer defined headers. Deploying each component in a configuration-driven mechanisms to classify and map stream types to corresponding backend services deployed within the Kubernetes cluster. Demultiplexing streams  and forwarding to its respective microservice. Finally establishing proper monitoring mechanisms for evaluation.
+This research follows a top-down approach by breaking down the large problem into manageable components and addressing each one iteratively, progressing towards a complete solution. The approach starts with dividing the overall challenge of WebTransport stream routing into distinct phases that bring us closer to the goal. At a high level, the divided tasks include configuring Kubernetes to accept incoming UDP traffic using tools, extracting individual WebTransport streams based on custom application-layer defined headers, deploying each component in a configuration-driven mechanism to classify and map stream types to corresponding backend services deployed within the Kubernetes cluster, demultiplexing streams and forwarding to their respective microservices, and finally establishing proper monitoring mechanisms for evaluation.
 
 \section{Contributions}
 
-This dissertation makes notable contributions to the field of cloud-native networking by building a WebTransport-aware proxy system for Kubernetes. The system built aims to route individual WebTransport streams using a custom QUIC demultiplexer which contributes to open-source development by providing a Proof of Concept, building upon the aioquic library \cite{aioquic-repo}. The solution supports dynamic routing through configuration files like ConfigMaps and Secrets, which can be updated without restarting the service providing easy deployable solution in kubernetes.
+This dissertation makes notable contributions to the field of cloud-native networking by building a WebTransport-aware proxy system for Kubernetes. The system built aims to route individual WebTransport streams using a custom QUIC demultiplexer, which contributes to open-source development by providing a proof-of-concept, building upon the aioquic library \cite{aioquic-repo}. The solution supports dynamic routing through configuration files like ConfigMaps and Secrets, which can be updated without restarting the service, providing an easily deployable solution in Kubernetes.
 
 
 \section{Structure \& Contents}
 
-The structure of this dissertation will contain seven chapters, progressing from theoretical considerations to execution, review and conclusions. The chapters are independent of each other and are organized based on logical flow.
+The structure of this dissertation contains seven chapters, progressing from theoretical considerations to execution, review, and conclusions. The chapters are independent of each other and are organized based on logical flow.
 
 \textbf{Chapter 1: Introduction} outlines the motivation, research goals, and scope of WebTransport routing in Kubernetes.
 
