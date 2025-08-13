@@ -51,7 +51,7 @@ The evaluation demonstrates that the proposed system performs effectively across
 
 Scalability is another key strength, with the modular architecture supporting the seamless addition of new microservices or router replicas as demand increases. Finally, the configuration-driven approach allows for dynamic updates to routing rules and service endpoints at runtime, improving maintainability and reducing the need for service restarts. These findings validate the system’s design and highlight its potential for production use in modern cloud-native environments.
 
-These findings validate the effectiveness of the proposed solution and demonstrate its potential for adoption in production environments.
+These findings validate the proposed solution's effectiveness and demonstrates the potential for adoption in production environments.
 
 \section{Limitations}
 
@@ -83,6 +83,11 @@ The current solution uses a custom packet format for stream identification and r
 
 \subsection{Advanced Ingress Controllers and Gateway APIs}
 The development of advanced ingress controllers and gateway APIs for Kubernetes could provide native support for HTTP/3 streams in future. Monitoring these developments is a good idea.
+
+\subsection{Comparative Evaluation Against TCP-Based Protocols}
+This dissertation has mainly focused on evaluating the proposed WebTransport router solution. However, it is suggested that further work should include a detailed comparison between this solution and existing TCP-based streaming protocols such as WebSocket over HTTP/1.1 and HTTP/2. Through this, we can identify specific situations where WebTransport performs best. At the same time, we can also spot any potential issues. For example, WebTransport might have higher connection setup costs, limited browser compatibility, and performance problems under certain network conditions. A comparative analysis would help us understand when WebTransport is more beneficial to use compared to the more established TCP-based streaming solutions.
+
+
 
 % \section{Conclusion}
 

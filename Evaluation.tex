@@ -400,7 +400,7 @@ The WebTransport client is constructed with the conservative performance options
 The client uses a custom format of 32 bytes of fixed-size fields as packet header which helps WebTransport router efficiently parse the packet: 16 bytes of stream identification, 4 bytes of payload length, and 12 bytes for classifying a track type. This well-ordered design enables the router to forward packets into proper microservices. The track type system ('video', 'audio', 'chat') provides clear semantic routing information, while the fixed header size aligns with memory boundaries for good processing performance. These default parameters create a evaluation friendly system that generates measurable buffer dynamics and fragmentation patterns essential for this dissertation
 
 \section{Results and Analysis}
-In order to observe reliable results the the experiments ie single client and multi Client tests were run for a total duration of 10 minutes in order to observe the performance over time with the configurations defined in section.
+In order to observe reliable results the the experiments ie single client and multi Client tests were run for a total duration of 10 minutes in order to observe the performance over time with the configurations defined in Section 6.1.
 
 \subsection{Single Client Performance Analysis}
 
@@ -433,7 +433,7 @@ Figure~\ref{fig:single-client-host-overview} demonstrates the impact on the over
 \label{fig:single-packet-performance}
 \end{figure}
 
-Figure~\ref{fig:single-packet-performance} presents the packet processing performance from 18:05 to 18:15, during which the system handled a total of 157,285 packets. Throughout this 10-minute window, packet processing exhibited a consistent linear growth rate, indicating stable system performance without any observable bottlenecks. Notably, the fragmentation rate stabilized at approximately 90.4\%, corresponding to 142,233 fragmented packets. This high fragmentation ratio suggests that the majority of incoming packets exceeded the configured maximum datagram size, likely due to the nature of the input streams. In contrast, only 15,052 complete packets were received, forming a small but steady subset of the total traffic. All fragmented packets were successfully reassembled, achieving a 100\% reconstruction rate. Furthermore, system throughput peaked at around 0.3385 Mbps and remained stable, while processing and buffer wait times consistently averaged between 0.03 and 0.04 milliseconds, demonstrating the system's efficiency in managing high-throughput, fragmented traffic.
+Figure~\ref{fig:single-packet-performance} presents the packet processing performance from 18:05 to 18:15, during which the system handled a total of 157,285 packets. Throughout this 10-minute window, packet processing exhibited a consistent linear growth rate, indicating stable system performance without any observable bottlenecks. Notably, the fragmentation rate stabilized at approximately 90.4\%, corresponding to 142,233 fragmented packets. This high fragmentation ratio suggests that the majority of incoming packets exceeded the configured maximum datagram size, likely due to the nature of the input streams. In contrast, only 15,052 complete packets were received, forming a small but steady subset of the total traffic. It is to note that all fragmented packets were successfully reassembled at the proxy, achieving a 100\% reconstruction rate. Furthermore, system throughput peaked at around 0.3385 Mbps and remained stable, while processing and buffer wait times consistently averaged between 0.03 and 0.04 milliseconds, demonstrating the system's efficiency in managing high-throughput, fragmented traffic.
 
 
 \subsubsection{Fragmentation Analysis}
@@ -460,11 +460,11 @@ The high fragmentation rate is primarily due to the large size of the input data
 \end{figure}
 
 Figure~\ref{fig:single-throughput-performance} displays the throughput performance over time from 18:05 to 18:15. The system maintained a throughput ranging between 0.25 and 0.35 Mbps, with a peak performance of approximately 0.35 Mbps around 18:06-18:07. The throughput declined sharply to 0.0 Mbps at 18:15, corresponding to the session termination.
-The throughput analysis indicates an average throughput of about 0.28 Mbps, with variations showing a ±25\% fluctuation from the average. The initial rise to 0.35 Mbps suggests high data handling capacity early in the session, while the dip around 18:08-18:09 reflects a temporary reduction, possibly due to processing adjustments. The smooth decline to 0.0 Mbps at 18:15 indicates a graceful connection termination without abrupt interruptions.
+The throughput analysis indicates an average throughput of about 0.28 Mbps, with variations showing a ±25\% fluctuation from the average. The initial rise to 0.35 Mbps suggests high data handling capacity early in the session, while the dip around 18:08-18:09 reflects a temporary reduction, possibly due to processing adjustments. The decline to 0.0 Mbps at 18:15 shows graceful connection termination without any form of interruptions.
 
 
 \subsubsection{Latency and Processing Time}
-The system exhibited excellent latency performance, with an average processing time of just 0.03-0.04 milliseconds, remaining consistent throughout the session. Similarly, the average buffer wait time was also 0.03-0.04 milliseconds, indicating minimal queuing and efficient data handling. Notably, latency remained stable and showed no observable correlation with fluctuations in throughput or packet fragmentation.
+The system showcased excellent latency performance, with an average processing time of just 0.03-0.04 milliseconds which remained consistent throughout the session. Similarly, the average buffer wait time was also 0.03-0.04 milliseconds, indicating minimal queuing and efficient data handling. Notably, latency remained stable and showed no observable correlation with fluctuations in throughput or packet fragmentation.
 
 These low latency values confirm the system's suitability for real-time applications requiring minimal processing delays.
 
@@ -541,7 +541,7 @@ The five-client experiment extends the scaling study to 15 concurrent media stre
 \caption{Packet Processing – Five Clients}
 \label{fig:packet-processing-five-clients}
 \end{figure}
-Figure~\ref{fig:packet-processing-five-clients} illustrates the packet processing performance across five clients from 19:10 to 19:22 on August 5, 2025, with an aggregate of approximately 890,000 packets. Per-client packet counts ranged from 175,000 to 180,000, showing linear growth and fair scheduling without head-of-line blocking. The fragmentation rate varied between 90.8\% and 91.6\%, with 100\% reassembly success and no packet losses.
+Figure~\ref{fig:packet-processing-five-clients} illustrates the packet processing performance across five clients from start 19:10 to end 19:22 on August 5, 2025 processing an aggregate of approximately 890,000 packets. The individual client packet counts ranged from 175,000 to 180,000 which showed linear growth and fair scheduling without head-of-line blocking. The fragmentation rate varied between 90.8\% and 91.6\%, with 100\% reassembly success and no packet losses.
 \begin{figure}[h!]
 \centering
 \includegraphics[width=0.8\textwidth]{Evaluation/fragmentation_by_client_five-clients.png}
