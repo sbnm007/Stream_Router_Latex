@@ -368,7 +368,7 @@ These stream methods are part of the WebTransport session object. createBidirect
 
 \subsubsection{Datagram API – Unreliable and Unordered Communication}
 
-The Datagram API allows for lightweight, unreliable, and unordered data exchange—perfect for scenarios where speed is prioritized over reliability, such as real-time positional updates in games or telemetry data.
+The Datagram API allows for lightweight, unreliable, and unordered data exchange, perfect for scenarios where speed is prioritized over reliability, such as real-time positional updates in games or telemetry data.
 
 Datagram Example:
 
@@ -394,7 +394,7 @@ const payload = new Uint8Array([...new TextEncoder().encode(header), ...binaryAu
 await writer.write(payload);
 \end{lstlisting}
 
-On the receiving end, such as in a server or reverse proxy, the application parses this prefixed header to determine how to route or process the incoming stream—such as directing it to the appropriate microservice, such as audio handler vs. video handler. While this provides flexibility, it introduces additional complexity in parsing logic and requires robust message framing techniques. This challenge will be explored further in the implementation section of this dissertation.
+On the receiving end, such as in a server or reverse proxy, the application parses this prefixed header to determine how to route or process the incoming stream, such as directing it to the appropriate microservice, such as audio handler vs. video handler. While this provides flexibility, it introduces additional complexity in parsing logic and requires robust message framing techniques. This challenge will be explored further in the implementation section of this dissertation.
 
 \subsection{Standardization Status and Future Outlook}
 
@@ -485,7 +485,7 @@ CoreDNS, the default DNS service in Kubernetes, provides service discovery and n
 Namespaces are logical separation of resources into groups. For example, all of the core architecture components run in a separate namespace kube-system.
 
 \subsubsection{Pods}
-A Pod is the smallest and simplest unit in the Kubernetes object model. It represents a single instance of a running process in a cluster. A pod can contain one or more containers that share the same network namespace, IP address, and storage volumes. Containers in the same pod can communicate using localhost and share mounted storage, making them ideal for tightly coupled workloads, such as a main app container and a sidecar for logging. Pods are ephemeral—once deleted or crashed, they aren't recreated unless managed by a higher-level controller like a Deployment or StatefulSet.
+A Pod is the smallest and simplest unit in the Kubernetes object model. It represents a single instance of a running process in a cluster. A pod can contain one or more containers that share the same network namespace, IP address, and storage volumes. Containers in the same pod can communicate using localhost and share mounted storage, making them ideal for tightly coupled workloads, such as a main app container and a sidecar for logging. Pods are ephemeral; once deleted or crashed, they aren't recreated unless managed by a higher-level controller like a Deployment or StatefulSet.
 
 
 \begin{figure}[H]
@@ -634,10 +634,10 @@ Helm is a useful tool for managing applications on Kubernetes. It works like a p
 These charts can be saved in different versions and shared with others through repositories. This means you can deploy complicated applications quickly and easily with just one command. Helm helps ensure that your apps are deployed smoothly and consistently, no matter where you run them. In this dissertation, Helm is used to deploy Apache Pulsar clusters and other components, simplifying the setup process and allowing for easy updates and rollbacks.
 
 \subsection{Ingress Controllers in Kubernetes}
-An Ingress Controller is a critical component in Kubernetes used to expose services, APIs, or web applications running inside the cluster to external users over HTTP or HTTPS. It works alongside Ingress resources, which define routing rules, to manage how external requests reach internal services. While Kubernetes provides the Ingress resource as part of its API, it does not ship with a default controller—users must install and configure one manually. Ingress controllers interpret these rules and handle tasks such as URL-based routing, TLS termination, and load balancing, enabling scalable, declarative web and API access. The different types of ingress controllers are as follows:
+An Ingress Controller is a critical component in Kubernetes used to expose services, APIs, or web applications running inside the cluster to external users over HTTP or HTTPS. It works alongside Ingress resources, which define routing rules, to manage how external requests reach internal services. While Kubernetes provides the Ingress resource as part of its API, it does not ship with a default controller; users must install and configure one manually. Ingress controllers interpret these rules and handle tasks such as URL-based routing, TLS termination, and load balancing, enabling scalable, declarative web and API access. The different types of ingress controllers are as follows:
 
 
-For platform-independent or more advanced use cases, several third-party ingress controllers are widely adopted. The NGINX Ingress Controller is the most common, known for its flexibility and ease of use across any Kubernetes setup. Traefik is a modern alternative that auto-discovers services and integrates well into dynamic or CI/CD-heavy environments. For API-first architectures, the Kong Ingress Controller doubles as an API gateway, offering authentication, rate limiting, and monitoring features. Istio's Ingress Gateway, designed for service meshes, provides advanced capabilities like mTLS, circuit breaking, and traffic splitting—ideal for secure, production-grade microservices deployments.
+For platform-independent or more advanced use cases, several third-party ingress controllers are widely adopted. The NGINX Ingress Controller is the most common, known for its flexibility and ease of use across any Kubernetes setup. Traefik is a modern alternative that auto-discovers services and integrates well into dynamic or CI/CD-heavy environments. For API-first architectures, the Kong Ingress Controller doubles as an API gateway, offering authentication, rate limiting, and monitoring features. Istio's Ingress Gateway, designed for service meshes, provides advanced capabilities like mTLS, circuit breaking, and traffic splitting, ideal for secure, production-grade microservices deployments.
 
 The following is the syntax for ingress controllers
 \begin{lstlisting}[breaklines=true,basicstyle=\small\ttfamily,frame=single]
@@ -665,7 +665,7 @@ Here we would use the custom annotations for the specific ingress we will use.
 
 
 \subsection{Ingress Controller Support for HTTP/3 and QUIC}
-HTTP/3, the latest evolution of the HTTP protocol, brings significant advantages in performance and reliability by using QUIC, a transport protocol that operates over UDP and integrates TLS 1.3. Despite growing interest in HTTP/3 for its benefits—such as reduced latency and improved multiplexing—Kubernetes Ingress Controllers have been slow to adopt it due to technical challenges and architectural limitations.
+HTTP/3, the latest evolution of the HTTP protocol, brings significant advantages in performance and reliability by using QUIC, a transport protocol that operates over UDP and integrates TLS 1.3. Despite growing interest in HTTP/3 for its benefits such as reduced latency and improved multiplexing, Kubernetes Ingress Controllers have been slow to adopt it due to technical challenges and architectural limitations.
 
 Most widely-used Ingress Controllers, like NGINX and HAProxy, are based on traditional HTTP/1.1 and HTTP/2 over TCP. Since HTTP/3 relies on QUIC, it requires support for UDP, TLS 1.3, and specialized libraries like BoringSSL. These changes involve substantial rewrites of existing proxying logic and networking layers, making native support difficult. As a result, HTTP/3 functionality in Kubernetes Ingress Controllers is generally experimental, requiring custom builds, complex configuration, and lack of standardization across implementations.
 
@@ -698,7 +698,7 @@ Despite these configurations, the ingress controller does not currently provide 
 
 
 \subsubsection{HAProxy Ingress Controller and HTTP3 Support}
-HAProxy has introduced experimental HTTP/3 support starting with version 2.6 \cite{haproxy-docs} \cite{haproxy-k8s-docs}. Its Ingress Controller can leverage this functionality. This includes enabling UDP listeners, tuning TLS settings, and adjusting protocol stacks manually—none of which are typically available through standard Helm charts. 
+HAProxy has introduced experimental HTTP/3 support starting with version 2.6 \cite{haproxy-docs} \cite{haproxy-k8s-docs}. Its Ingress Controller can leverage this functionality. This includes enabling UDP listeners, tuning TLS settings, and adjusting protocol stacks manually, none of which are typically available through standard Helm charts. 
 
 
 To test HTTP/3 support in a Kubernetes environment, the following steps were performed:
@@ -870,7 +870,7 @@ This indicates that the Gateway API currently lacks support for stream-level fea
 \subsubsection{Declarative Configuration vs. Annotation-Driven Models}
 A major improvement introduced by the Gateway API is its declarative configuration model, which replaces the annotation-heavy approach of the traditional Ingress API. Annotations in Ingress controllers often lack standardization, are implementation-specific, and are difficult to validate, leading to operational ambiguity. In contrast, the Gateway API uses structured CRDs to define listeners, routes, and policies, making configuration clearer, more consistent, and easier to validate.
 
-Nevertheless, annotations have not been entirely eliminated. They are still used in specific cases, particularly to enable experimental features or for backward compatibility with legacy tooling. For example, enabling QUIC support or selecting specific cipher suites via BoringSSL may still require annotations, depending on the controller. However, these annotations are supplementary rather than central, with the primary configuration expressed through first-class Kubernetes resources. This allows for richer multi-protocol configurations—such as defining a single gateway that supports both TCPRoute and UDPRoute—an arrangement difficult to express using traditional Ingress.
+Nevertheless, annotations have not been entirely eliminated. They are still used in specific cases, particularly to enable experimental features or for backward compatibility with legacy tooling. For example, enabling QUIC support or selecting specific cipher suites via BoringSSL may still require annotations, depending on the controller. However, these annotations are supplementary rather than central, with the primary configuration expressed through first-class Kubernetes resources. This allows for richer multi-protocol configurations such as defining a single gateway that supports both TCPRoute and UDPRoute, an arrangement difficult to express using traditional Ingress.
 
 
 \subsection{QUIC Library Implementations}
@@ -996,7 +996,7 @@ This example shows the control developers have over connection handling and pack
 Quiche is used in Cloudflare's HTTP/3 infrastructure and has been integrated into major projects such as Nginx, curl, and Wireshark (for traffic analysis). Its adoption by performance-critical applications highlights its production maturity and scalability. Additionally, its inclusion in the QUIC Interop Runner and extensive qlog support make it a valuable reference implementation for QUIC protocol conformance testing.
 
 \subsubsection{Summary of Libraries}
-The three libraries—Aioquic \cite{aioquic-repo}, Quic-go \cite{quic-go-repo}, and Quiche \cite{quiche-repo} explains the diversity of QUIC implementations, each targeting different domains. Aioquic prioritizes accessibility and research flexibility whereas Quic-go balances performance and developer usability and finally Quiche focuses on high-throughput, secure, production deployments. The choice among them depends on the development environment, performance constraints, and programming language expertise. In the context of this dissertation, Aioquic is selected for the implementation phase because of its easy syntax.  ie. Python being easy to understand and configure.
+The three libraries Aioquic \cite{aioquic-repo}, Quic-go \cite{quic-go-repo}, and Quiche \cite{quiche-repo} explains the diversity of QUIC implementations, each targeting different domains. Aioquic prioritizes accessibility and research flexibility whereas Quic-go balances performance and developer usability and finally Quiche focuses on high-throughput, secure, production deployments. The choice among them depends on the development environment, performance constraints, and programming language expertise. In the context of this dissertation, Aioquic is selected for the implementation phase because of its easy syntax.  ie. Python being easy to understand and configure.
 
 \subsection{Angie Webserver}
 Angie is a high-performance, modular web server and reverse proxy developed as a fork of NGINX, with explicit focus on supporting emerging protocols and modern web traffic patterns \cite{angie-docs}. One of Angie's key differentiators is its support for HTTP/3 via native QUIC integration. By leveraging QUIC, Angie can handle low-latency, multiplexed connections over UDP, making it suitable for next-generation web workloads. Angie's modular architecture also facilitates extensibility for protocol enhancements and security mechanisms.
@@ -1056,7 +1056,7 @@ This configuration enables Angie to listen for QUIC traffic on port 443 (listen 
 This allows it to proxy http3 traffic to backend but faces the same limitation as faced in haproxy ingress controller and gateway api of not having stream level knowledge
 
 \subsection{Limitation of Modern Webservers for H3 Support}
-A fundamental limitation observed in both Angie web server is the inability to perform stream-level inspection of QUIC traffic. QUIC, by design, supports stream multiplexing, which allows multiple concurrent and independent streams—such as HTML documents, images, or scripts—to be transmitted over a single connection without head-of-line blocking. However, both Angie and other webservers treat QUIC packets as udp datagrams and do not parse or prioritize individual streams.
+A fundamental limitation observed in both Angie web server is the inability to perform stream-level inspection of QUIC traffic. QUIC, by design, supports stream multiplexing, which allows multiple concurrent and independent streams such as HTML documents, images, or scripts to be transmitted over a single connection without head-of-line blocking. However, both Angie and other webservers treat QUIC packets as udp datagrams and do not parse or prioritize individual streams.
 
 This architectural constraint significantly limits their ability to apply intelligent routing, prioritization, or filtering at the stream level. No granular control over the constituent streams and no existing mechanisms existing to allow such modification raises a critical problem. 
 
@@ -1084,7 +1084,7 @@ Two prominent distributed messaging systems supporting streaming workloads are A
 \subsubsection{Comparative Evaluation: Apache Kafka vs Apache Pulsar}
 Apache Kafka \cite{kreps2011} and Apache Pulsar are two leading platforms for distributed event streaming, but they differ significantly in architecture and operational capabilities. Kafka adopts a monolithic design where each broker handles both message processing and local storage. This simplifies the system under certain conditions but introduces limitations in scalability, multi-tenancy, and storage flexibility. Kafka's tight coupling of compute and storage means both must be scaled together, increasing operational overhead.
 
-In contrast, Apache Pulsar follows a cloud-native layered architecture, separating compute (stateless brokers) from storage (Apache BookKeeper). This decoupling allows independent scaling, built-in multi-tenancy, native tiered storage, and geo-replication—features that better support modern, dynamic, and multi-tenant workloads. Pulsar's architecture is particularly aligned with containerized environments and streaming use cases involving QUIC/WebTransport, which require persistent, low-latency streams and decoupled resource management.
+In contrast, Apache Pulsar follows a cloud-native layered architecture, separating compute (stateless brokers) from storage (Apache BookKeeper). This decoupling allows independent scaling, built-in multi-tenancy, native tiered storage, and geo-replication, features that better support modern, dynamic, and multi-tenant workloads. Pulsar's architecture is particularly aligned with containerized environments and streaming use cases involving QUIC/WebTransport, which require persistent, low-latency streams and decoupled resource management.
 
 Thus, while Kafka remains effective for stable, centralized deployments, Pulsar offers greater architectural flexibility and operational efficiency for contemporary streaming systems. The storage-compute separation gives Pulsar an elastic stability and long-term message retention.
 
@@ -1103,7 +1103,7 @@ Figure~\ref{fig:pulsar_architecture} illustrates the modular architecture of Apa
 \paragraph{Pulsar Brokers}
 Pulsar brokers are stateless services responsible for handling client requests, maintaining topic metadata caches, and managing the coordination of message dispatch between producers and consumers. Brokers do not store message data locally. Instead, upon receiving a message, a broker writes it to BookKeeper and returns acknowledgements once the required replication factor is achieved.
 
-This stateless nature allows brokers to scale horizontally with minimal coordination overhead. It also enhances system reliability, as brokers can fail and recover without requiring data rebalancing. In streaming scenarios—such as telemetry ingestion, application monitoring, and order processing pipelines—Pulsar brokers facilitate consistent and low-latency message routing across topics.
+This stateless nature allows brokers to scale horizontally with minimal coordination overhead. It also enhances system reliability, as brokers can fail and recover without requiring data rebalancing. In streaming scenarios such as telemetry ingestion, application monitoring, and order processing pipelines, Pulsar brokers facilitate consistent and low-latency message routing across topics.
 
 \paragraph{Apache BookKeeper (Bookies)}
 Apache BookKeeper serves as the storage backend for Pulsar and is comprised of nodes referred to as "bookies." Data in Pulsar is persisted in write-ahead log structures called ledgers, which are divided into segments and distributed across multiple bookies. Each segment is replicated (typically across three nodes) for durability and fault tolerance.
