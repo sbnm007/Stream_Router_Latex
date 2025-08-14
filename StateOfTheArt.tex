@@ -17,10 +17,10 @@ The Open Systems Interconnection (OSI) Model \cite{kurose2017} essentially break
 
 
 \subsection{IP Frames}
-Internet Protocol (IP) Frames, also called Packets, are a protocol structure that operates at the networking layer, which encapsulates the data. In its structure there are source and destination IP addresses, which are responsible for inter-network routing. An IP packet consists of a header that contains the IP address and protocol type, and a payload which contains the data from the underlying protocol that was used. IP packets are most critical for routing TCP, UDP, or QUIC transport data across the internet.
+Internet Protocol (IP) Frames, also called Packets, are a protocol structure that operates at the networking layer, which encapsulates the data \cite{kurose2017}. In its structure there are source and destination IP addresses, which are responsible for inter-network routing. An IP packet consists of a header that contains the IP address and protocol type, and a payload which contains the data from the underlying protocol that was used. IP packets are most critical for routing TCP, UDP, or QUIC transport data across the internet.
 
 \subsection{Network Interface}
-Network interfaces operate between the Physical and Data Link layers,. It acts as an interface between the hardware and software for network communication. Examples are Ethernet Network Interface Cards (NICs) - such as eth0 - and wireless adapters - such as wlan0 -, which is responsible for converting raw bits to signals and for processing Ethernet frames. Any form of communication passes through a network interface. Heres a snapshot of some network interfaces on my device.
+Network interfaces operate between the Physical and Data Link layers \cite{kurose2017}. It acts as an interface between the hardware and software for network communication. Examples are Ethernet Network Interface Cards (NICs) - such as eth0 - and wireless adapters - such as wlan0 -, which is responsible for converting raw bits to signals and for processing Ethernet frames. Any form of communication passes through a network interface. Heres a snapshot of some network interfaces on my device.
 Note that we have an Maximum Transmission Unit (MTU) parameter equal to 1500.
 
 \begin{figure}[h]
@@ -78,12 +78,12 @@ TCP’s congestion control is managed by the sender with the congestion window '
 
 
 \subsection{Middle-Box Ossification}
-Middleboxes become bottlenecks because of its old implementation and inability to update widely adopted middleboxes. In context of tcp it means the network devices like firewalls, routers have tcp implementation at their kernel level, which becomes an issue when updates to the core implementation of protocol are required.
+Middleboxes become bottlenecks because of its old implementation and inability to update widely adopted middleboxes \cite{quic-performance-analysis}. In context of tcp it means the network devices like firewalls, routers have tcp implementation at their kernel level, which becomes an issue when updates to the core implementation of protocol are required.
 
 
 \subsection{User Datagram Protocol}
 
-User Datagram Protocol (UDP), is a connectionless protocol that focuses low latency than reliability \cite{kurose2017}. This is due to the fact that it lacks the built-in mechanisms for retransmission, ordering, or congestion control and hence makes it suitable for applications where speed is critical, and occasional packet loss is tolerated. Due to this it enables one-RTT communication which is ideal for Domain Name System (DNS) queries and real-time media streaming like online gaming, video streaming, etc. But, its lack of reliability, security, and congestion control makes it unsuitable for use in cases requiring guaranteed delivery.
+User Datagram Protocol (UDP), is a connectionless protocol that focuses low latency than reliability \cite{kurose2017}. This is due to the fact that it lacks the built-in mechanisms for retransmission, ordering, or congestion control and hence makes it suitable for applications where speed is critical, and occasional packet loss is tolerated. Due to this it enables one-RTT communication which is ideal for Domain Name System (DNS) queries \cite{kurose2017} and real-time media streaming like online gaming, video streaming, etc. But, its lack of reliability, security, and congestion control makes it unsuitable for use in cases requiring guaranteed delivery.
 
 \subsubsection{UDP Packet Structure}
 
@@ -218,7 +218,7 @@ Introduced in 1991, HTTP/0.9 was the earliest version of the protocol, designed 
 
 \subsection{HTTP/1.0}
 
-HTTP/1.0, standardized in 1996 (RFC 1945), introduced significant improvements over HTTP/0.9. It added support for additional HTTP methods such as \texttt{POST} and \texttt{HEAD}, HTTP headers for metadata exchange, status codes to indicate request outcomes, and support for different content types beyond HTML. HTTP/1.0 also introduced the concept of request and response headers, enabling features like content negotiation, caching directives, and authentication mechanisms.
+HTTP/1.0, standardized in 1996 (RFC 1945) \cite{kurose2017}, introduced significant improvements over HTTP/0.9. It added support for additional HTTP methods such as \texttt{POST} and \texttt{HEAD}, HTTP headers for metadata exchange, status codes to indicate request outcomes, and support for different content types beyond HTML. HTTP/1.0 also introduced the concept of request and response headers, enabling features like content negotiation, caching directives, and authentication mechanisms.
 
 However, HTTP/1.0 maintained the limitation of opening a new TCP connection for each request-response cycle, leading to significant overhead. Each resource on a web page required a separate connection, resulting in multiple TCP handshakes and increased latency. This approach proved inefficient as web pages became more complex, incorporating multiple images, stylesheets, and scripts, highlighting the need for connection reuse mechanisms.
 
@@ -230,7 +230,7 @@ Despite these improvements, HTTP/1.1 suffered from head-of-line blocking at the 
 
 \subsection{HTTP/2}
 
-HTTP/2 was published in 2015 (RFC 7540), in order to fix the performance limitations of HTTP/1.1 \cite{kurose2017}. It introduced binary framing, header compression (HPACK), and multiplexing, allowing multiple concurrent streams over a single TCP connection. These changes led to significant reduction in latency and improved page load times. As HTTP/2 still has underlying TCP, it remains susceptible to TCP-level head-of-line blocking. If a packet is lost, the entire TCP connection stalls until retransmission is complete, affecting all multiplexed streams.
+HTTP/2 was published in 2015 (RFC 7540), in order to fix the performance limitations of HTTP/1.1 \cite{rfc7540}. It introduced binary framing, header compression (HPACK), and multiplexing, allowing multiple concurrent streams over a single TCP connection. These changes led to significant reduction in latency and improved page load times. As HTTP/2 still has underlying TCP, it remains susceptible to TCP-level head-of-line blocking. If a packet is lost, the entire TCP connection stalls until retransmission is complete, affecting all multiplexed streams.
 
 \subsection{HTTP/3}
 
@@ -240,7 +240,7 @@ HTTP/3 is an application-layer protocol built on top of QUIC, developed to overc
 
 HTTP/3 benefits directly from QUIC’s architecture, which provides independent, multiplexed streams within a single connection. This means that packet loss on one stream doesn’t block others, resolving the HOL blocking issue thats present in TCP. It allows more efficient and smoother data delivery, especially over unreliable or variable networks.
 
-QUIC also implements stream-level flow control, ensuring that each stream can progress without interfering with others. Additionally, it features advanced congestion control algorithms, such as BBR or CUBIC, similar to TCP, but designed to react faster and recover more effectively in poor network conditions. These mechanisms enable HTTP/3 to maintain low latency and high performance across diverse network environments.
+QUIC also implements stream-level flow control, ensuring that each stream can progress without interfering with others. Additionally, it features advanced congestion control algorithms, such as BBR (Bottleneck Bandwidth and Round-trip propagation time) or CUBIC \cite{quic-performance-analysis}, similar to TCP, but designed to react faster and recover more effectively in poor network conditions. These mechanisms enable HTTP/3 to maintain low latency and high performance across diverse network environments.
 
 HTTP/3, through QUIC, provides several key enhancements including faster connection establishment via reduced round trips, encryption by default using TLS 1.3, stream multiplexing without HOL blocking, connection migration in case of IP changes, such as switching from Wi-Fi to mobile data, and 0-RTT support allowing faster repeat connections.
 
@@ -249,7 +249,7 @@ HTTP/3, through QUIC, provides several key enhancements including faster connect
 
 HTTP/3 is supported by major implementations such as Google’s quiche, Cloudflare’s quiche, Mozilla’s neqo, and Facebook’s mvfst, with integration into popular web servers like nginx, LiteSpeed, and Apache. Browser support is strong, with Chrome, Firefox, Safari, and Edge already implementing HTTP/3.
 
-However, widespread adoption is still in progress. Challenges such as middlebox compatibility, UDP tuning limitations, and infrastructure readiness hinders deployment. Nonetheless, as HTTP/3 continues to demonstrate tangible performance and reliability improvements, especially in mobile and high-latency scenarios, its adoption is steadily accelerating.
+However, widespread adoption is still in progress. Challenges such as middlebox compatibility, UDP tuning limitations, and infrastructure readiness hinder deployment \cite{quic-performance-analysis}. Nonetheless, as HTTP/3 continues to demonstrate tangible performance and reliability improvements, especially in mobile and high-latency scenarios, its adoption is steadily accelerating.
 
 
 \subsection{Summary Table: HTTP Protocol Evolution}
@@ -281,7 +281,7 @@ Encryption & No & No & Optional (via TLS) & Optional (via TLS) & Yes (via QUIC) 
 
 As HTTP protocols evolved to address performance limitations, another approach emerged to handle real-time, bidirectional communication needs: WebSocket. While HTTP/3 focused on improving request-response patterns through QUIC, WebSocket took a different path by establishing persistent, full-duplex communication channels over TCP.
 
-WebSocket is a communication protocol that provides full-duplex communication channels over a single TCP connection. Standardized in RFC 6455, it was designed specifically for real-time web applications that require persistent connections between clients and servers. Unlike the request-response model of HTTP, WebSocket enables continuous, low-latency communication by keeping the connection open, eliminating the overhead of establishing new connections for each data exchange.
+WebSocket is a communication protocol that provides full-duplex communication channels over a single TCP connection \cite{rfc6455}. Standardized in RFC 6455, it was designed specifically for real-time web applications that require persistent connections between clients and servers. Unlike the request-response model of HTTP, WebSocket enables continuous, low-latency communication by keeping the connection open, eliminating the overhead of establishing new connections for each data exchange.
 
 The protocol operates through an initial HTTP handshake that upgrades the connection to the WebSocket protocol. Once established, data can be sent bidirectionally without the constraints of HTTP headers or request-response cycles. This persistent nature makes WebSocket particularly suitable for applications requiring real-time updates, such as chat applications, online gaming, collaborative editing, and live streaming platforms.
 
@@ -398,7 +398,7 @@ On the receiving end, such as in a server or reverse proxy, the application pars
 
 \subsection{Standardization Status and Future Outlook}
 
-WebTransport represents an emerging approach to internet communication using modern web technologies. The protocol is currently defined in RFC 9297 for its HTTP/3 variant, though it has not yet achieved full standardization status. Similarly, the WebTransport API used in web browsers remains a Working Draft by the W3C, indicating that the specification may undergo changes before final standardization.
+WebTransport represents an emerging approach to internet communication using modern web technologies. The protocol is currently defined in RFC 9297 for its HTTP/3 variant \cite{webtransport-draft}, though it has not yet achieved full standardization status. Similarly, the WebTransport API used in web browsers remains a Working Draft by the W3C \cite{webtransport-w3c}, indicating that the specification may undergo changes before final standardization.
 
 This evolving status presents both opportunities and challenges. While the protocol offers significant advantages over existing transport mechanisms, its ongoing development means that implementations may need to adapt to specification changes. This dynamic environment makes WebTransport an active area of research and innovation, particularly relevant for applications requiring low-latency, multiplexed communication.
 
@@ -430,7 +430,7 @@ One of Wireshark’s key features is its ability to decrypt encrypted traffic, i
 Figure~\ref{fig:ws_interfaces} and Figure~\ref{fig:ws_packets} above illustrates the Wireshark interface, showing the available network interfaces and captured packets. The left side displays the list of interfaces, while the right side shows the captured packets in the loopback interface with detailed information about each packet's protocol, source, destination, and other relevant metadata.
 
 \section{Containers}
-Containers are lightweight, portable, and consistent runtime environments that package an application along with all its dependencies, configuration files, and system libraries. Unlike traditional virtual machines, containers share the host operating system kernel, making them faster to start and more resource-efficient. Containers are created with a container image and all the information is bundled into an image and stored in a registry. This makes it ideal for deploying and scaling applications in a microservices architecture. In context for this dissertation, in order to deploy and run applications in Kubernetes, the prerequisite is having a Docker image ready.
+Containers are lightweight, portable, and consistent runtime environments that package an application along with all its dependencies, configuration files, and system libraries. Unlike traditional virtual machines, containers share the host operating system kernel, making them faster to start and more resource-efficient. Containers are created with a container image and all the information is bundled into an image and stored in a registry \cite{docker}. This makes it ideal for deploying and scaling applications in a microservices architecture. In context for this dissertation, in order to deploy and run applications in Kubernetes, the prerequisite is having a Docker image ready.
 
 \section{Kubernetes Concepts}
 
@@ -539,7 +539,7 @@ This decouples storage provisioning from storage consumption, allowing pods to r
 \subsubsection{StatefulSets}
 StatefulSets are a Kubernetes controller used to manage stateful applications that require stable network identities and persistent storage. Unlike Deployments, which treat all pods as interchangeable, StatefulSets assign each pod a unique, stable identity (including name and network address) and ensure ordered, graceful deployment, scaling, and deletion.
 
-StatefulSets are ideal for workloads like databases, such as MongoDB, PostgreSQL, distributed systems, such as Kafka, ZooKeeper \cite{zookeeper-docs}, and any application that requires persistent storage tied to a specific pod. Each pod in a StatefulSet can be connected via a predictable DNS name and retains its associated PVC even when restarted.
+StatefulSets are ideal for workloads like databases, such as MongoDB, PostgreSQL, distributed systems, such as Apache Kafka \cite{kreps2011}, ZooKeeper \cite{zookeeper-docs}, and any application that requires persistent storage tied to a specific pod. Each pod in a StatefulSet can be connected via a predictable DNS name and retains its associated PVC even when restarted.
 
 \subsection{Cloud Kubernetes Clusters}
 As Kubernetes adoption continues to rise across industries, cloud providers have responded with fully managed solutions to simplify deployment, scaling, and maintenance. Among the most prominent managed Kubernetes offerings are Amazon Elastic Kubernetes Service (EKS), Azure Kubernetes Service (AKS), and Google Kubernetes Engine (GKE). This section reviews these platforms, examining their design principles, cloud integration capabilities, and recent developments, with a focus on their maturity and positioning in the cloud-native ecosystem.
@@ -751,7 +751,7 @@ One of the defining features of the Gateway API is its emphasis on supporting a 
 
 
 \subsubsection{Architecture and Core Components}
-The Gateway API introduces modular CRDs for fine-grained network traffic control in Kubernetes. GatewayClass defines types of gateways, such as Envoy, HAProxy, managed by admins, while Gateway instances configure ports, protocols, and TLS settings. Routing is handled by resources like HTTPRoute, TCPRoute, and UDPRoute, which forward traffic based on specific rules. Additional resources like ReferencePolicy support cross-namespace and security configurations. This design separates infrastructure and application concerns, improving scalability, security, and maintainability
+The Gateway API introduces modular CRDs for fine-grained network traffic control in Kubernetes \cite{gateway-api}. GatewayClass defines types of gateways, such as Envoy, HAProxy, managed by admins, while Gateway instances configure ports, protocols, and TLS settings. Routing is handled by resources like HTTPRoute, TCPRoute, and UDPRoute, which forward traffic based on specific rules. Additional resources like ReferencePolicy support cross-namespace and security configurations. Modern reverse proxies like Envoy \cite{envoy-proxy} have begun implementing support for these APIs, providing advanced traffic management capabilities. This design separates infrastructure and application concerns, improving scalability, security, and maintainability
 
 
 \subsubsection{Gateway API Implementation for HTTP3 Support}
@@ -1079,10 +1079,10 @@ While MetalLB fulfills the basic requirement of enabling UDP passthrough for HTT
 \subsubsection{Introduction to Streaming Systems}
 In order to work with modern transport protocols such as QUIC and WebTransport, which support bi-directional, low-latency, and multiplexed data transmission, a streaming use case is typically required. These protocols are specifically designed to operate within systems that continuously process data in motion, rather than in static batches. In the context of modern data-driven architectures, streaming systems have thus become foundational to processing high-velocity, continuous data flows in near real-time. Such systems facilitate the ingestion, transformation, and delivery of data as it is generated, supporting critical use cases including real-time analytics, fraud detection, anomaly monitoring, telemetry processing, and event-driven microservices [Kreps et al., 2011]. At the core of these platforms lies a robust messaging infrastructure, which guarantees the reliable delivery and persistence of events between producers and consumers, enabling scalable and responsive data pipelines.
 
-Two prominent distributed messaging systems supporting streaming workloads are Apache Kafka and Apache Pulsar. While Kafka has historically dominated the event streaming landscape, Apache Pulsar presents a rearchitected solution that addresses several of Kafka's limitations, particularly with respect to scalability, multi-tenancy, and storage management.
+Two prominent distributed messaging systems supporting streaming workloads are Apache Kafka \cite{kreps2011} and Apache Pulsar. While Kafka has historically dominated the event streaming landscape, Apache Pulsar presents a rearchitected solution that addresses several of Kafka's limitations, particularly with respect to scalability, multi-tenancy, and storage management.
 
 \subsubsection{Comparative Evaluation: Apache Kafka vs Apache Pulsar}
-Apache Kafka and Apache Pulsar are two leading platforms for distributed event streaming, but they differ significantly in architecture and operational capabilities. Kafka adopts a monolithic design where each broker handles both message processing and local storage. This simplifies the system under certain conditions but introduces limitations in scalability, multi-tenancy, and storage flexibility. Kafka's tight coupling of compute and storage means both must be scaled together, increasing operational overhead.
+Apache Kafka \cite{kreps2011} and Apache Pulsar are two leading platforms for distributed event streaming, but they differ significantly in architecture and operational capabilities. Kafka adopts a monolithic design where each broker handles both message processing and local storage. This simplifies the system under certain conditions but introduces limitations in scalability, multi-tenancy, and storage flexibility. Kafka's tight coupling of compute and storage means both must be scaled together, increasing operational overhead.
 
 In contrast, Apache Pulsar follows a cloud-native layered architecture, separating compute (stateless brokers) from storage (Apache BookKeeper). This decoupling allows independent scaling, built-in multi-tenancy, native tiered storage, and geo-replication—features that better support modern, dynamic, and multi-tenant workloads. Pulsar's architecture is particularly aligned with containerized environments and streaming use cases involving QUIC/WebTransport, which require persistent, low-latency streams and decoupled resource management.
 
@@ -1136,5 +1136,5 @@ Technologies like WebTransport, with their support for unreliability and reliabl
 
 As the most widely-used container orchestration platform, Kubernetes has shown great flexibility in adapting to the demands of current protocols. UDP-based systems, including QUIC, cannot be easily integrated into Kubernetes, and HTTP/3 traffic is not yet supported. This is largely because more advanced solutions are needed in load balancing, ingress management, and service discovery. Recent standards like the Gateway API and custom resource definitions offer a new way to enhance native Kubernetes support. These changes could lead to a brighter future for Kubernetes in handling current protocols. Deploying these technologies in a real production setting remains challenging and is an active area of research.
 
-Apache Pulsar is a new technology in the streaming solutions segment. Unlike the typical monolithic architecture of Apache Kafka, Pulsar adopts a non-monolithic design by separating compute and storage. This innovative structure makes Pulsar highly suitable for complex and cloud-native streaming applications. Pulsar can scale, is elastic, and supports multi-tenancy. Its architecture meets the current demands of real-time data processing, including high throughput, fault tolerance, and geo-replication, which are essential for applications based on WebTransport and QUIC.
+Apache Pulsar is a new technology in the streaming solutions segment. Unlike the typical monolithic architecture of Apache Kafka \cite{kreps2011}, Pulsar adopts a non-monolithic design by separating compute and storage. This innovative structure makes Pulsar highly suitable for complex and cloud-native streaming applications. Pulsar can scale, is elastic, and supports multi-tenancy. Its architecture meets the current demands of real-time data processing, including high throughput, fault tolerance, and geo-replication, which are essential for applications based on WebTransport and QUIC.
 
