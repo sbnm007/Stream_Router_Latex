@@ -13,16 +13,20 @@
   title = {Computer Networking: A Top-Down Approach},
   publisher = {Pearson},
   year = {2017},
-  edition = {7th}
+  edition = {7th},
+  url = {https://www.pearson.com/us/higher-education/program/Kurose-Computer-Networking-A-Top-Down-Approach-7th-Edition/PGM328276.html}
 }
 
-@inproceedings{kreps2011,
+@misc{kreps2011,
   author = {Kreps, J. and Narkhede, N. and Rao, J.},
-  title = {Kafka: A Distributed Streaming Platform},
-  booktitle = {Proceedings of the ACM SIGMOD International Conference},
-  year = {2011},
-  publisher = {ACM}
+  title = {Kafka: A Distributed Messaging System for Log Processing},
+  year = {2025},
+  url = {https://kafka.apache.org/documentation/},
+  note = {No URL provided}
 }
+
+
+
 
 % RFCs
 @misc{rfc9114,
@@ -30,7 +34,7 @@
   title = {HTTP/3},
   howpublished = {IETF RFC 9114},
   year = {2022},
-  url = {https://datatracker.ietf.org/doc/html/rfc9114},
+  url = {https://datatracker.ietf.org/doc/rfc9114/},
   note = {Accessed August 2025}
 }
 
@@ -39,7 +43,7 @@
   title = {The WebTransport Protocol Framework},
   howpublished = {IETF Internet-Draft},
   year = {2023},
-  url = {https://datatracker.ietf.org/doc/draft-ietf-webtrans-overview/},
+  url = {https://ietf-wg-webtrans.github.io/draft-ietf-webtrans-http3/draft-ietf-webtrans-http3.html},
   note = {Accessed August 2025}
 }
 
@@ -72,7 +76,7 @@
   author = {DataStax},
   title = {Apache Pulsar Helm Chart},
   year = {2024},
-  url = {https://github.com/datastax/pulsar-helm-chart/},
+  url = {https://github.com/apache/pulsar-helm-chart},
   note = {Accessed August 2025}
 }
 
@@ -81,7 +85,7 @@
   author = {{Kubernetes}},
   title = {Kubernetes Documentation},
   year = {2024},
-  url = {https://kubernetes.io/docs/home/},
+  url = {https://kubernetes.io/docs/},
   note = {Accessed August 2025}
 }
 
@@ -89,7 +93,7 @@
   author = {{Mozilla Developer Network}},
   title = {WebTransport API},
   year = {2024},
-  url = {https://developer.mozilla.org/en-US/docs/Web/API/WebTransport_API},
+  url = {https://developer.mozilla.org/en-US/docs/Web/API/WebTransport},
   note = {Accessed August 2025}
 }
 
@@ -121,7 +125,7 @@
   author = {{HAProxy Technologies}},
   title = {HAProxy Configuration Manual},
   year = {2024},
-  url = {https://docs.haproxy.org/dev/configuration.html},
+  url = {https://www.haproxy.com/documentation/},
   note = {Accessed August 2025}
 }
 
@@ -129,7 +133,7 @@
   author = {{HAProxy Technologies}},
   title = {HAProxy Kubernetes Ingress Controller Documentation},
   year = {2024},
-  url = {https://www.haproxy.com/documentation/kubernetes-ingress/},
+  url = {https://www.haproxy.com/documentation/kubernetes-ingress/community/configuration-reference/ingress/},
   note = {Accessed August 2025}
 }
 
@@ -169,7 +173,7 @@
   author = {{Rancher Labs}},
   title = {K3s Documentation},
   year = {2024},
-  url = {https://docs.k3s.io/},
+  url = {https://rancher.com/docs/k3s/latest/en/},
   note = {Accessed August 2025}
 }
 
@@ -177,7 +181,7 @@
   author = {{Kubernetes SIGs}},
   title = {kind (Kubernetes in Docker) Documentation},
   year = {2024},
-  url = {https://kind.sigs.k8s.io/},
+  url = {https://kind.sigs.k8s.io/docs/},
   note = {Accessed August 2025}
 }
 
@@ -201,34 +205,34 @@
   author = {{Microsoft Azure}},
   title = {Azure Documentation},
   year = {2024},
-  url = {https://docs.azure.cn/en-us/},
+  url = {https://docs.microsoft.com/en-us/azure/},
   note = {Accessed August 2025}
 }
 
 % Additional Protocol References
 @misc{rfc6455,
   title = {{The WebSocket Protocol}},
-  author = {Fette, Ian and Melnikov, Alexey},
+  author = {Fette, I. and Melnikov, A.},
   howpublished = {RFC 6455},
   year = {2011},
   organization = {IETF},
-  url = {https://tools.ietf.org/rfc/rfc6455.txt}
+  url = {https://datatracker.ietf.org/doc/rfc6455/}
 }
 
 @misc{rfc7540,
   title = {{Hypertext Transfer Protocol Version 2 (HTTP/2)}},
-  author = {Belshe, Mike and Peon, Roberto and Thomson, Martin},
+  author = {Belshe, M. and Peon, R. and Thomson, M.},
   howpublished = {RFC 7540},
   year = {2015},
   organization = {IETF},
-  url = {https://tools.ietf.org/rfc/rfc7540.txt}
+  url = {https://datatracker.ietf.org/doc/rfc7540/}
 }
 
 @misc{webtransport-w3c,
   title = {{WebTransport}},
   author = {{W3C WebTransport Working Group}},
   year = {2023},
-  url = {https://w3c.github.io/webtransport/}
+  url = {https://www.w3.org/TR/webtransport/}
 }
 
 % Kubernetes Ecosystem References
@@ -247,28 +251,7 @@
 }
 
 % Academic Research Papers
-@article{quic-performance-analysis,
-  title = {{A comprehensive analysis of QUIC performance over high latency satellite networks}},
-  author = {Rüth, Jan and Poese, Ingmar and Dietzel, Christoph and Hohlfeld, Oliver},
-  journal = {IEEE Transactions on Network and Service Management},
-  volume = {17},
-  number = {1},
-  pages = {229--243},
-  year = {2020},
-  publisher = {IEEE}
-}
 
-
-@article{kubernetes-networking,
-  title = {{Understanding modern service discovery: an alternative to service meshes}},
-  author = {Burns, Brendan and Beda, Joe and Hightower, Kelsey},
-  journal = {Communications of the ACM},
-  volume = {62},
-  number = {2},
-  pages = {53--59},
-  year = {2019},
-  publisher = {ACM}
-}
 
 
 @misc{docker,
@@ -281,18 +264,18 @@
 % Specific Technology References
 
 @misc{webrtc,
-  title = {{WebRTC: Real-time communication for the web}},
+  title = {{WebRTC: Real-time Communication for the Web}},
   author = {{W3C WebRTC Working Group}},
   year = {2023},
-  url = {https://webrtc.org/}
+  url = {https://www.w3.org/TR/webrtc/}
 }
 
 % Blogs
 @misc{marx2021-http3,
-  author = {Marx, Robin},
-  title = {HTTP/3 Core Concepts},
+  author = {Marx, R.},
+  title = {HTTP/3 Performance Improvements Part 2},
   year = {2021},
-  url = {https://www.smashingmagazine.com/2021/08/http3-core-concepts-part1/},
+  url = {https://www.smashingmagazine.com/2021/08/http3-performance-improvements-part2/},
   note = {Smashing Magazine, Accessed August 2025}
 }
 

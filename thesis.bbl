@@ -33,12 +33,6 @@ M.~Belshe, R.~Peon, and M.~Thomson, ``{Hypertext Transfer Protocol Version 2
 J.~F. Kurose and K.~W. Ross, {\em Computer Networking: A Top-Down Approach}.
 \newblock Pearson, 7th~ed., 2017.
 
-\bibitem{quic-performance-analysis}
-J.~Rüth, I.~Poese, C.~Dietzel, and O.~Hohlfeld, ``{A comprehensive analysis of
-  QUIC performance over high latency satellite networks},'' {\em IEEE
-  Transactions on Network and Service Management}, vol.~17, no.~1,
-  pp.~229--243, 2020.
-
 \bibitem{webtransport-draft}
 V.~Vasiliev, ``The webtransport protocol framework.'' IETF Internet-Draft,
   2023.
@@ -52,17 +46,12 @@ V.~Vasiliev, ``The webtransport protocol framework.'' IETF Internet-Draft,
 I.~Fette and A.~Melnikov, ``{The WebSocket Protocol}.'' RFC 6455, 2011.
 
 \bibitem{webrtc}
-{W3C WebRTC Working Group}, ``{WebRTC: Real-time communication for the web},''
+{W3C WebRTC Working Group}, ``{WebRTC: Real-time Communication for the Web},''
   2023.
 
 \bibitem{marx2021-http3}
-R.~Marx, ``Http/3 core concepts,'' 2021.
+R.~Marx, ``Http/3 performance improvements part 2,'' 2021.
 \newblock Smashing Magazine, Accessed August 2025.
-
-\bibitem{kubernetes-networking}
-B.~Burns, J.~Beda, and K.~Hightower, ``{Understanding modern service discovery:
-  an alternative to service meshes},'' {\em Communications of the ACM},
-  vol.~62, no.~2, pp.~53--59, 2019.
 
 \bibitem{nginx-ingress-docs}
 {NGINX Inc.}, ``Nginx ingress controller documentation,'' 2024.
@@ -74,8 +63,9 @@ B.~Burns, J.~Beda, and K.~Hightower, ``{Understanding modern service discovery:
 \newblock Accessed August 2025.
 
 \bibitem{kreps2011}
-J.~Kreps, N.~Narkhede, and J.~Rao, ``Kafka: A distributed streaming platform,''
-  in {\em Proceedings of the ACM SIGMOD International Conference}, ACM, 2011.
+J.~Kreps, N.~Narkhede, and J.~Rao, ``Kafka: A distributed messaging system for
+  log processing,'' 2025.
+\newblock No URL provided.
 
 \bibitem{kind-docs}
 {Kubernetes SIGs}, ``kind (kubernetes in docker) documentation,'' 2024.

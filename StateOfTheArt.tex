@@ -78,7 +78,7 @@ TCP’s congestion control is managed by the sender with the congestion window '
 
 
 \subsection{Middle-Box Ossification}
-Middleboxes become bottlenecks because of its old implementation and inability to update widely adopted middleboxes \cite{quic-performance-analysis}. In context of tcp it means the network devices like firewalls, routers have tcp implementation at their kernel level, which becomes an issue when updates to the core implementation of protocol are required.
+Middleboxes become bottlenecks because of its old implementation and inability to update widely adopted middleboxes. In context of tcp it means the network devices like firewalls, routers have tcp implementation at their kernel level, which becomes an issue when updates to the core implementation of protocol are required.
 
 
 \subsection{User Datagram Protocol}
@@ -240,7 +240,7 @@ HTTP/3 is an application-layer protocol built on top of QUIC, developed to overc
 
 HTTP/3 benefits directly from QUIC’s architecture, which provides independent, multiplexed streams within a single connection. This means that packet loss on one stream doesn’t block others, resolving the HOL blocking issue thats present in TCP. It allows more efficient and smoother data delivery, especially over unreliable or variable networks.
 
-QUIC also implements stream-level flow control, ensuring that each stream can progress without interfering with others. Additionally, it features advanced congestion control algorithms, such as BBR (Bottleneck Bandwidth and Round-trip propagation time) or CUBIC \cite{quic-performance-analysis}, similar to TCP, but designed to react faster and recover more effectively in poor network conditions. These mechanisms enable HTTP/3 to maintain low latency and high performance across diverse network environments.
+QUIC also implements stream-level flow control, ensuring that each stream can progress without interfering with others. Additionally, it features advanced congestion control algorithms, such as BBR (Bottleneck Bandwidth and Round-trip propagation time) or CUBIC, similar to TCP, but designed to react faster and recover more effectively in poor network conditions. These mechanisms enable HTTP/3 to maintain low latency and high performance across diverse network environments.
 
 HTTP/3, through QUIC, provides several key enhancements including faster connection establishment via reduced round trips, encryption by default using TLS 1.3, stream multiplexing without HOL blocking, connection migration in case of IP changes, such as switching from Wi-Fi to mobile data, and 0-RTT support allowing faster repeat connections.
 
@@ -249,7 +249,7 @@ HTTP/3, through QUIC, provides several key enhancements including faster connect
 
 HTTP/3 is supported by major implementations such as Google’s quiche, Cloudflare’s quiche, Mozilla’s neqo, and Facebook’s mvfst, with integration into popular web servers like nginx, LiteSpeed, and Apache. Browser support is strong, with Chrome, Firefox, Safari, and Edge already implementing HTTP/3.
 
-However, widespread adoption is still in progress. Challenges such as middlebox compatibility, UDP tuning limitations, and infrastructure readiness hinder deployment \cite{quic-performance-analysis}. Nonetheless, as HTTP/3 continues to demonstrate tangible performance and reliability improvements, especially in mobile and high-latency scenarios, its adoption is steadily accelerating.
+However, widespread adoption is still in progress. Challenges such as middlebox compatibility, UDP tuning limitations, and infrastructure readiness hinder deployment. Nonetheless, as HTTP/3 continues to demonstrate tangible performance and reliability improvements, especially in mobile and high-latency scenarios, its adoption is steadily accelerating.
 
 
 \subsection{Summary Table: HTTP Protocol Evolution}

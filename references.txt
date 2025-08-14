@@ -1,0 +1,67 @@
+Here are the references formatted in IEEE citation style:
+
+1. J. Iyengar and M. Thomson, "QUIC: A UDP-Based Multiplexed and Secure Transport," *IETF RFC 9000*, 2021. [Online]. Available: <https://datatracker.ietf.org/doc/rfc9000/>
+
+2. M. Bishop, "HTTP/3," *IETF RFC 9114*, 2022. [Online]. Available: <https://datatracker.ietf.org/doc/rfc9114/>
+
+3. Kubernetes, "Kubernetes Documentation," 2024. [Online]. Available: <https://kubernetes.io/docs/>
+
+4. aiortc, "aioquic: QUIC and HTTP/3 implementation in Python," 2024. [Online]. Available: <https://github.com/aiortc/aioquic>
+
+5. DataStax, "Apache Pulsar Helm Chart," 2024. [Online]. Available: <https://github.com/apache/pulsar-helm-chart>
+
+6. Kubernetes SIGs, "Minikube Documentation," 2024. [Online]. Available: <https://minikube.sigs.k8s.io/docs/>
+
+7. M. Belshe, R. Peon, and M. Thomson, "Hypertext Transfer Protocol Version 2 (HTTP/2)," *RFC 7540*, 2015. [Online]. Available: <https://datatracker.ietf.org/doc/rfc7540/>
+
+8. J. F. Kurose and K. W. Ross, *Computer Networking: A Top-Down Approach*, 7th ed. Pearson, 2017. [Online]. Available: <https://www.pearson.com/us/higher-education/program/Kurose-Computer-Networking-A-Top-Down-Approach-7th-Edition/PGM328276.html>
+
+9. NGINX Inc., "NGINX Ingress Controller Documentation," 2024. [Online]. Available: <https://docs.nginx.com/nginx-ingress-controller/>
+
+10. V. Vasiliev, "The WebTransport Protocol Framework," *IETF Internet-Draft*, 2023. [Online]. Available: <https://ietf-wg-webtrans.github.io/draft-ietf-webtrans-http3/draft-ietf-webtrans-http3.html>
+
+11. Mozilla Developer Network, "WebTransport API," 2024. [Online]. Available: <https://developer.mozilla.org/en-US/docs/Web/API/WebTransport>
+
+12. I. Fette and A. Melnikov, "The WebSocket Protocol," *RFC 6455*, 2011. [Online]. Available: <https://datatracker.ietf.org/doc/rfc6455/>
+
+13. W3C WebRTC Working Group, "WebRTC: Real-time Communication for the Web," 2023. [Online]. Available: <https://www.w3.org/TR/webrtc/>
+
+14. R. Marx, "HTTP/3 Performance Improvements Part 2," *Smashing Magazine*, 2021. [Online]. Available: <https://www.smashingmagazine.com/2021/08/http3-performance-improvements-part2/>
+
+15. HAProxy Technologies, "HAProxy Kubernetes Ingress Controller Documentation," 2024. [Online]. Available: <https://www.haproxy.com/documentation/kubernetes-ingress/community/configuration-reference/ingress/>
+
+16. J. Kreps, N. Narkhede, and J. Rao, "Kafka: A Distributed Messaging System for Log Processing," 2025. [No URL provided]
+
+17. Kubernetes SIGs, "kind (Kubernetes in Docker) Documentation," 2024. [Online]. Available: <https://kind.sigs.k8s.io/docs/>
+
+18. Rancher Labs, "K3s Documentation," 2024. [Online]. Available: <https://rancher.com/docs/k3s/latest/en/>
+
+19. W3C WebTransport Working Group, "WebTransport," 2023. [Online]. Available: <https://www.w3.org/TR/webtransport/>
+
+20. Docker Inc., "Docker: Accelerated Container Application Development," 2023. [Online]. Available: <https://www.docker.com/>
+
+21. MetalLB, "MetalLB Documentation," 2024. [Online]. Available: <https://metallb.io/>
+
+22. Apache Software Foundation, "Apache Zookeeper Documentation," 2024. [Online]. Available: <https://zookeeper.apache.org/doc/current/>
+
+23. Amazon Web Services, "AWS Documentation," 2024. [Online]. Available: <https://docs.aws.amazon.com/>
+
+24. Microsoft Azure, "Azure Documentation," 2024. [Online]. Available: <https://docs.microsoft.com/en-us/azure/>
+
+25. Google Cloud, "Google Cloud Documentation," 2024. [Online]. Available: <https://cloud.google.com/docs>
+
+26. HAProxy Technologies, "HAProxy Configuration Manual," 2024. [Online]. Available: <https://www.haproxy.com/documentation/>
+
+27. Kubernetes SIG Network, "Kubernetes Gateway API," 2023. [Online]. Available: <https://gateway-api.sigs.k8s.io/>
+
+28. Cloud Native Computing Foundation, "Envoy Proxy," 2023. [Online]. Available: <https://www.envoyproxy.io/>
+
+29. quic-go, "A QUIC Implementation in Pure Go," 2024. [Online]. Available: <https://github.com/lucas-clemente/quic-go>
+
+30. Cloudflare, "quiche: Savoury Implementation of the QUIC Transport Protocol and HTTP/3," 2024. [Online]. Available: <https://github.com/cloudflare/quiche>
+
+31. Angie, "Angie Web Server Documentation," 2024. [Online]. Available: <https://en.angie.software/angie/docs/>
+
+32. Wireshark Foundation, "Wireshark Documentation," 2024. [Online]. Available: <https://www.wireshark.org/docs/>
+
+33. Python Software Foundation, "Python 3 Documentation," 2024. [Online]. Available: <https://docs.python.org/3/>
