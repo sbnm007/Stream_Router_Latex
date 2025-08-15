@@ -1,42 +1,3 @@
-% \chapter{Problem Formulation}
-% \label{chap:ProblemFormulatiQUIC's encrypted headers and multiplexed streams in QUIC improve performance and security at the expense of making traffic inspection difficult using tools like Wireshark \cite{wireshark-docs}. Kubernetes environment being largely based on tcp have weak weak support for QUIC, which makes it harder to debug and analyze performance as discussed in Section 2.6.10.6. Even the Gateway API decouples infrastructure and application considerations, a misconfiguration of work makes whole operation within kubernetes more difficult as also covered in Section 2.6.10.6. These issues create barriers to building reliable, real-time webtransport stream demultiplexers/Routers in kubernetes.UIC's encrypted headers and multiplexed streams in QUIC improve performance and security at the expense of making traffic inspection difficult. Kubernetes environment being largely based on tcp have weak weak support for QUIC, which makes it harder to debug and analyze performance as discussed in 'Ingress Controller Support for HTTP/3 and QUIC' section. Even the Gateway API decouples infrastructure and application considerations, a misconfiguration of work makes whole operation within kubernetes more difficult as also covered in 'Ingress Controller Support for HTTP/3 and QUIC' section. These issues create barriers to building reliable, real-time webtransport stream demultiplexers/Routers in kubernetes.UIC's encrypted headers and multiplexed streams in QUIC improve performance and security at the expense of making traffic inspection difficult. Kubernetes environment being largely based on tcp have weak weak support for QUIC, which makes it harder to debug and analyze performance as discussed in Section 2.6.10.6. Even the Gateway API decouples infrastructure and application considerations, a misconfiguration of work makes whole operation within kubernetes more difficult as also covered in Section 2.6.10.6. These issues create barriers to building reliable, real-time webtransport stream demultiplexers/Routers in kubernetes.UIC's encrypted headers and multiplexed streams in QUIC improve performance and security at the expense of making traffic inspection difficult. Kubernetes environment being largely based on tcp have weak weak support for QUIC, which makes it harder to debug and analyze performance as discussed in Section 2.6.10.6. Even the Gateway API decouples infrastructure and application considerations, a misconfiguration of work makes whole operation within kubernetes more difficult as also covered in Section 2.6.10.6. These issues create barriers to building reliable, real-time webtransport stream demultiplexers/Routers in kubernetes.UIC's encrypted headers and multiplexed streams in QUIC improve performance and security at the expense of making traffic inspection difficult. Kubernetes environment being largely based on tcp have weak weak support for QUIC, which makes it harder to debug and analyze performance. Even the Gateway API decouples infrastructure and application considerations, a misconfiguration of work makes whole operation within kubernetes more difficult. These issues create barriers to building reliable, real-time webtransport stream demultiplexers/Routers in kubernetes.n}
-
-% The previous chapter described the literature that contributed towards the support of Proxying Quic streams within kubernetes cluster. It summarized the drawbacks of several different approaches and clearly identified the limitations for the approaches by defininig the gaps of the those approaches. Clearly there is a need to be able to have a solution that enables proxying QUIC streams into kubernetes. In other words, there exists a requirement to distribute and loadbalance http3 multiplexed streams within kubernetes. This chapter focuses on correctly identifying the challenges and clearly stating out the gaps occuring in the traditional proxy servers with regards to supporting webtransport streams. This chapter then proceeds to provide a primary approach for this dissertation in order to realise our end result. This chapter starts by giving an abstracted view of the approach that would solve the problem and arrive at a working solution. The next section talks about the novelty of the proposed approach and how it is different from existing working directions. The section covers the idea on the on the intuition behind chosing the approach following which the targets to be achieved for the stated problem are stated. Finally, the identified challenges are listed for the proposed approach.
-
-% \section{Abstracted View of the solution}
-% The main objective of this study is to enable Webtransport independent multiplexed streams to be proxied to different microservices in kubernetes envirnoment. This study aims to provide a complete discrete solution to the problem and solving the core problem which other studies did not solve. In order to arrive at a working solution at a highly abstracted way is to find a way to create a kuberentes supported http3 streams based proxy server.
-
-% \begin{table}[H]
-% \centering
-% \caption{Abstracted View of Proposed Solution}
-% \begin{tabular}{|p{4cm}|p{5.5cm}|p{5.5cm}|}
-% \hline
-% \textbf{Capability Area} & \textbf{Existing Approaches} & \textbf{Our Approach (Custom Proxy Server)} \\
-% \hline
-% Stream Visibility & Operate at packet level with no awareness of streams & Enable deep stream-level visibility and context recognition \\
-% \hline
-% Stream Handling & Entire connection treated as a monolithic flow & Demultiplex and manage streams individually \\
-% \hline
-% Application-Layer Intelligence & Minimal application-layer insight or control & Enable content-based routing, security, and monitoring per stream \\
-% \hline
-% \end{tabular}
-% \end{table}
-
-
-% \section{Differences from existing approaches}
-% As stated in the previous chapter most of the existing approaches do not address the problem at hand which is independent stream level inspection and control. Most of the approaches use custom annotations in ingress or use third party libraries but finally ends up routing entire UDP packet when it comes to http3 streams to the server. On the other hand work for this specific problem is currently in progress and is being addressed but there has not yet been a working solution which addresses the core problem. Thus, our apporach differs in a way that modification are done to the working quic library implementation to make a progress towards creating a standardized solution. The difference in approaches is shown in the table below
-
-
-
-
-
-% This section should present a short review of the topics discussed in the State of the Art chapter in order to then discuss gaps in the existing work and the relationship of these gaps to the work described in this dissertation.
-
-% \section{Proposed Work}
-% % This section should provide a thorough description of the problem and an overview of the
-% % work proposed to address the problem.
-% To cater to the problem of Head of the line blocking with TCP, Quic Protocol was incepted and formalized. With Quic streams we are able to leverage the performance benefit only if one can use it at scale. Kubernetes is the state of the art modern solution for deploying applications in containers across multiple machines as microservices and there exists gaps witth regard to the support of quic streams hindering being able to leverage the capability of http3 webtransport streams.  Current solutions in kubernetes does not act as stream forwards but rather act as UDP packet forwarders as they operate at a lower level abstraction rather than providing granular application level visibility. Kubernetes environment is largely based on TCP and Http 1.1 Protocols and support for Http3 streams is not natively support by any Kubernetes objects. The approach to the the solution is addressing the gaps individually. To first address the lack of support by native kuberentes objects the proposed solution would be expected to be deployed as a Pod exposed via service in kubernetes. To address the solution, a custom proxy server supporting acceptance of webtransport streams is proposed. To demonstrate the working prototype a streaming usecase is used along with widely used streaming tools. This approach addresses the problem at hand and provides a suitable working solution/
-
 
 % Defining the chapter
 \chapter{Problem Formulation}
@@ -132,16 +93,15 @@ This section outlines the design and implementation goals for the proposed solut
 
 
 \section{Summary}
-This dissertation addresses the problem of a lack of solutions to understand Http3 streams within Kubernetes, so that a custom solution creating an HTTP3 server that understands HTTP3 streams can be created to proxy it to other Kubernetes services. This dissertation analyses different ways to achieve the targeted result and proposes a solution "Custom HTTP3 Ingress Server" wherein kubernetes' native objects are leveraged in conjuction with Aioquics quic implementation.
+Current Kubernetes ingress solutions are not able to effectively handle QUIC-based WebTransport streams because of fundamental architectural limitations. Three specific technical challenges restrics the deployment of real-time streaming applications viz - existing controllers provide only experimental QUIC support without stream-aware routing capabilities, MetalLB and other similar bare-metal load balancers handle QUIC traffic as raw UDP packets without intelligent protocol information and QUIC's encrypted and multiplexed nature creates observability gaps in standard Kubernetes monitoring tools.
+
+The proposed solution addresses these limitations through a custom HTTP/3 proxy server that provides stream level demultiplexing and content based routing within Kubernetes environments. Unlike several current connection level forwarding approaches, the proposed system allows for independent stream management. This allows individual WebTransport streams to be able to be proxied to different microservices based on header metadata. This approach leverages the Aioquic QUIC implementation with Kubernetes native deployment.
+
+Implementation targets include a standardized 32-byte header format for efficient stream identification, YAML-driven configuration through ConfigMaps for dynamic routing updates, and integration with Apache Pulsar for real-time data processing. This architecture ensures compatibility with existing Kubernetes workflows while introducing novel feature of stream awareness which allows to access QUIC's performance benefits in local kubernetes clusters.
 
 
 \chapter{Design}
 \label{chap:Design}
-
-% At the beginning of each chapter, a description should introduce the reader to the content of the chapter. For the Design chapter, this desription should explain to the sections of the chapter, how these sections will explain the overall design and specific details, and the contribution of the individual sections towards the overall chapter.
-
-% The Design chapter should provide a description of the approach that addresses the problem identified above. The intention of this chapter is to discuss a proposed solution at an abstract, high level that is disconnected from an actual realisation of a solution. The motivation for this approach is that it should be possible to implement the proposed solution using a variety of methods; however, the abstract description of the solution should be applicable to a variety of possible realisation. For example, a solution for an issue may have been realised in as a Pascal or C program in the mid-1990s, whereas in the mid-2020s, the same issue may be addressed with a Python or Rust program. 
-
 
 This chapter outlines the major design decisions taken in this dissertation. The general problem is decomposed into smaller subproblems, and each of them is solved one at a time. For every subproblem, the reasoning behind the chosen solution is explained and described using diagrams to understand the flow of communication. Once each part is solved, the solutions are combined to form the final system design.
 
@@ -491,26 +451,3 @@ The proposed system is a real-time streaming architecture that is modular and sc
 Inside the Kubernetes cluster, a single-node Minikube setup is used for simplicity, leveraging the Docker driver to eliminate virtual machine overhead and enable shared networking. MetalLB is used as a bare-metal load balancer that exposes QUIC-based UDP traffic to components of the Kubernetes cluster, enabling external WebTransport clients to connect to internal services. Its routing logic is config-driven, user-managed through YAML-based ConfigMaps, and allows for dynamic updates and reloading of routing configurations without system restarts. The core of this solution is the WebTransportRouter, a custom component that accepts and deals with QUIC/HTTP3 streams by attaching each track with its own explicitly associated buffer of streams. This guarantees that audio, video, and chat information is manipulated on a low-latency basis for redirections. Once the component performs initial parsing, it sends each stream to its respective microservice through HTTP/1.1 via a proxy server that acts as a reliable gateway between the transport and application layers.
 
 At the application layer, separate stateless microservices are responsible for processing specific types of data such as audio, video, or chat. Each microservice publishes the processed data to its corresponding Apache Pulsar topic for instance, chat-topic or video-topic, thereby enabling a decoupled and scalable processing model. Apache Pulsar is used as the main system for handling event streams. It consists of a broker which receives data for a specific topic and stores multiple topics' logical associations, with each topic keeping different types of data separate such as audio, video, or chat. To ensure data is safely stored and can be recovered if something goes wrong, Apache BookKeeper is used in the background through components called Bookies. On the receiving side, different consumer applications connect to Pulsar and subscribe to specific topics to get the data they need. By keeping the parts that send, process, and receive data separate, the system stays flexible, reliable, and easy to scale for real-time streaming or analytics tasks.
-
-
-% \section{Detail 1 of the Design}
-% \subsection{Aspect \#1}
-
-% \subsubsection{Detail of Aspect  \#1}
-
-% \subsubsection{Another Detail of Aspect  \#1}
-
-
-% \subsection{Aspect \#2}
-
-% \subsubsection{Detail of Aspect  \#2}
-
-% \subsubsection{Another Detail of Aspect  \#2}
-
-
-% \section{Detail 2 of the Design}
-
-% \section{Summary}
-% \label{sec:SummaryDesign}
-
-% Every chapter aside from the first and last chapter should conclude with a summary. 

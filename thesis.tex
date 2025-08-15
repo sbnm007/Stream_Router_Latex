@@ -82,7 +82,7 @@
 \renewcommand{\thesisauthor}{Sibin George}                %% Your official TCD name.
 \renewcommand{\thesismonth}{August}                    %% Month of submission of the document.
 \renewcommand{\thesisyear}{2025}                      %% Year of submission of the document.
-\renewcommand{\thesistitle}{Stream-Level Routing over QUIC: A WebTransport Proxy Architecture for Kubernetes}   %% The title of your dissertation; use mixed-case.
+\renewcommand{\thesistitle}{WebTransport Proxy Architecture over QUIC for Kubernetes}   %% The title of your dissertation; use mixed-case.
 \renewcommand{\thesisauthorpreviousdegrees}{, M.Sc.}    %% Your previous degrees, abbreviated; separate multiple degrees by commas.
 \renewcommand{\thesissupervisor}{Dr. Stefan Weber}            %% Your thesis supervisor; use mixed-case and don't use any titles or degrees.
 % \renewcommand{\thesiscosupervisor}{}                %% Your PhD. thesis co-supervisor; if any.
@@ -193,11 +193,11 @@
 \setcounter{secnumdepth}{4}
 \setcounter{tocdepth}{4}
 
-%\hypersetup{pageanchor=false}
-%\thesisdeclarationpage                            %% Generate the declaration page.
+\hypersetup{pageanchor=false}
+\thesisdeclarationpage                            %% Generate the declaration page.
 
-%\thesispermissionpage                             %% Generate the copyright permission page
-%\hypersetup{pageanchor=true}
+\thesispermissionpage                             %% Generate the copyright permission page
+\hypersetup{pageanchor=true}
 
 \begin{thesisabstract}                            %% the abstract for your thesis
 Modern web applications increasingly demand ultra-low-latency, multiplexed, and secure transport between browsers and cloud-native back-ends. While the QUIC transport protocol \cite{rfc9000} and its application-layer companion HTTP/3 \cite{rfc9114} eliminate head-of-line blocking and reduce handshake latency, current Kubernetes ingress controllers and reverse proxies only provide coarse-grained, connection-level load balancing. They terminate QUIC early and forward traffic over HTTP/1.1, losing the ability to route or observe individual WebTransport streams. This limitation severely hampers real-time use cases such as interactive video, gaming, and telemetry.
