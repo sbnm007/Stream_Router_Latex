@@ -1,4 +1,4 @@
-# Stream-Level Routing over QUIC: A WebTransport Proxy Architecture for Kubernetes
+# WebTransport Proxy Architecture over QUIC for Kubernetes
 
 A Master's thesis exploring WebTransport-aware proxy architecture for Kubernetes environments, enabling stream-level routing of QUIC connections.
 
@@ -71,6 +71,13 @@ ls -la
 ### Quick Compilation
 
 ```bash
+# Using the provided shell script (recommended)
+./compile_generate.sh
+```
+
+### Alternative: Make Command
+
+```bash
 # Single command compilation (handles bibliography automatically)
 make all
 ```
@@ -96,7 +103,10 @@ pdflatex thesis.tex
 ### Clean Build
 
 ```bash
-# Remove all auxiliary files and rebuild
+# Using the shell script (automatically cleans and rebuilds)
+./compile_generate.sh
+
+# Or using make:
 make clean
 make all
 
@@ -104,7 +114,6 @@ make all
 rm -f *.aux *.bbl *.blg *.log *.out *.toc *.lof *.lot
 rm -f Introduction.aux StateOfTheArt.aux Design.aux Implementation.aux Evaluation.aux Conclusions.aux
 pdflatex thesis.tex && bibtex thesis && pdflatex thesis.tex && pdflatex thesis.tex
-pdflatex -interaction=nonstopmode thesis.tex
 ```
 
 ## 📁 Project Structure
@@ -121,6 +130,7 @@ Stream_Router_Latex/
 ├── Conclusions.tex         # Chapter 6: Conclusions
 ├── Appendix1.tex           # Appendices
 ├── tcdthesis.sty          # TCD thesis style file
+├── compile_generate.sh     # Compilation script
 ├── .gitignore             # Git ignore rules
 ├── README.md              # This file
 └── thesis.pdf             # Generated PDF (after compilation)
